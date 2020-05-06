@@ -5,6 +5,9 @@ CONFIG += shared
 CONFIG -= core
 CONFIG -= gui
 
+# not yet supported for double-precision on CoppeliaSim side
+# DEFINES += SIM_MATH_DOUBLE # for double-precision
+
 *-msvc* {
     QMAKE_CFLAGS += -O2
     QMAKE_CFLAGS += -fp:precise
@@ -19,6 +22,8 @@ CONFIG -= gui
     QMAKE_CXXFLAGS += -O3
     QMAKE_CFLAGS_WARN_ON = -Wall
     QMAKE_CXXFLAGS_WARN_ON = -Wall
+    QMAKE_CFLAGS += -Wno-float-equal
+    QMAKE_CXXFLAGS += -Wno-float-equal
 }
 
 clang* {
@@ -26,6 +31,8 @@ clang* {
     QMAKE_CXXFLAGS += -O3
     QMAKE_CFLAGS_WARN_ON = -Wall
     QMAKE_CXXFLAGS_WARN_ON = -Wall
+    QMAKE_CFLAGS += -Wno-float-equal
+    QMAKE_CXXFLAGS += -Wno-float-equal
 }
 
 win32 {

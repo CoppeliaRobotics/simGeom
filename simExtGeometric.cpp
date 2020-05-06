@@ -1,12 +1,7 @@
 #include "simExtGeometric.h"
 #include "simLib.h"
-#include "obbStruct.h"
-#include "pcStruct.h"
-#include "ocStruct.h"
 #include <iostream>
 #include <cstdio>
-#include "calcUtils.h"
-#include "geom.h"
 #include "scriptFunctionData.h"
 #include <map>
 
@@ -24,16 +19,35 @@
 
 #define CONCAT(x,y,z) x y z
 #define strConCat(x,y,z)    CONCAT(x,y,z)
+#ifdef SIM_MATH_DOUBLE
+#define realData doubleData
+#define sim_script_arg_real sim_script_arg_double
+#else
+#define realData floatData
+#define sim_script_arg_real sim_script_arg_float
+#endif
 
-LIBRARY simLib;
+static LIBRARY simLib;
 
-std::map<int,CObbStruct*> _meshData;
-int _nextMeshDataHandle=0;
-std::map<int,COcStruct*> _octreeData;
-int _nextOctreeDataHandle=0;
-std::map<int,CPcStruct*> _ptcloudData;
-int _nextPtcloudDataHandle=0;
+static std::map<int,CObbStruct*> _meshData;
+static int _nextMeshDataHandle=0;
+static std::map<int,COcStruct*> _octreeData;
+static int _nextOctreeDataHandle=0;
+static std::map<int,CPcStruct*> _ptcloudData;
+static int _nextPtcloudDataHandle=0;
 
+bool canOutputMsg(int msgType)
+{
+    int plugin_verbosity = sim_verbosity_default;
+    simGetModuleInfo("Geometric",sim_moduleinfo_verbosity,nullptr,&plugin_verbosity);
+    return(plugin_verbosity>=msgType);
+}
+
+void outputMsg(int msgType,const char* msg)
+{
+    if (canOutputMsg(msgType))
+        printf("%s\n",msg);
+}
 
 // --------------------------------------------------------------------------------------
 // simGeom.getMeshMeshCollision
@@ -44,11 +58,11 @@ int _nextPtcloudDataHandle=0;
 const int inArgs_GETMESHMESHCOLLISION[]={
     8,
     sim_script_arg_int32,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
     sim_script_arg_int32,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
     sim_script_arg_int32|sim_lua_arg_table,2, // cachData, default is nil
     sim_script_arg_bool,0, // return intersections, default is false
 };
@@ -65,10 +79,10 @@ void LUA_GETMESHMESHCOLLISION_CALLBACK(SScriptCallBack* p)
         std::map<int,CObbStruct*>::iterator it2=_meshData.find(h2);
         if ( (it1!=_meshData.end())&&(it2!=_meshData.end()) )
         {
-            C3Vector mesh1Pos(&(inData->at(1).floatData[0]));
-            C4Vector mesh1Q(inData->at(2).floatData[3],inData->at(2).floatData[0],inData->at(2).floatData[1],inData->at(2).floatData[2]);
-            C3Vector mesh2Pos(&(inData->at(4).floatData[0]));
-            C4Vector mesh2Q(inData->at(5).floatData[3],inData->at(5).floatData[0],inData->at(5).floatData[1],inData->at(5).floatData[2]);
+            C3Vector mesh1Pos(&(inData->at(1).realData[0]));
+            C4Vector mesh1Q(inData->at(2).realData[3],inData->at(2).realData[0],inData->at(2).realData[1],inData->at(2).realData[2]);
+            C3Vector mesh2Pos(&(inData->at(4).realData[0]));
+            C4Vector mesh2Q(inData->at(5).realData[3],inData->at(5).realData[0],inData->at(5).realData[1],inData->at(5).realData[2]);
             int cache1=-1;
             int cache2=-1;
             if ( (inData->size()>=7)&&(inData->at(6).int32Data.size()>=2) )
@@ -79,8 +93,8 @@ void LUA_GETMESHMESHCOLLISION_CALLBACK(SScriptCallBack* p)
             bool returnIntersections=false;
             if ( (inData->size()>=8)&&(inData->at(7).boolData.size()==1) )
                 returnIntersections=inData->at(7).boolData[0];
-            std::vector<float>* _intersect=nullptr;
-            std::vector<float> intersect;
+            std::vector<simReal>* _intersect=nullptr;
+            std::vector<simReal> intersect;
             if (returnIntersections)
                 _intersect=&intersect;
             bool coll=geom_getMeshMeshCollision(it1->second,C7Vector(mesh1Q,mesh1Pos),it2->second,C7Vector(mesh2Q,mesh2Pos),_intersect,&cache1,&cache2);
@@ -111,11 +125,11 @@ void LUA_GETMESHMESHCOLLISION_CALLBACK(SScriptCallBack* p)
 const int inArgs_GETMESHOCTREECOLLISION[]={
     7,
     sim_script_arg_int32,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
     sim_script_arg_int32,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
     sim_script_arg_double|sim_lua_arg_table,2, // cachData, default is nil
 };
 
@@ -131,16 +145,16 @@ void LUA_GETMESHOCTREECOLLISION_CALLBACK(SScriptCallBack* p)
         std::map<int,COcStruct*>::iterator it2=_octreeData.find(h2);
         if ( (it1!=_meshData.end())&&(it2!=_octreeData.end()) )
         {
-            C3Vector meshPos(&(inData->at(1).floatData[0]));
-            C4Vector meshQ(inData->at(2).floatData[3],inData->at(2).floatData[0],inData->at(2).floatData[1],inData->at(2).floatData[2]);
-            C3Vector octreePos(&(inData->at(4).floatData[0]));
-            C4Vector octreeQ(inData->at(5).floatData[3],inData->at(5).floatData[0],inData->at(5).floatData[1],inData->at(5).floatData[2]);
+            C3Vector meshPos(&(inData->at(1).realData[0]));
+            C4Vector meshQ(inData->at(2).realData[3],inData->at(2).realData[0],inData->at(2).realData[1],inData->at(2).realData[2]);
+            C3Vector octreePos(&(inData->at(4).realData[0]));
+            C4Vector octreeQ(inData->at(5).realData[3],inData->at(5).realData[0],inData->at(5).realData[1],inData->at(5).realData[2]);
             int cache1=-1;
             unsigned long long int cache2=0;
             if ( (inData->size()>=7)&&(inData->at(6).doubleData.size()>=2) )
             {
-                cache1=(int)inData->at(6).doubleData[0];
-                cache2=(unsigned long long int)inData->at(6).doubleData[1];
+                cache1=static_cast<int>(inData->at(6).doubleData[0]);
+                cache2=static_cast<unsigned long long int>(inData->at(6).doubleData[1]);
             }
             bool coll=geom_getMeshOctreeCollision(it1->second,C7Vector(meshQ,meshPos),it2->second,C7Vector(octreeQ,octreePos),&cache1,&cache2);
             D.pushOutData(CScriptFunctionDataItem(coll));
@@ -148,7 +162,7 @@ void LUA_GETMESHOCTREECOLLISION_CALLBACK(SScriptCallBack* p)
             {
                 std::vector<double> c;
                 c.push_back(cache1);
-                c.push_back(cache2);
+                c.push_back(double(cache2));
                 D.pushOutData(CScriptFunctionDataItem(c));
             }
         }
@@ -169,11 +183,11 @@ void LUA_GETMESHOCTREECOLLISION_CALLBACK(SScriptCallBack* p)
 const int inArgs_GETMESHTRIANGLECOLLISION[]={
     8,
     sim_script_arg_int32,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
     sim_script_arg_int32,0, // cachData, default is -1
     sim_script_arg_bool,0, // return intersections, default is false
 };
@@ -188,19 +202,19 @@ void LUA_GETMESHTRIANGLECOLLISION_CALLBACK(SScriptCallBack* p)
         std::map<int,CObbStruct*>::iterator it=_meshData.find(h);
         if (it!=_meshData.end())
         {
-            C3Vector meshPos(&(inData->at(1).floatData[0]));
-            C4Vector meshQ(inData->at(2).floatData[3],inData->at(2).floatData[0],inData->at(2).floatData[1],inData->at(2).floatData[2]);
-            C3Vector triPt1(&inData->at(3).floatData[0]);
-            C3Vector triPt2(&inData->at(4).floatData[0]);
-            C3Vector triPt3(&inData->at(5).floatData[0]);
+            C3Vector meshPos(&(inData->at(1).realData[0]));
+            C4Vector meshQ(inData->at(2).realData[3],inData->at(2).realData[0],inData->at(2).realData[1],inData->at(2).realData[2]);
+            C3Vector triPt1(&inData->at(3).realData[0]);
+            C3Vector triPt2(&inData->at(4).realData[0]);
+            C3Vector triPt3(&inData->at(5).realData[0]);
             int cache=-1;
             if ( (inData->size()>=7)&&(inData->at(6).int32Data.size()==1) )
                 cache=inData->at(6).int32Data[0];
             bool returnIntersections=false;
             if ( (inData->size()>=8)&&(inData->at(7).boolData.size()==1) )
                 returnIntersections=inData->at(7).boolData[0];
-            std::vector<float>* _intersect=nullptr;
-            std::vector<float> intersect;
+            std::vector<simReal>* _intersect=nullptr;
+            std::vector<simReal> intersect;
             if (returnIntersections)
                 _intersect=&intersect;
             bool coll=geom_getMeshTriangleCollision(it->second,C7Vector(meshQ,meshPos),triPt1,triPt2-triPt1,triPt3-triPt1,_intersect,&cache);
@@ -228,10 +242,10 @@ void LUA_GETMESHTRIANGLECOLLISION_CALLBACK(SScriptCallBack* p)
 const int inArgs_GETMESHSEGMENTCOLLISION[]={
     7,
     sim_script_arg_int32,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
     sim_script_arg_int32,0, // cachData, default is -1
     sim_script_arg_bool,0, // return intersections, default is false
 };
@@ -246,18 +260,18 @@ void LUA_GETMESHSEGMENTCOLLISION_CALLBACK(SScriptCallBack* p)
         std::map<int,CObbStruct*>::iterator it=_meshData.find(h);
         if (it!=_meshData.end())
         {
-            C3Vector meshPos(&(inData->at(1).floatData[0]));
-            C4Vector meshQ(inData->at(2).floatData[3],inData->at(2).floatData[0],inData->at(2).floatData[1],inData->at(2).floatData[2]);
-            C3Vector segPt1(&inData->at(3).floatData[0]);
-            C3Vector segPt2(&inData->at(4).floatData[0]);
+            C3Vector meshPos(&(inData->at(1).realData[0]));
+            C4Vector meshQ(inData->at(2).realData[3],inData->at(2).realData[0],inData->at(2).realData[1],inData->at(2).realData[2]);
+            C3Vector segPt1(&inData->at(3).realData[0]);
+            C3Vector segPt2(&inData->at(4).realData[0]);
             int cache=-1;
             if ( (inData->size()>=6)&&(inData->at(5).int32Data.size()==1) )
                 cache=inData->at(5).int32Data[0];
             bool returnIntersections=false;
             if ( (inData->size()>=7)&&(inData->at(6).boolData.size()==1) )
                 returnIntersections=inData->at(6).boolData[0];
-            std::vector<float>* _intersect=nullptr;
-            std::vector<float> intersect;
+            std::vector<simReal>* _intersect=nullptr;
+            std::vector<simReal> intersect;
             if (returnIntersections)
                 _intersect=&intersect;
             bool coll=geom_getMeshSegmentCollision(it->second,C7Vector(meshQ,meshPos),segPt1,segPt2-segPt1,_intersect,&cache);
@@ -285,11 +299,11 @@ void LUA_GETMESHSEGMENTCOLLISION_CALLBACK(SScriptCallBack* p)
 const int inArgs_GETOCTREEOCTREECOLLISION[]={
     7,
     sim_script_arg_int32,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
     sim_script_arg_int32,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
     sim_script_arg_double|sim_lua_arg_table,2, // cachData, default is nil
 //    sim_script_arg_bool,0, // return intersections, default is false
 };
@@ -306,34 +320,25 @@ void LUA_GETOCTREEOCTREECOLLISION_CALLBACK(SScriptCallBack* p)
         std::map<int,COcStruct*>::iterator it2=_octreeData.find(h2);
         if ( (it1!=_octreeData.end())&&(it2!=_octreeData.end()) )
         {
-            C3Vector octree1Pos(&(inData->at(1).floatData[0]));
-            C4Vector octree1Q(inData->at(2).floatData[3],inData->at(2).floatData[0],inData->at(2).floatData[1],inData->at(2).floatData[2]);
-            C3Vector octree2Pos(&(inData->at(4).floatData[0]));
-            C4Vector octree2Q(inData->at(5).floatData[3],inData->at(5).floatData[0],inData->at(5).floatData[1],inData->at(5).floatData[2]);
-            unsigned long long int cache1=-1;
-            unsigned long long int cache2=-1;
+            C3Vector octree1Pos(&(inData->at(1).realData[0]));
+            C4Vector octree1Q(inData->at(2).realData[3],inData->at(2).realData[0],inData->at(2).realData[1],inData->at(2).realData[2]);
+            C3Vector octree2Pos(&(inData->at(4).realData[0]));
+            C4Vector octree2Q(inData->at(5).realData[3],inData->at(5).realData[0],inData->at(5).realData[1],inData->at(5).realData[2]);
+            unsigned long long int cache1=0;
+            unsigned long long int cache2=0;
             if ( (inData->size()>=7)&&(inData->at(6).doubleData.size()>=2) )
             {
-                cache1=( unsigned long long int)inData->at(6).doubleData[0];
-                cache2=( unsigned long long int)inData->at(6).doubleData[1];
+                cache1=static_cast<unsigned long long int>(inData->at(6).doubleData[0]);
+                cache2=static_cast<unsigned long long int>(inData->at(6).doubleData[1]);
             }
-//            bool returnIntersections=false;
-//            if ( (inData->size()>=8)&&(inData->at(7).boolData.size()==1) )
-//                returnIntersections=inData->at(7).boolData[0];
-//            std::vector<float>* _intersect=nullptr;
-//            std::vector<float> intersect;
-//            if (returnIntersections)
-//                _intersect=&intersect;
             bool coll=geom_getOctreeOctreeCollision(it1->second,C7Vector(octree1Q,octree1Pos),it2->second,C7Vector(octree2Q,octree2Pos),&cache1,&cache2);
             D.pushOutData(CScriptFunctionDataItem(coll));
             if (coll)
             {
                 std::vector<double> c;
-                c.push_back(cache1);
-                c.push_back(cache2);
+                c.push_back(double(cache1));
+                c.push_back(double(cache2));
                 D.pushOutData(CScriptFunctionDataItem(c));
-//                if (returnIntersections)
-//                    D.pushOutData(CScriptFunctionDataItem(intersect));
             }
         }
         else
@@ -352,11 +357,11 @@ void LUA_GETOCTREEOCTREECOLLISION_CALLBACK(SScriptCallBack* p)
 const int inArgs_GETOCTREEPTCLOUDCOLLISION[]={
     7,
     sim_script_arg_int32,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
     sim_script_arg_int32,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
     sim_script_arg_double|sim_lua_arg_table,2, // cachData, default is nil
 //    sim_script_arg_bool,0, // return intersections, default is false
 };
@@ -373,34 +378,25 @@ void LUA_GETOCTREEPTCLOUDCOLLISION_CALLBACK(SScriptCallBack* p)
         std::map<int,CPcStruct*>::iterator it2=_ptcloudData.find(h2);
         if ( (it1!=_octreeData.end())&&(it2!=_ptcloudData.end()) )
         {
-            C3Vector octreePos(&(inData->at(1).floatData[0]));
-            C4Vector octreeQ(inData->at(2).floatData[3],inData->at(2).floatData[0],inData->at(2).floatData[1],inData->at(2).floatData[2]);
-            C3Vector ptcloudPos(&(inData->at(4).floatData[0]));
-            C4Vector ptcloudQ(inData->at(5).floatData[3],inData->at(5).floatData[0],inData->at(5).floatData[1],inData->at(5).floatData[2]);
-            unsigned long long int cache1=-1;
-            unsigned long long int cache2=-1;
+            C3Vector octreePos(&(inData->at(1).realData[0]));
+            C4Vector octreeQ(inData->at(2).realData[3],inData->at(2).realData[0],inData->at(2).realData[1],inData->at(2).realData[2]);
+            C3Vector ptcloudPos(&(inData->at(4).realData[0]));
+            C4Vector ptcloudQ(inData->at(5).realData[3],inData->at(5).realData[0],inData->at(5).realData[1],inData->at(5).realData[2]);
+            unsigned long long int cache1=0;
+            unsigned long long int cache2=0;
             if ( (inData->size()>=7)&&(inData->at(6).doubleData.size()>=2) )
             {
-                cache1=( unsigned long long int)inData->at(6).doubleData[0];
-                cache2=( unsigned long long int)inData->at(6).doubleData[1];
+                cache1=static_cast<unsigned long long int>(inData->at(6).doubleData[0]);
+                cache2=static_cast<unsigned long long int>(inData->at(6).doubleData[1]);
             }
-//            bool returnIntersections=false;
-//            if ( (inData->size()>=8)&&(inData->at(7).boolData.size()==1) )
-//                returnIntersections=inData->at(7).boolData[0];
-//            std::vector<float>* _intersect=nullptr;
-//            std::vector<float> intersect;
-//            if (returnIntersections)
-//                _intersect=&intersect;
             bool coll=geom_getOctreePtcloudCollision(it1->second,C7Vector(octreeQ,octreePos),it2->second,C7Vector(ptcloudQ,ptcloudPos),&cache1,&cache2);
             D.pushOutData(CScriptFunctionDataItem(coll));
             if (coll)
             {
                 std::vector<double> c;
-                c.push_back(cache1);
-                c.push_back(cache2);
+                c.push_back(double(cache1));
+                c.push_back(double(cache2));
                 D.pushOutData(CScriptFunctionDataItem(c));
-//                if (returnIntersections)
-//                    D.pushOutData(CScriptFunctionDataItem(intersect));
             }
         }
         else
@@ -419,11 +415,11 @@ void LUA_GETOCTREEPTCLOUDCOLLISION_CALLBACK(SScriptCallBack* p)
 const int inArgs_GETOCTREETRIANGLECOLLISION[]={
     7,
     sim_script_arg_int32,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
     sim_script_arg_double,0, // cachData, default is nil
 };
 
@@ -437,18 +433,18 @@ void LUA_GETOCTREETRIANGLECOLLISION_CALLBACK(SScriptCallBack* p)
         std::map<int,COcStruct*>::iterator it=_octreeData.find(h);
         if (it!=_octreeData.end())
         {
-            C3Vector octreePos(&(inData->at(1).floatData[0]));
-            C4Vector octreeQ(inData->at(2).floatData[3],inData->at(2).floatData[0],inData->at(2).floatData[1],inData->at(2).floatData[2]);
-            C3Vector triPt1(&(inData->at(3).floatData[0]));
-            C3Vector triPt2(&(inData->at(4).floatData[0]));
-            C3Vector triPt3(&(inData->at(5).floatData[0]));
+            C3Vector octreePos(&(inData->at(1).realData[0]));
+            C4Vector octreeQ(inData->at(2).realData[3],inData->at(2).realData[0],inData->at(2).realData[1],inData->at(2).realData[2]);
+            C3Vector triPt1(&(inData->at(3).realData[0]));
+            C3Vector triPt2(&(inData->at(4).realData[0]));
+            C3Vector triPt3(&(inData->at(5).realData[0]));
             unsigned long long int cache=0;
             if ( (inData->size()>=7)&&(inData->at(6).doubleData.size()==1) )
-                cache=(unsigned long long int)inData->at(6).doubleData[0];
+                cache=static_cast<unsigned long long int>(inData->at(6).doubleData[0]);
             bool coll=geom_getOctreeTriangleCollision(it->second,C7Vector(octreeQ,octreePos),triPt1,triPt2-triPt1,triPt3-triPt1,&cache);
             D.pushOutData(CScriptFunctionDataItem(coll));
             if (coll)
-                D.pushOutData(CScriptFunctionDataItem((double)cache));
+                D.pushOutData(CScriptFunctionDataItem(double(cache)));
         }
         else
             simSetLastError(LUA_GETOCTREETRIANGLECOLLISION_COMMAND,"Invalid handle.");
@@ -466,10 +462,10 @@ void LUA_GETOCTREETRIANGLECOLLISION_CALLBACK(SScriptCallBack* p)
 const int inArgs_GETOCTREESEGMENTCOLLISION[]={
     6,
     sim_script_arg_int32,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
     sim_script_arg_double,0, // cachData, default is nil
 };
 
@@ -483,17 +479,17 @@ void LUA_GETOCTREESEGMENTCOLLISION_CALLBACK(SScriptCallBack* p)
         std::map<int,COcStruct*>::iterator it=_octreeData.find(h);
         if (it!=_octreeData.end())
         {
-            C3Vector octreePos(&(inData->at(1).floatData[0]));
-            C4Vector octreeQ(inData->at(2).floatData[3],inData->at(2).floatData[0],inData->at(2).floatData[1],inData->at(2).floatData[2]);
-            C3Vector segPt1(&(inData->at(3).floatData[0]));
-            C3Vector segPt2(&(inData->at(4).floatData[0]));
+            C3Vector octreePos(&(inData->at(1).realData[0]));
+            C4Vector octreeQ(inData->at(2).realData[3],inData->at(2).realData[0],inData->at(2).realData[1],inData->at(2).realData[2]);
+            C3Vector segPt1(&(inData->at(3).realData[0]));
+            C3Vector segPt2(&(inData->at(4).realData[0]));
             unsigned long long int cache=0;
             if ( (inData->size()>=6)&&(inData->at(5).doubleData.size()==1) )
-                cache=(unsigned long long int)inData->at(5).doubleData[0];
+                cache=static_cast<unsigned long long int>(inData->at(5).doubleData[0]);
             bool coll=geom_getOctreeSegmentCollision(it->second,C7Vector(octreeQ,octreePos),segPt1,segPt2-segPt1,&cache);
             D.pushOutData(CScriptFunctionDataItem(coll));
             if (coll)
-                D.pushOutData(CScriptFunctionDataItem((double)cache));
+                D.pushOutData(CScriptFunctionDataItem(double(cache)));
         }
         else
             simSetLastError(LUA_GETOCTREESEGMENTCOLLISION_COMMAND,"Invalid handle.");
@@ -511,9 +507,9 @@ void LUA_GETOCTREESEGMENTCOLLISION_CALLBACK(SScriptCallBack* p)
 const int inArgs_GETOCTREEPOINTCOLLISION[]={
     5,
     sim_script_arg_int32,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
-    sim_script_arg_float|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
+    sim_script_arg_real|sim_lua_arg_table,3,
     sim_script_arg_double,0, // cachData, default is nil
 };
 
@@ -527,16 +523,16 @@ void LUA_GETOCTREEPOINTCOLLISION_CALLBACK(SScriptCallBack* p)
         std::map<int,COcStruct*>::iterator it=_octreeData.find(h);
         if (it!=_octreeData.end())
         {
-            C3Vector octreePos(&(inData->at(1).floatData[0]));
-            C4Vector octreeQ(inData->at(2).floatData[3],inData->at(2).floatData[0],inData->at(2).floatData[1],inData->at(2).floatData[2]);
-            C3Vector point(&(inData->at(3).floatData[0]));
+            C3Vector octreePos(&(inData->at(1).realData[0]));
+            C4Vector octreeQ(inData->at(2).realData[3],inData->at(2).realData[0],inData->at(2).realData[1],inData->at(2).realData[2]);
+            C3Vector point(&(inData->at(3).realData[0]));
             unsigned long long int cache=0;
             if ( (inData->size()>=5)&&(inData->at(4).doubleData.size()==1) )
-                cache=(unsigned long long int)inData->at(4).doubleData[0];
+                cache=static_cast<unsigned long long int>(inData->at(4).doubleData[0]);
             bool coll=geom_getOctreePointCollision(it->second,C7Vector(octreeQ,octreePos),point,nullptr,&cache);
             D.pushOutData(CScriptFunctionDataItem(coll));
             if (coll)
-                D.pushOutData(CScriptFunctionDataItem((double)cache));
+                D.pushOutData(CScriptFunctionDataItem(double(cache)));
         }
         else
             simSetLastError(LUA_GETOCTREEPOINTCOLLISION_COMMAND,"Invalid handle.");
@@ -557,12 +553,12 @@ void LUA_GETOCTREEPOINTCOLLISION_CALLBACK(SScriptCallBack* p)
 const int inArgs_GETMESHMESHDISTANCE[]={
     8,
     sim_script_arg_int32,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
     sim_script_arg_int32,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
-    sim_script_arg_float,0, // threshold, default is FLT_MAX
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
+    sim_script_arg_real,0, // threshold, default is REAL_MAX
     sim_script_arg_int32|sim_lua_arg_table,2, // cachData, default is nil
 };
 
@@ -578,13 +574,13 @@ void LUA_GETMESHMESHDISTANCE_CALLBACK(SScriptCallBack* p)
         std::map<int,CObbStruct*>::iterator it2=_meshData.find(h2);
         if ( (it1!=_meshData.end())&&(it2!=_meshData.end()) )
         {
-            C3Vector mesh1Pos(&(inData->at(1).floatData[0]));
-            C4Vector mesh1Q(inData->at(2).floatData[3],inData->at(2).floatData[0],inData->at(2).floatData[1],inData->at(2).floatData[2]);
-            C3Vector mesh2Pos(&(inData->at(4).floatData[0]));
-            C4Vector mesh2Q(inData->at(5).floatData[3],inData->at(5).floatData[0],inData->at(5).floatData[1],inData->at(5).floatData[2]);
-            float dist=FLT_MAX;
-            if ( (inData->size()>=7)&&(inData->at(6).floatData.size()==1) )
-                dist=inData->at(6).floatData[0];
+            C3Vector mesh1Pos(&(inData->at(1).realData[0]));
+            C4Vector mesh1Q(inData->at(2).realData[3],inData->at(2).realData[0],inData->at(2).realData[1],inData->at(2).realData[2]);
+            C3Vector mesh2Pos(&(inData->at(4).realData[0]));
+            C4Vector mesh2Q(inData->at(5).realData[3],inData->at(5).realData[0],inData->at(5).realData[1],inData->at(5).realData[2]);
+            simReal dist=REAL_MAX;
+            if ( (inData->size()>=7)&&(inData->at(6).realData.size()==1) )
+                dist=inData->at(6).realData[0];
             int cache1=-1;
             int cache2=-1;
             if ( (inData->size()>=8)&&(inData->at(7).int32Data.size()>=2) )
@@ -597,9 +593,9 @@ void LUA_GETMESHMESHDISTANCE_CALLBACK(SScriptCallBack* p)
             D.pushOutData(CScriptFunctionDataItem(dist));
             if (smaller)
             {
-                std::vector<float> pp1(distPt1.data,distPt1.data+3);
+                std::vector<simReal> pp1(distPt1.data,distPt1.data+3);
                 D.pushOutData(CScriptFunctionDataItem(pp1));
-                std::vector<float> pp2(distPt2.data,distPt2.data+3);
+                std::vector<simReal> pp2(distPt2.data,distPt2.data+3);
                 D.pushOutData(CScriptFunctionDataItem(pp2));
                 std::vector<int> c;
                 c.push_back(cache1);
@@ -623,12 +619,12 @@ void LUA_GETMESHMESHDISTANCE_CALLBACK(SScriptCallBack* p)
 const int inArgs_GETMESHOCTREEDISTANCE[]={
     8,
     sim_script_arg_int32,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
     sim_script_arg_int32,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
-    sim_script_arg_float,0, // threshold, default is FLT_MAX
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
+    sim_script_arg_real,0, // threshold, default is REAL_MAX
     sim_script_arg_double|sim_lua_arg_table,2, // cachData, default is nil
 };
 
@@ -644,32 +640,32 @@ void LUA_GETMESHOCTREEDISTANCE_CALLBACK(SScriptCallBack* p)
         std::map<int,COcStruct*>::iterator it2=_octreeData.find(h2);
         if ( (it1!=_meshData.end())&&(it2!=_octreeData.end()) )
         {
-            C3Vector meshPos(&(inData->at(1).floatData[0]));
-            C4Vector meshQ(inData->at(2).floatData[3],inData->at(2).floatData[0],inData->at(2).floatData[1],inData->at(2).floatData[2]);
-            C3Vector octreePos(&(inData->at(4).floatData[0]));
-            C4Vector octreeQ(inData->at(5).floatData[3],inData->at(5).floatData[0],inData->at(5).floatData[1],inData->at(5).floatData[2]);
-            float dist=FLT_MAX;
-            if ( (inData->size()>=7)&&(inData->at(6).floatData.size()==1) )
-                dist=inData->at(6).floatData[0];
+            C3Vector meshPos(&(inData->at(1).realData[0]));
+            C4Vector meshQ(inData->at(2).realData[3],inData->at(2).realData[0],inData->at(2).realData[1],inData->at(2).realData[2]);
+            C3Vector octreePos(&(inData->at(4).realData[0]));
+            C4Vector octreeQ(inData->at(5).realData[3],inData->at(5).realData[0],inData->at(5).realData[1],inData->at(5).realData[2]);
+            simReal dist=REAL_MAX;
+            if ( (inData->size()>=7)&&(inData->at(6).realData.size()==1) )
+                dist=inData->at(6).realData[0];
             int cache1=-1;
             unsigned long long int cache2=0;
             if ( (inData->size()>=8)&&(inData->at(7).doubleData.size()>=2) )
             {
-                cache1=(int)inData->at(7).doubleData[0];
-                cache2=(unsigned long long int)inData->at(7).doubleData[1];
+                cache1=int(inData->at(7).doubleData[0]);
+                cache2=static_cast<unsigned long long int>(inData->at(7).doubleData[1]);
             }
             C3Vector distPt1,distPt2;
             bool smaller=geom_getMeshOctreeDistanceIfSmaller(it1->second,C7Vector(meshQ,meshPos),it2->second,C7Vector(octreeQ,octreePos),dist,&distPt1,&distPt2,&cache1,&cache2);
             D.pushOutData(CScriptFunctionDataItem(dist));
             if (smaller)
             {
-                std::vector<float> pp1(distPt1.data,distPt1.data+3);
+                std::vector<simReal> pp1(distPt1.data,distPt1.data+3);
                 D.pushOutData(CScriptFunctionDataItem(pp1));
-                std::vector<float> pp2(distPt2.data,distPt2.data+3);
+                std::vector<simReal> pp2(distPt2.data,distPt2.data+3);
                 D.pushOutData(CScriptFunctionDataItem(pp2));
                 std::vector<double> c;
-                c.push_back(cache1);
-                c.push_back(cache2);
+                c.push_back(double(cache1));
+                c.push_back(double(cache2));
                 D.pushOutData(CScriptFunctionDataItem(c));
             }
         }
@@ -689,12 +685,12 @@ void LUA_GETMESHOCTREEDISTANCE_CALLBACK(SScriptCallBack* p)
 const int inArgs_GETMESHPTCLOUDDISTANCE[]={
     8,
     sim_script_arg_int32,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
     sim_script_arg_int32,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
-    sim_script_arg_float,0, // threshold, default is FLT_MAX
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
+    sim_script_arg_real,0, // threshold, default is REAL_MAX
     sim_script_arg_double|sim_lua_arg_table,2, // cachData, default is nil
 };
 
@@ -710,32 +706,32 @@ void LUA_GETMESHPTCLOUDDISTANCE_CALLBACK(SScriptCallBack* p)
         std::map<int,CPcStruct*>::iterator it2=_ptcloudData.find(h2);
         if ( (it1!=_meshData.end())&&(it2!=_ptcloudData.end()) )
         {
-            C3Vector meshPos(&(inData->at(1).floatData[0]));
-            C4Vector meshQ(inData->at(2).floatData[3],inData->at(2).floatData[0],inData->at(2).floatData[1],inData->at(2).floatData[2]);
-            C3Vector ptcloudPos(&(inData->at(4).floatData[0]));
-            C4Vector ptcloudQ(inData->at(5).floatData[3],inData->at(5).floatData[0],inData->at(5).floatData[1],inData->at(5).floatData[2]);
-            float dist=FLT_MAX;
-            if ( (inData->size()>=7)&&(inData->at(6).floatData.size()==1) )
-                dist=inData->at(6).floatData[0];
+            C3Vector meshPos(&(inData->at(1).realData[0]));
+            C4Vector meshQ(inData->at(2).realData[3],inData->at(2).realData[0],inData->at(2).realData[1],inData->at(2).realData[2]);
+            C3Vector ptcloudPos(&(inData->at(4).realData[0]));
+            C4Vector ptcloudQ(inData->at(5).realData[3],inData->at(5).realData[0],inData->at(5).realData[1],inData->at(5).realData[2]);
+            simReal dist=REAL_MAX;
+            if ( (inData->size()>=7)&&(inData->at(6).realData.size()==1) )
+                dist=inData->at(6).realData[0];
             int cache1=-1;
             unsigned long long int cache2=0;
             if ( (inData->size()>=8)&&(inData->at(7).doubleData.size()>=2) )
             {
-                cache1=(int)inData->at(7).doubleData[0];
-                cache2=(unsigned long long int)inData->at(7).doubleData[1];
+                cache1=int(inData->at(7).doubleData[0]);
+                cache2=static_cast<unsigned long long int>(inData->at(7).doubleData[1]);
             }
             C3Vector distPt1,distPt2;
             bool smaller=geom_getMeshPtcloudDistanceIfSmaller(it1->second,C7Vector(meshQ,meshPos),it2->second,C7Vector(ptcloudQ,ptcloudPos),dist,&distPt1,&distPt2,&cache1,&cache2);
             D.pushOutData(CScriptFunctionDataItem(dist));
             if (smaller)
             {
-                std::vector<float> pp1(distPt1.data,distPt1.data+3);
+                std::vector<simReal> pp1(distPt1.data,distPt1.data+3);
                 D.pushOutData(CScriptFunctionDataItem(pp1));
-                std::vector<float> pp2(distPt2.data,distPt2.data+3);
+                std::vector<simReal> pp2(distPt2.data,distPt2.data+3);
                 D.pushOutData(CScriptFunctionDataItem(pp2));
                 std::vector<double> c;
-                c.push_back(cache1);
-                c.push_back(cache2);
+                c.push_back(double(cache1));
+                c.push_back(double(cache2));
                 D.pushOutData(CScriptFunctionDataItem(c));
             }
         }
@@ -755,12 +751,12 @@ void LUA_GETMESHPTCLOUDDISTANCE_CALLBACK(SScriptCallBack* p)
 const int inArgs_GETOCTREEOCTREEDISTANCE[]={
     8,
     sim_script_arg_int32,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
     sim_script_arg_int32,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
-    sim_script_arg_float,0, // threshold, default is FLT_MAX
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
+    sim_script_arg_real,0, // threshold, default is REAL_MAX
     sim_script_arg_double|sim_lua_arg_table,2, // cachData, default is nil
 };
 
@@ -776,32 +772,32 @@ void LUA_GETOCTREEOCTREEDISTANCE_CALLBACK(SScriptCallBack* p)
         std::map<int,COcStruct*>::iterator it2=_octreeData.find(h2);
         if ( (it1!=_octreeData.end())&&(it2!=_octreeData.end()) )
         {
-            C3Vector octree1Pos(&(inData->at(1).floatData[0]));
-            C4Vector octree1Q(inData->at(2).floatData[3],inData->at(2).floatData[0],inData->at(2).floatData[1],inData->at(2).floatData[2]);
-            C3Vector octree2Pos(&(inData->at(4).floatData[0]));
-            C4Vector octree2Q(inData->at(5).floatData[3],inData->at(5).floatData[0],inData->at(5).floatData[1],inData->at(5).floatData[2]);
-            float dist=FLT_MAX;
-            if ( (inData->size()>=7)&&(inData->at(6).floatData.size()==1) )
-                dist=inData->at(6).floatData[0];
+            C3Vector octree1Pos(&(inData->at(1).realData[0]));
+            C4Vector octree1Q(inData->at(2).realData[3],inData->at(2).realData[0],inData->at(2).realData[1],inData->at(2).realData[2]);
+            C3Vector octree2Pos(&(inData->at(4).realData[0]));
+            C4Vector octree2Q(inData->at(5).realData[3],inData->at(5).realData[0],inData->at(5).realData[1],inData->at(5).realData[2]);
+            simReal dist=REAL_MAX;
+            if ( (inData->size()>=7)&&(inData->at(6).realData.size()==1) )
+                dist=inData->at(6).realData[0];
             unsigned long long int cache1=0;
             unsigned long long int cache2=0;
             if ( (inData->size()>=8)&&(inData->at(7).doubleData.size()>=2) )
             {
-                cache1=(unsigned long long int)inData->at(7).doubleData[0];
-                cache2=(unsigned long long int)inData->at(7).doubleData[1];
+                cache1=static_cast<unsigned long long int>(inData->at(7).doubleData[0]);
+                cache2=static_cast<unsigned long long int>(inData->at(7).doubleData[1]);
             }
             C3Vector distPt1,distPt2;
             bool smaller=geom_getOctreeOctreeDistanceIfSmaller(it1->second,C7Vector(octree1Q,octree1Pos),it2->second,C7Vector(octree2Q,octree2Pos),dist,&distPt1,&distPt2,&cache1,&cache2);
             D.pushOutData(CScriptFunctionDataItem(dist));
             if (smaller)
             {
-                std::vector<float> pp1(distPt1.data,distPt1.data+3);
+                std::vector<simReal> pp1(distPt1.data,distPt1.data+3);
                 D.pushOutData(CScriptFunctionDataItem(pp1));
-                std::vector<float> pp2(distPt2.data,distPt2.data+3);
+                std::vector<simReal> pp2(distPt2.data,distPt2.data+3);
                 D.pushOutData(CScriptFunctionDataItem(pp2));
                 std::vector<double> c;
-                c.push_back(cache1);
-                c.push_back(cache2);
+                c.push_back(double(cache1));
+                c.push_back(double(cache2));
                 D.pushOutData(CScriptFunctionDataItem(c));
             }
         }
@@ -821,12 +817,12 @@ void LUA_GETOCTREEOCTREEDISTANCE_CALLBACK(SScriptCallBack* p)
 const int inArgs_GETOCTREEPTCLOUDDISTANCE[]={
     8,
     sim_script_arg_int32,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
     sim_script_arg_int32,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
-    sim_script_arg_float,0, // threshold, default is FLT_MAX
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
+    sim_script_arg_real,0, // threshold, default is REAL_MAX
     sim_script_arg_double|sim_lua_arg_table,2, // cachData, default is nil
 };
 
@@ -842,32 +838,32 @@ void LUA_GETOCTREEPTCLOUDDISTANCE_CALLBACK(SScriptCallBack* p)
         std::map<int,CPcStruct*>::iterator it2=_ptcloudData.find(h2);
         if ( (it1!=_octreeData.end())&&(it2!=_ptcloudData.end()) )
         {
-            C3Vector octreePos(&(inData->at(1).floatData[0]));
-            C4Vector octreeQ(inData->at(2).floatData[3],inData->at(2).floatData[0],inData->at(2).floatData[1],inData->at(2).floatData[2]);
-            C3Vector ptcloudPos(&(inData->at(4).floatData[0]));
-            C4Vector ptcloudQ(inData->at(5).floatData[3],inData->at(5).floatData[0],inData->at(5).floatData[1],inData->at(5).floatData[2]);
-            float dist=FLT_MAX;
-            if ( (inData->size()>=7)&&(inData->at(6).floatData.size()==1) )
-                dist=inData->at(6).floatData[0];
+            C3Vector octreePos(&(inData->at(1).realData[0]));
+            C4Vector octreeQ(inData->at(2).realData[3],inData->at(2).realData[0],inData->at(2).realData[1],inData->at(2).realData[2]);
+            C3Vector ptcloudPos(&(inData->at(4).realData[0]));
+            C4Vector ptcloudQ(inData->at(5).realData[3],inData->at(5).realData[0],inData->at(5).realData[1],inData->at(5).realData[2]);
+            simReal dist=REAL_MAX;
+            if ( (inData->size()>=7)&&(inData->at(6).realData.size()==1) )
+                dist=inData->at(6).realData[0];
             unsigned long long int cache1=0;
             unsigned long long int cache2=0;
             if ( (inData->size()>=8)&&(inData->at(7).doubleData.size()>=2) )
             {
-                cache1=(unsigned long long int)inData->at(7).doubleData[0];
-                cache2=(unsigned long long int)inData->at(7).doubleData[1];
+                cache1=static_cast<unsigned long long int>(inData->at(7).doubleData[0]);
+                cache2=static_cast<unsigned long long int>(inData->at(7).doubleData[1]);
             }
             C3Vector distPt1,distPt2;
             bool smaller=geom_getOctreePtcloudDistanceIfSmaller(it1->second,C7Vector(octreeQ,octreePos),it2->second,C7Vector(ptcloudQ,ptcloudPos),dist,&distPt1,&distPt2,&cache1,&cache2);
             D.pushOutData(CScriptFunctionDataItem(dist));
             if (smaller)
             {
-                std::vector<float> pp1(distPt1.data,distPt1.data+3);
+                std::vector<simReal> pp1(distPt1.data,distPt1.data+3);
                 D.pushOutData(CScriptFunctionDataItem(pp1));
-                std::vector<float> pp2(distPt2.data,distPt2.data+3);
+                std::vector<simReal> pp2(distPt2.data,distPt2.data+3);
                 D.pushOutData(CScriptFunctionDataItem(pp2));
                 std::vector<double> c;
-                c.push_back(cache1);
-                c.push_back(cache2);
+                c.push_back(double(cache1));
+                c.push_back(double(cache2));
                 D.pushOutData(CScriptFunctionDataItem(c));
             }
         }
@@ -887,12 +883,12 @@ void LUA_GETOCTREEPTCLOUDDISTANCE_CALLBACK(SScriptCallBack* p)
 const int inArgs_GETOCTREETRIANGLEDISTANCE[]={
     8,
     sim_script_arg_int32,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float,0, // threshold, default is FLT_MAX
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real,0, // threshold, default is REAL_MAX
     sim_script_arg_double,0, // cachData, default is nil
 };
 
@@ -906,27 +902,27 @@ void LUA_GETOCTREETRIANGLEDISTANCE_CALLBACK(SScriptCallBack* p)
         std::map<int,COcStruct*>::iterator it=_octreeData.find(h);
         if (it!=_octreeData.end())
         {
-            C3Vector octreePos(&(inData->at(1).floatData[0]));
-            C4Vector octreeQ(inData->at(2).floatData[3],inData->at(2).floatData[0],inData->at(2).floatData[1],inData->at(2).floatData[2]);
-            C3Vector triPt1(&(inData->at(3).floatData[0]));
-            C3Vector triPt2(&(inData->at(4).floatData[0]));
-            C3Vector triPt3(&(inData->at(5).floatData[0]));
-            float dist=FLT_MAX;
-            if ( (inData->size()>=7)&&(inData->at(6).floatData.size()==1) )
-                dist=inData->at(6).floatData[0];
+            C3Vector octreePos(&(inData->at(1).realData[0]));
+            C4Vector octreeQ(inData->at(2).realData[3],inData->at(2).realData[0],inData->at(2).realData[1],inData->at(2).realData[2]);
+            C3Vector triPt1(&(inData->at(3).realData[0]));
+            C3Vector triPt2(&(inData->at(4).realData[0]));
+            C3Vector triPt3(&(inData->at(5).realData[0]));
+            simReal dist=REAL_MAX;
+            if ( (inData->size()>=7)&&(inData->at(6).realData.size()==1) )
+                dist=inData->at(6).realData[0];
             unsigned long long int cache=0;
             if ( (inData->size()>=8)&&(inData->at(7).doubleData.size()==1) )
-                cache=(unsigned long long int)inData->at(7).doubleData[0];
+                cache=static_cast<unsigned long long int>(inData->at(7).doubleData[0]);
             C3Vector distPt1,distPt2;
             bool smaller=geom_getOctreeTriangleDistanceIfSmaller(it->second,C7Vector(octreeQ,octreePos),triPt1,triPt2-triPt1,triPt3-triPt1,dist,&distPt1,&distPt2,&cache);
             D.pushOutData(CScriptFunctionDataItem(dist));
             if (smaller)
             {
-                std::vector<float> pp1(distPt1.data,distPt1.data+3);
+                std::vector<simReal> pp1(distPt1.data,distPt1.data+3);
                 D.pushOutData(CScriptFunctionDataItem(pp1));
-                std::vector<float> pp2(distPt2.data,distPt2.data+3);
+                std::vector<simReal> pp2(distPt2.data,distPt2.data+3);
                 D.pushOutData(CScriptFunctionDataItem(pp2));
-                D.pushOutData(CScriptFunctionDataItem((double)cache));
+                D.pushOutData(CScriptFunctionDataItem(double(cache)));
             }
         }
         else
@@ -945,11 +941,11 @@ void LUA_GETOCTREETRIANGLEDISTANCE_CALLBACK(SScriptCallBack* p)
 const int inArgs_GETOCTREESEGMENTDISTANCE[]={
     7,
     sim_script_arg_int32,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float,0, // threshold, default is FLT_MAX
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real,0, // threshold, default is REAL_MAX
     sim_script_arg_double,0, // cachData, default is nil
 };
 
@@ -963,26 +959,26 @@ void LUA_GETOCTREESEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
         std::map<int,COcStruct*>::iterator it=_octreeData.find(h);
         if (it!=_octreeData.end())
         {
-            C3Vector octreePos(&(inData->at(1).floatData[0]));
-            C4Vector octreeQ(inData->at(2).floatData[3],inData->at(2).floatData[0],inData->at(2).floatData[1],inData->at(2).floatData[2]);
-            C3Vector segPt1(&(inData->at(3).floatData[0]));
-            C3Vector segPt2(&(inData->at(4).floatData[0]));
-            float dist=FLT_MAX;
-            if ( (inData->size()>=6)&&(inData->at(5).floatData.size()==1) )
-                dist=inData->at(5).floatData[0];
+            C3Vector octreePos(&(inData->at(1).realData[0]));
+            C4Vector octreeQ(inData->at(2).realData[3],inData->at(2).realData[0],inData->at(2).realData[1],inData->at(2).realData[2]);
+            C3Vector segPt1(&(inData->at(3).realData[0]));
+            C3Vector segPt2(&(inData->at(4).realData[0]));
+            simReal dist=REAL_MAX;
+            if ( (inData->size()>=6)&&(inData->at(5).realData.size()==1) )
+                dist=inData->at(5).realData[0];
             unsigned long long int cache=0;
             if ( (inData->size()>=7)&&(inData->at(6).doubleData.size()==1) )
-                cache=(unsigned long long int)inData->at(6).doubleData[0];
+                cache=static_cast<unsigned long long int>(inData->at(6).doubleData[0]);
             C3Vector distPt1,distPt2;
             bool smaller=geom_getOctreeSegmentDistanceIfSmaller(it->second,C7Vector(octreeQ,octreePos),segPt1,segPt2-segPt1,dist,&distPt1,&distPt2,&cache);
             D.pushOutData(CScriptFunctionDataItem(dist));
             if (smaller)
             {
-                std::vector<float> pp1(distPt1.data,distPt1.data+3);
+                std::vector<simReal> pp1(distPt1.data,distPt1.data+3);
                 D.pushOutData(CScriptFunctionDataItem(pp1));
-                std::vector<float> pp2(distPt2.data,distPt2.data+3);
+                std::vector<simReal> pp2(distPt2.data,distPt2.data+3);
                 D.pushOutData(CScriptFunctionDataItem(pp2));
-                D.pushOutData(CScriptFunctionDataItem((double)cache));
+                D.pushOutData(CScriptFunctionDataItem(double(cache)));
             }
         }
         else
@@ -1001,10 +997,10 @@ void LUA_GETOCTREESEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
 const int inArgs_GETOCTREEPOINTDISTANCE[]={
     6,
     sim_script_arg_int32,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float,0, // threshold, default is FLT_MAX
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real,0, // threshold, default is REAL_MAX
     sim_script_arg_double,0, // cachData, default is nil
 };
 
@@ -1018,23 +1014,23 @@ void LUA_GETOCTREEPOINTDISTANCE_CALLBACK(SScriptCallBack* p)
         std::map<int,COcStruct*>::iterator it=_octreeData.find(h);
         if (it!=_octreeData.end())
         {
-            C3Vector octreePos(&(inData->at(1).floatData[0]));
-            C4Vector octreeQ(inData->at(2).floatData[3],inData->at(2).floatData[0],inData->at(2).floatData[1],inData->at(2).floatData[2]);
-            C3Vector point(&(inData->at(3).floatData[0]));
-            float dist=FLT_MAX;
-            if ( (inData->size()>=5)&&(inData->at(4).floatData.size()==1) )
-                dist=inData->at(4).floatData[0];
+            C3Vector octreePos(&(inData->at(1).realData[0]));
+            C4Vector octreeQ(inData->at(2).realData[3],inData->at(2).realData[0],inData->at(2).realData[1],inData->at(2).realData[2]);
+            C3Vector point(&(inData->at(3).realData[0]));
+            simReal dist=REAL_MAX;
+            if ( (inData->size()>=5)&&(inData->at(4).realData.size()==1) )
+                dist=inData->at(4).realData[0];
             unsigned long long int cache=0;
             if ( (inData->size()>=6)&&(inData->at(5).doubleData.size()==1) )
-                cache=(unsigned long long int)inData->at(5).doubleData[0];
+                cache=static_cast<unsigned long long int>(inData->at(5).doubleData[0]);
             C3Vector distPt;
             bool smaller=geom_getOctreePointDistanceIfSmaller(it->second,C7Vector(octreeQ,octreePos),point,dist,&distPt,&cache);
             D.pushOutData(CScriptFunctionDataItem(dist));
             if (smaller)
             {
-                std::vector<float> pp1(distPt.data,distPt.data+3);
+                std::vector<simReal> pp1(distPt.data,distPt.data+3);
                 D.pushOutData(CScriptFunctionDataItem(pp1));
-                D.pushOutData(CScriptFunctionDataItem((double)cache));
+                D.pushOutData(CScriptFunctionDataItem(double(cache)));
             }
         }
         else
@@ -1053,12 +1049,12 @@ void LUA_GETOCTREEPOINTDISTANCE_CALLBACK(SScriptCallBack* p)
 const int inArgs_GETMESHTRIANGLEDISTANCE[]={
     8,
     sim_script_arg_int32,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float,0, // threshold, default is FLT_MAX
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real,0, // threshold, default is REAL_MAX
     sim_script_arg_int32,0, // cachData, default is -1
 };
 
@@ -1072,14 +1068,14 @@ void LUA_GETMESHTRIANGLEDISTANCE_CALLBACK(SScriptCallBack* p)
         std::map<int,CObbStruct*>::iterator it=_meshData.find(h);
         if (it!=_meshData.end())
         {
-            C3Vector meshPos(&(inData->at(1).floatData[0]));
-            C4Vector meshQ(inData->at(2).floatData[3],inData->at(2).floatData[0],inData->at(2).floatData[1],inData->at(2).floatData[2]);
-            C3Vector triPt1(&inData->at(3).floatData[0]);
-            C3Vector triPt2(&inData->at(4).floatData[0]);
-            C3Vector triPt3(&inData->at(5).floatData[0]);
-            float dist=FLT_MAX;
-            if ( (inData->size()>=7)&&(inData->at(6).floatData.size()==1) )
-                dist=inData->at(6).floatData[0];
+            C3Vector meshPos(&(inData->at(1).realData[0]));
+            C4Vector meshQ(inData->at(2).realData[3],inData->at(2).realData[0],inData->at(2).realData[1],inData->at(2).realData[2]);
+            C3Vector triPt1(&inData->at(3).realData[0]);
+            C3Vector triPt2(&inData->at(4).realData[0]);
+            C3Vector triPt3(&inData->at(5).realData[0]);
+            simReal dist=REAL_MAX;
+            if ( (inData->size()>=7)&&(inData->at(6).realData.size()==1) )
+                dist=inData->at(6).realData[0];
             int cache=-1;
             if ( (inData->size()>=8)&&(inData->at(7).int32Data.size()==1) )
                 cache=inData->at(7).int32Data[0];
@@ -1088,9 +1084,9 @@ void LUA_GETMESHTRIANGLEDISTANCE_CALLBACK(SScriptCallBack* p)
             D.pushOutData(CScriptFunctionDataItem(dist));
             if (smaller)
             {
-                std::vector<float> pp1(distPt1.data,distPt1.data+3);
+                std::vector<simReal> pp1(distPt1.data,distPt1.data+3);
                 D.pushOutData(CScriptFunctionDataItem(pp1));
-                std::vector<float> pp2(distPt2.data,distPt2.data+3);
+                std::vector<simReal> pp2(distPt2.data,distPt2.data+3);
                 D.pushOutData(CScriptFunctionDataItem(pp2));
                 D.pushOutData(CScriptFunctionDataItem(cache));
             }
@@ -1111,11 +1107,11 @@ void LUA_GETMESHTRIANGLEDISTANCE_CALLBACK(SScriptCallBack* p)
 const int inArgs_GETMESHSEGMENTDISTANCE[]={
     7,
     sim_script_arg_int32,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float,0, // threshold, default is FLT_MAX
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real,0, // threshold, default is REAL_MAX
     sim_script_arg_int32,0, // cachData, default is -1
 };
 
@@ -1129,13 +1125,13 @@ void LUA_GETMESHSEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
         std::map<int,CObbStruct*>::iterator it=_meshData.find(h);
         if (it!=_meshData.end())
         {
-            C3Vector meshPos(&(inData->at(1).floatData[0]));
-            C4Vector meshQ(inData->at(2).floatData[3],inData->at(2).floatData[0],inData->at(2).floatData[1],inData->at(2).floatData[2]);
-            C3Vector segPt1(&inData->at(3).floatData[0]);
-            C3Vector segPt2(&inData->at(4).floatData[0]);
-            float dist=FLT_MAX;
-            if ( (inData->size()>=6)&&(inData->at(5).floatData.size()==1) )
-                dist=inData->at(5).floatData[0];
+            C3Vector meshPos(&(inData->at(1).realData[0]));
+            C4Vector meshQ(inData->at(2).realData[3],inData->at(2).realData[0],inData->at(2).realData[1],inData->at(2).realData[2]);
+            C3Vector segPt1(&inData->at(3).realData[0]);
+            C3Vector segPt2(&inData->at(4).realData[0]);
+            simReal dist=REAL_MAX;
+            if ( (inData->size()>=6)&&(inData->at(5).realData.size()==1) )
+                dist=inData->at(5).realData[0];
             int cache=-1;
             if ( (inData->size()>=7)&&(inData->at(6).int32Data.size()==1) )
                 cache=inData->at(6).int32Data[0];
@@ -1144,9 +1140,9 @@ void LUA_GETMESHSEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
             D.pushOutData(CScriptFunctionDataItem(dist));
             if (smaller)
             {
-                std::vector<float> pp1(distPt1.data,distPt1.data+3);
+                std::vector<simReal> pp1(distPt1.data,distPt1.data+3);
                 D.pushOutData(CScriptFunctionDataItem(pp1));
-                std::vector<float> pp2(distPt2.data,distPt2.data+3);
+                std::vector<simReal> pp2(distPt2.data,distPt2.data+3);
                 D.pushOutData(CScriptFunctionDataItem(pp2));
                 D.pushOutData(CScriptFunctionDataItem(cache));
             }
@@ -1167,10 +1163,10 @@ void LUA_GETMESHSEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
 const int inArgs_GETMESHPOINTDISTANCE[]={
     6,
     sim_script_arg_int32,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float,0, // threshold, default is FLT_MAX
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real,0, // threshold, default is REAL_MAX
     sim_script_arg_int32,0, // cachData, default is -1
 };
 
@@ -1184,12 +1180,12 @@ void LUA_GETMESHPOINTDISTANCE_CALLBACK(SScriptCallBack* p)
         std::map<int,CObbStruct*>::iterator it=_meshData.find(h);
         if (it!=_meshData.end())
         {
-            C3Vector meshPos(&(inData->at(1).floatData[0]));
-            C4Vector meshQ(inData->at(2).floatData[3],inData->at(2).floatData[0],inData->at(2).floatData[1],inData->at(2).floatData[2]);
-            C3Vector pt1(&inData->at(3).floatData[0]);
-            float dist=FLT_MAX;
-            if ( (inData->size()>=5)&&(inData->at(4).floatData.size()==1) )
-                dist=inData->at(4).floatData[0];
+            C3Vector meshPos(&(inData->at(1).realData[0]));
+            C4Vector meshQ(inData->at(2).realData[3],inData->at(2).realData[0],inData->at(2).realData[1],inData->at(2).realData[2]);
+            C3Vector pt1(&inData->at(3).realData[0]);
+            simReal dist=REAL_MAX;
+            if ( (inData->size()>=5)&&(inData->at(4).realData.size()==1) )
+                dist=inData->at(4).realData[0];
             int cache=-1;
             if ( (inData->size()>=6)&&(inData->at(5).int32Data.size()==1) )
                 cache=inData->at(5).int32Data[0];
@@ -1198,7 +1194,7 @@ void LUA_GETMESHPOINTDISTANCE_CALLBACK(SScriptCallBack* p)
             D.pushOutData(CScriptFunctionDataItem(dist));
             if (smaller)
             {
-                std::vector<float> pp1(distPt1.data,distPt1.data+3);
+                std::vector<simReal> pp1(distPt1.data,distPt1.data+3);
                 D.pushOutData(CScriptFunctionDataItem(pp1));
                 D.pushOutData(CScriptFunctionDataItem(cache));
             }
@@ -1218,12 +1214,12 @@ void LUA_GETMESHPOINTDISTANCE_CALLBACK(SScriptCallBack* p)
 
 const int inArgs_GETBOXBOXDISTANCE[]={
     8,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
-    sim_script_arg_float|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
+    sim_script_arg_real|sim_lua_arg_table,3,
     sim_script_arg_bool,0,
     sim_script_arg_bool,0,
 };
@@ -1234,22 +1230,22 @@ void LUA_GETBOXBOXDISTANCE_CALLBACK(SScriptCallBack* p)
     if (D.readDataFromStack(p->stackID,inArgs_GETBOXBOXDISTANCE,inArgs_GETBOXBOXDISTANCE[0]-1,LUA_GETBOXBOXDISTANCE_COMMAND))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
-        C3Vector box1Pos(&(inData->at(0).floatData[0]));
-        C4Vector box1Q(inData->at(1).floatData[3],inData->at(1).floatData[0],inData->at(1).floatData[1],inData->at(1).floatData[2]);
-        C3Vector box1Hs(&(inData->at(2).floatData[0]));
-        C3Vector box2Pos(&(inData->at(3).floatData[0]));
-        C4Vector box2Q(inData->at(4).floatData[3],inData->at(4).floatData[0],inData->at(4).floatData[1],inData->at(4).floatData[2]);
-        C3Vector box2Hs(&(inData->at(5).floatData[0]));
+        C3Vector box1Pos(&(inData->at(0).realData[0]));
+        C4Vector box1Q(inData->at(1).realData[3],inData->at(1).realData[0],inData->at(1).realData[1],inData->at(1).realData[2]);
+        C3Vector box1Hs(&(inData->at(2).realData[0]));
+        C3Vector box2Pos(&(inData->at(3).realData[0]));
+        C4Vector box2Q(inData->at(4).realData[3],inData->at(4).realData[0],inData->at(4).realData[1],inData->at(4).realData[2]);
+        C3Vector box2Hs(&(inData->at(5).realData[0]));
         bool boxesAreSolid=inData->at(6).boolData[0];
         bool altRoutine=false;
         if ( (inData->size()>7)&&(inData->at(7).boolData.size()==1) )
             altRoutine=inData->at(7).boolData[0];
         C3Vector distPt1,distPt2;
-        float dist=geom_getBoxBoxDistance(C7Vector(box1Q,box1Pos),box1Hs,C7Vector(box2Q,box2Pos),box2Hs,boxesAreSolid,&distPt1,&distPt2,altRoutine);
+        simReal dist=geom_getBoxBoxDistance(C7Vector(box1Q,box1Pos),box1Hs,C7Vector(box2Q,box2Pos),box2Hs,boxesAreSolid,&distPt1,&distPt2,altRoutine);
         D.pushOutData(CScriptFunctionDataItem(dist));
-        std::vector<float> pp1(distPt1.data,distPt1.data+3);
+        std::vector<simReal> pp1(distPt1.data,distPt1.data+3);
         D.pushOutData(CScriptFunctionDataItem(pp1));
-        std::vector<float> pp2(distPt2.data,distPt2.data+3);
+        std::vector<simReal> pp2(distPt2.data,distPt2.data+3);
         D.pushOutData(CScriptFunctionDataItem(pp2));
     }
     D.writeDataToStack(p->stackID);
@@ -1264,13 +1260,13 @@ void LUA_GETBOXBOXDISTANCE_CALLBACK(SScriptCallBack* p)
 
 const int inArgs_GETBOXTRIANGLEDISTANCE[]={
     8,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
-    sim_script_arg_float|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
+    sim_script_arg_real|sim_lua_arg_table,3,
     sim_script_arg_bool,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
     sim_script_arg_bool,0,
 };
 
@@ -1280,22 +1276,22 @@ void LUA_GETBOXTRIANGLEDISTANCE_CALLBACK(SScriptCallBack* p)
     if (D.readDataFromStack(p->stackID,inArgs_GETBOXTRIANGLEDISTANCE,inArgs_GETBOXTRIANGLEDISTANCE[0]-1,LUA_GETBOXTRIANGLEDISTANCE_COMMAND))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
-        C3Vector boxPos(&(inData->at(0).floatData[0]));
-        C4Vector boxQ(inData->at(1).floatData[3],inData->at(1).floatData[0],inData->at(1).floatData[1],inData->at(1).floatData[2]);
-        C3Vector boxHs(&(inData->at(2).floatData[0]));
+        C3Vector boxPos(&(inData->at(0).realData[0]));
+        C4Vector boxQ(inData->at(1).realData[3],inData->at(1).realData[0],inData->at(1).realData[1],inData->at(1).realData[2]);
+        C3Vector boxHs(&(inData->at(2).realData[0]));
         bool boxIsSolid=inData->at(3).boolData[0];
-        C3Vector p1(&(inData->at(4).floatData[0]));
-        C3Vector p2(&(inData->at(5).floatData[0]));
-        C3Vector p3(&(inData->at(6).floatData[0]));
+        C3Vector p1(&(inData->at(4).realData[0]));
+        C3Vector p2(&(inData->at(5).realData[0]));
+        C3Vector p3(&(inData->at(6).realData[0]));
         bool altRoutine=false;
         if ( (inData->size()>7)&&(inData->at(7).boolData.size()==1) )
             altRoutine=inData->at(7).boolData[0];
         C3Vector distPt1,distPt2;
-        float dist=geom_getBoxTriangleDistance(C7Vector(boxQ,boxPos),boxHs,boxIsSolid,p1,p2-p1,p3-p1,&distPt1,&distPt2,altRoutine);
+        simReal dist=geom_getBoxTriangleDistance(C7Vector(boxQ,boxPos),boxHs,boxIsSolid,p1,p2-p1,p3-p1,&distPt1,&distPt2,altRoutine);
         D.pushOutData(CScriptFunctionDataItem(dist));
-        std::vector<float> pp1(distPt1.data,distPt1.data+3);
+        std::vector<simReal> pp1(distPt1.data,distPt1.data+3);
         D.pushOutData(CScriptFunctionDataItem(pp1));
-        std::vector<float> pp2(distPt2.data,distPt2.data+3);
+        std::vector<simReal> pp2(distPt2.data,distPt2.data+3);
         D.pushOutData(CScriptFunctionDataItem(pp2));
     }
     D.writeDataToStack(p->stackID);
@@ -1310,12 +1306,12 @@ void LUA_GETBOXTRIANGLEDISTANCE_CALLBACK(SScriptCallBack* p)
 
 const int inArgs_GETBOXSEGMENTDISTANCE[]={
     7,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
-    sim_script_arg_float|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
+    sim_script_arg_real|sim_lua_arg_table,3,
     sim_script_arg_bool,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
     sim_script_arg_bool,0,
 };
 
@@ -1325,21 +1321,21 @@ void LUA_GETBOXSEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
     if (D.readDataFromStack(p->stackID,inArgs_GETBOXSEGMENTDISTANCE,inArgs_GETBOXSEGMENTDISTANCE[0]-1,LUA_GETBOXSEGMENTDISTANCE_COMMAND))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
-        C3Vector boxPos(&(inData->at(0).floatData[0]));
-        C4Vector boxQ(inData->at(1).floatData[3],inData->at(1).floatData[0],inData->at(1).floatData[1],inData->at(1).floatData[2]);
-        C3Vector boxHs(&(inData->at(2).floatData[0]));
+        C3Vector boxPos(&(inData->at(0).realData[0]));
+        C4Vector boxQ(inData->at(1).realData[3],inData->at(1).realData[0],inData->at(1).realData[1],inData->at(1).realData[2]);
+        C3Vector boxHs(&(inData->at(2).realData[0]));
         bool boxIsSolid=inData->at(3).boolData[0];
-        C3Vector segP1(&(inData->at(4).floatData[0]));
-        C3Vector segP2(&(inData->at(5).floatData[0]));
+        C3Vector segP1(&(inData->at(4).realData[0]));
+        C3Vector segP2(&(inData->at(5).realData[0]));
         bool altRoutine=false;
         if ( (inData->size()>6)&&(inData->at(6).boolData.size()==1) )
             altRoutine=inData->at(6).boolData[0];
         C3Vector distPt1,distPt2;
-        float dist=geom_getBoxSegmentDistance(C7Vector(boxQ,boxPos),boxHs,boxIsSolid,segP1,segP2-segP1,&distPt1,&distPt2,altRoutine);
+        simReal dist=geom_getBoxSegmentDistance(C7Vector(boxQ,boxPos),boxHs,boxIsSolid,segP1,segP2-segP1,&distPt1,&distPt2,altRoutine);
         D.pushOutData(CScriptFunctionDataItem(dist));
-        std::vector<float> p1(distPt1.data,distPt1.data+3);
+        std::vector<simReal> p1(distPt1.data,distPt1.data+3);
         D.pushOutData(CScriptFunctionDataItem(p1));
-        std::vector<float> p2(distPt2.data,distPt2.data+3);
+        std::vector<simReal> p2(distPt2.data,distPt2.data+3);
         D.pushOutData(CScriptFunctionDataItem(p2));
     }
     D.writeDataToStack(p->stackID);
@@ -1354,11 +1350,11 @@ void LUA_GETBOXSEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
 
 const int inArgs_GETBOXPOINTDISTANCE[]={
     5,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
-    sim_script_arg_float|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
+    sim_script_arg_real|sim_lua_arg_table,3,
     sim_script_arg_bool,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
 };
 
 void LUA_GETBOXPOINTDISTANCE_CALLBACK(SScriptCallBack* p)
@@ -1367,15 +1363,15 @@ void LUA_GETBOXPOINTDISTANCE_CALLBACK(SScriptCallBack* p)
     if (D.readDataFromStack(p->stackID,inArgs_GETBOXPOINTDISTANCE,inArgs_GETBOXPOINTDISTANCE[0],LUA_GETBOXPOINTDISTANCE_COMMAND))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
-        C3Vector boxPos(&(inData->at(0).floatData[0]));
-        C4Vector boxQ(inData->at(1).floatData[3],inData->at(1).floatData[0],inData->at(1).floatData[1],inData->at(1).floatData[2]);
-        C3Vector boxHs(&(inData->at(2).floatData[0]));
+        C3Vector boxPos(&(inData->at(0).realData[0]));
+        C4Vector boxQ(inData->at(1).realData[3],inData->at(1).realData[0],inData->at(1).realData[1],inData->at(1).realData[2]);
+        C3Vector boxHs(&(inData->at(2).realData[0]));
         bool boxIsSolid=inData->at(3).boolData[0];
-        C3Vector point(&(inData->at(4).floatData[0]));
+        C3Vector point(&(inData->at(4).realData[0]));
         C3Vector distPt;
-        float dist=geom_getBoxPointDistance(C7Vector(boxQ,boxPos),boxHs,boxIsSolid,point,&distPt);
+        simReal dist=geom_getBoxPointDistance(C7Vector(boxQ,boxPos),boxHs,boxIsSolid,point,&distPt);
         D.pushOutData(CScriptFunctionDataItem(dist));
-        std::vector<float> p1(distPt.data,distPt.data+3);
+        std::vector<simReal> p1(distPt.data,distPt.data+3);
         D.pushOutData(CScriptFunctionDataItem(p1));
     }
     D.writeDataToStack(p->stackID);
@@ -1390,12 +1386,12 @@ void LUA_GETBOXPOINTDISTANCE_CALLBACK(SScriptCallBack* p)
 
 const int inArgs_GETTRIANGLETRIANGLEDISTANCE[]={
     6,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
 };
 
 void LUA_GETTRIANGLETRIANGLEDISTANCE_CALLBACK(SScriptCallBack* p)
@@ -1404,18 +1400,18 @@ void LUA_GETTRIANGLETRIANGLEDISTANCE_CALLBACK(SScriptCallBack* p)
     if (D.readDataFromStack(p->stackID,inArgs_GETTRIANGLETRIANGLEDISTANCE,inArgs_GETTRIANGLETRIANGLEDISTANCE[0],LUA_GETTRIANGLETRIANGLEDISTANCE_COMMAND))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
-        C3Vector tpa1(&(inData->at(0).floatData[0]));
-        C3Vector tpa2(&(inData->at(1).floatData[0]));
-        C3Vector tpa3(&(inData->at(2).floatData[0]));
-        C3Vector tpb1(&(inData->at(3).floatData[0]));
-        C3Vector tpb2(&(inData->at(4).floatData[0]));
-        C3Vector tpb3(&(inData->at(5).floatData[0]));
+        C3Vector tpa1(&(inData->at(0).realData[0]));
+        C3Vector tpa2(&(inData->at(1).realData[0]));
+        C3Vector tpa3(&(inData->at(2).realData[0]));
+        C3Vector tpb1(&(inData->at(3).realData[0]));
+        C3Vector tpb2(&(inData->at(4).realData[0]));
+        C3Vector tpb3(&(inData->at(5).realData[0]));
         C3Vector distPt1,distPt2;
-        float dist=geom_getTriangleTriangleDistance(tpa1,tpa2-tpa1,tpa3-tpa1,tpb1,tpb2-tpb1,tpb3-tpb1,&distPt1,&distPt2);
+        simReal dist=geom_getTriangleTriangleDistance(tpa1,tpa2-tpa1,tpa3-tpa1,tpb1,tpb2-tpb1,tpb3-tpb1,&distPt1,&distPt2);
         D.pushOutData(CScriptFunctionDataItem(dist));
-        std::vector<float> p1(distPt1.data,distPt1.data+3);
+        std::vector<simReal> p1(distPt1.data,distPt1.data+3);
         D.pushOutData(CScriptFunctionDataItem(p1));
-        std::vector<float> p2(distPt2.data,distPt2.data+3);
+        std::vector<simReal> p2(distPt2.data,distPt2.data+3);
         D.pushOutData(CScriptFunctionDataItem(p2));
     }
     D.writeDataToStack(p->stackID);
@@ -1430,11 +1426,11 @@ void LUA_GETTRIANGLETRIANGLEDISTANCE_CALLBACK(SScriptCallBack* p)
 
 const int inArgs_GETTRIANGLESEGMENTDISTANCE[]={
     5,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
 };
 
 void LUA_GETTRIANGLESEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
@@ -1443,17 +1439,17 @@ void LUA_GETTRIANGLESEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
     if (D.readDataFromStack(p->stackID,inArgs_GETTRIANGLESEGMENTDISTANCE,inArgs_GETTRIANGLESEGMENTDISTANCE[0],LUA_GETTRIANGLESEGMENTDISTANCE_COMMAND))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
-        C3Vector tp1(&(inData->at(0).floatData[0]));
-        C3Vector tp2(&(inData->at(1).floatData[0]));
-        C3Vector tp3(&(inData->at(2).floatData[0]));
-        C3Vector segP1(&(inData->at(3).floatData[0]));
-        C3Vector segP2(&(inData->at(4).floatData[0]));
+        C3Vector tp1(&(inData->at(0).realData[0]));
+        C3Vector tp2(&(inData->at(1).realData[0]));
+        C3Vector tp3(&(inData->at(2).realData[0]));
+        C3Vector segP1(&(inData->at(3).realData[0]));
+        C3Vector segP2(&(inData->at(4).realData[0]));
         C3Vector distPt1,distPt2;
-        float dist=geom_getTriangleSegmentDistance(tp1,tp2-tp1,tp3-tp1,segP1,segP2-segP1,&distPt1,&distPt2);
+        simReal dist=geom_getTriangleSegmentDistance(tp1,tp2-tp1,tp3-tp1,segP1,segP2-segP1,&distPt1,&distPt2);
         D.pushOutData(CScriptFunctionDataItem(dist));
-        std::vector<float> p1(distPt1.data,distPt1.data+3);
+        std::vector<simReal> p1(distPt1.data,distPt1.data+3);
         D.pushOutData(CScriptFunctionDataItem(p1));
-        std::vector<float> p2(distPt2.data,distPt2.data+3);
+        std::vector<simReal> p2(distPt2.data,distPt2.data+3);
         D.pushOutData(CScriptFunctionDataItem(p2));
     }
     D.writeDataToStack(p->stackID);
@@ -1468,10 +1464,10 @@ void LUA_GETTRIANGLESEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
 
 const int inArgs_GETTRIANGLEPOINTDISTANCE[]={
     4,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
 };
 
 void LUA_GETTRIANGLEPOINTDISTANCE_CALLBACK(SScriptCallBack* p)
@@ -1480,14 +1476,14 @@ void LUA_GETTRIANGLEPOINTDISTANCE_CALLBACK(SScriptCallBack* p)
     if (D.readDataFromStack(p->stackID,inArgs_GETTRIANGLEPOINTDISTANCE,inArgs_GETTRIANGLEPOINTDISTANCE[0],LUA_GETTRIANGLEPOINTDISTANCE_COMMAND))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
-        C3Vector tp1(&(inData->at(0).floatData[0]));
-        C3Vector tp2(&(inData->at(1).floatData[0]));
-        C3Vector tp3(&(inData->at(2).floatData[0]));
-        C3Vector point(&(inData->at(3).floatData[0]));
+        C3Vector tp1(&(inData->at(0).realData[0]));
+        C3Vector tp2(&(inData->at(1).realData[0]));
+        C3Vector tp3(&(inData->at(2).realData[0]));
+        C3Vector point(&(inData->at(3).realData[0]));
         C3Vector distPt;
-        float dist=geom_getTrianglePointDistance(tp1,tp2-tp1,tp3-tp1,point,&distPt);
+        simReal dist=geom_getTrianglePointDistance(tp1,tp2-tp1,tp3-tp1,point,&distPt);
         D.pushOutData(CScriptFunctionDataItem(dist));
-        std::vector<float> p1(distPt.data,distPt.data+3);
+        std::vector<simReal> p1(distPt.data,distPt.data+3);
         D.pushOutData(CScriptFunctionDataItem(p1));
     }
     D.writeDataToStack(p->stackID);
@@ -1502,10 +1498,10 @@ void LUA_GETTRIANGLEPOINTDISTANCE_CALLBACK(SScriptCallBack* p)
 
 const int inArgs_GETSEGMENTSEGMENTDISTANCE[]={
     4,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
 };
 
 void LUA_GETSEGMENTSEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
@@ -1514,16 +1510,16 @@ void LUA_GETSEGMENTSEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
     if (D.readDataFromStack(p->stackID,inArgs_GETSEGMENTSEGMENTDISTANCE,inArgs_GETSEGMENTSEGMENTDISTANCE[0],LUA_GETSEGMENTSEGMENTDISTANCE_COMMAND))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
-        C3Vector segaP1(&(inData->at(0).floatData[0]));
-        C3Vector segaP2(&(inData->at(1).floatData[0]));
-        C3Vector segbP1(&(inData->at(2).floatData[0]));
-        C3Vector segbP2(&(inData->at(3).floatData[0]));
+        C3Vector segaP1(&(inData->at(0).realData[0]));
+        C3Vector segaP2(&(inData->at(1).realData[0]));
+        C3Vector segbP1(&(inData->at(2).realData[0]));
+        C3Vector segbP2(&(inData->at(3).realData[0]));
         C3Vector distPt1,distPt2;
-        float dist=geom_getSegmentSegmentDistance(segaP1,segaP2-segaP1,segbP1,segbP2-segbP1,&distPt1,&distPt2);
+        simReal dist=geom_getSegmentSegmentDistance(segaP1,segaP2-segaP1,segbP1,segbP2-segbP1,&distPt1,&distPt2);
         D.pushOutData(CScriptFunctionDataItem(dist));
-        std::vector<float> p1(distPt1.data,distPt1.data+3);
+        std::vector<simReal> p1(distPt1.data,distPt1.data+3);
         D.pushOutData(CScriptFunctionDataItem(p1));
-        std::vector<float> p2(distPt2.data,distPt2.data+3);
+        std::vector<simReal> p2(distPt2.data,distPt2.data+3);
         D.pushOutData(CScriptFunctionDataItem(p2));
     }
     D.writeDataToStack(p->stackID);
@@ -1538,9 +1534,9 @@ void LUA_GETSEGMENTSEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
 
 const int inArgs_GETSEGMENTPOINTDISTANCE[]={
     3,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
 };
 
 void LUA_GETSEGMENTPOINTDISTANCE_CALLBACK(SScriptCallBack* p)
@@ -1549,13 +1545,13 @@ void LUA_GETSEGMENTPOINTDISTANCE_CALLBACK(SScriptCallBack* p)
     if (D.readDataFromStack(p->stackID,inArgs_GETSEGMENTPOINTDISTANCE,inArgs_GETSEGMENTPOINTDISTANCE[0],LUA_GETSEGMENTPOINTDISTANCE_COMMAND))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
-        C3Vector segPt1(&(inData->at(0).floatData[0]));
-        C3Vector segPt2(&(inData->at(1).floatData[0]));
-        C3Vector point(&(inData->at(3).floatData[0]));
+        C3Vector segPt1(&(inData->at(0).realData[0]));
+        C3Vector segPt2(&(inData->at(1).realData[0]));
+        C3Vector point(&(inData->at(3).realData[0]));
         C3Vector distPt;
-        float dist=geom_getSegmentPointDistance(segPt1,segPt2-segPt1,point,&distPt);
+        simReal dist=geom_getSegmentPointDistance(segPt1,segPt2-segPt1,point,&distPt);
         D.pushOutData(CScriptFunctionDataItem(dist));
-        std::vector<float> p1(distPt.data,distPt.data+3);
+        std::vector<simReal> p1(distPt.data,distPt.data+3);
         D.pushOutData(CScriptFunctionDataItem(p1));
     }
     D.writeDataToStack(p->stackID);
@@ -1570,11 +1566,11 @@ void LUA_GETSEGMENTPOINTDISTANCE_CALLBACK(SScriptCallBack* p)
 
 const int inArgs_CREATEMESH[]={
     6,
-    sim_script_arg_float|sim_lua_arg_table,0,
+    sim_script_arg_real|sim_lua_arg_table,0,
     sim_script_arg_int32|sim_lua_arg_table,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
-    sim_script_arg_float,0,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
+    sim_script_arg_real,0,
     sim_script_arg_int32,0,
 };
 
@@ -1584,27 +1580,27 @@ void LUA_CREATEMESH_CALLBACK(SScriptCallBack* p)
     if (D.readDataFromStack(p->stackID,inArgs_CREATEMESH,inArgs_CREATEMESH[0]-4,LUA_CREATEMESH_COMMAND))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
-        float maxTriS=0.3f;
+        simReal maxTriS=simReal(0.3);
         C3Vector pos;
         pos.clear();
-        if ( (inData->size()>=3)&&(inData->at(2).floatData.size()>=3) )
-            pos.set(&inData->at(2).floatData[0]);
+        if ( (inData->size()>=3)&&(inData->at(2).realData.size()>=3) )
+            pos.set(&inData->at(2).realData[0]);
         C4Vector quat;
         quat.setIdentity();
-        if ( (inData->size()>=4)&&(inData->at(3).floatData.size()>=4) )
+        if ( (inData->size()>=4)&&(inData->at(3).realData.size()>=4) )
         {
-            quat(0)=inData->at(3).floatData[3];
-            quat(1)=inData->at(3).floatData[0];
-            quat(2)=inData->at(3).floatData[1];
-            quat(3)=inData->at(3).floatData[2];
+            quat(0)=inData->at(3).realData[3];
+            quat(1)=inData->at(3).realData[0];
+            quat(2)=inData->at(3).realData[1];
+            quat(3)=inData->at(3).realData[2];
         }
         C7Vector tr(quat,pos);
-        if ( (inData->size()>=5)&&(inData->at(4).floatData.size()==1) )
-            maxTriS=inData->at(4).floatData[0];
+        if ( (inData->size()>=5)&&(inData->at(4).realData.size()==1) )
+            maxTriS=inData->at(4).realData[0];
         int maxTri=8;
         if ( (inData->size()>=6)&&(inData->at(5).int32Data.size()==1) )
             maxTri=inData->at(5).int32Data[0];
-        CObbStruct* obbStruct=geom_createMesh(&inData->at(0).floatData[0],inData->at(0).floatData.size(),&inData->at(1).int32Data[0],inData->at(1).int32Data.size(),&tr,maxTriS,maxTri);
+        CObbStruct* obbStruct=geom_createMesh(&inData->at(0).realData[0],int(inData->at(0).realData.size()),&inData->at(1).int32Data[0],int(inData->at(1).int32Data.size()),&tr,maxTriS,maxTri);
         _meshData[_nextMeshDataHandle]=obbStruct;
         D.pushOutData(CScriptFunctionDataItem(_nextMeshDataHandle));
         _nextMeshDataHandle++;
@@ -1686,7 +1682,7 @@ void LUA_COPYMESH_CALLBACK(SScriptCallBack* p)
 const int inArgs_SCALEMESH[]={
     2,
     sim_script_arg_int32,0,
-    sim_script_arg_float,0,
+    sim_script_arg_real,0,
 };
 
 void LUA_SCALEMESH_CALLBACK(SScriptCallBack* p)
@@ -1698,7 +1694,7 @@ void LUA_SCALEMESH_CALLBACK(SScriptCallBack* p)
         int h=inData->at(0).int32Data[0];
         std::map<int,CObbStruct*>::iterator it=_meshData.find(h);
         if (it!=_meshData.end())
-            geom_scaleMesh(it->second,inData->at(1).floatData[0]);
+            geom_scaleMesh(it->second,inData->at(1).realData[0]);
         else
             simSetLastError(LUA_SCALEMESH_COMMAND,"Invalid handle.");
     }
@@ -1775,10 +1771,10 @@ void LUA_CREATEMESHFROMSERIALIZATIONDATA_CALLBACK(SScriptCallBack* p)
 
 const int inArgs_CREATEOCTREEFROMPOINTS[]={
     6,
-    sim_script_arg_float|sim_lua_arg_table,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
-    sim_script_arg_float,0,
+    sim_script_arg_real|sim_lua_arg_table,0,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
+    sim_script_arg_real,0,
     sim_script_arg_int32|sim_lua_arg_table,3,
     sim_script_arg_int32,0,
 };
@@ -1791,21 +1787,21 @@ void LUA_CREATEOCTREEFROMPOINTS_CALLBACK(SScriptCallBack* p)
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         C3Vector pos;
         pos.clear();
-        if ( (inData->size()>=2)&&(inData->at(1).floatData.size()>=3) )
-            pos.set(&inData->at(1).floatData[0]);
+        if ( (inData->size()>=2)&&(inData->at(1).realData.size()>=3) )
+            pos.set(&inData->at(1).realData[0]);
         C4Vector quat;
         quat.setIdentity();
-        if ( (inData->size()>=3)&&(inData->at(2).floatData.size()>=4) )
+        if ( (inData->size()>=3)&&(inData->at(2).realData.size()>=4) )
         {
-            quat(0)=inData->at(2).floatData[3];
-            quat(1)=inData->at(2).floatData[0];
-            quat(2)=inData->at(2).floatData[1];
-            quat(3)=inData->at(2).floatData[2];
+            quat(0)=inData->at(2).realData[3];
+            quat(1)=inData->at(2).realData[0];
+            quat(2)=inData->at(2).realData[1];
+            quat(3)=inData->at(2).realData[2];
         }
         C7Vector tr(quat,pos);
-        float cellS=0.05f;
-        if ( (inData->size()>=4)&&(inData->at(3).floatData.size()==1) )
-            cellS=inData->at(3).floatData[0];
+        simReal cellS=simReal(0.05);
+        if ( (inData->size()>=4)&&(inData->at(3).realData.size()==1) )
+            cellS=inData->at(3).realData[0];
         unsigned char rgb[3]={0,0,0};
         if ( (inData->size()>=5)&&(inData->at(4).int32Data.size()>=3) )
         {
@@ -1817,7 +1813,7 @@ void LUA_CREATEOCTREEFROMPOINTS_CALLBACK(SScriptCallBack* p)
         if ( (inData->size()>=6)&&(inData->at(5).int32Data.size()==1) )
             usrdata=inData->at(5).int32Data[0];
 
-        COcStruct* ocStruct=geom_createOctreeFromPoints(&inData->at(0).floatData[0],inData->at(0).floatData.size()/3,&tr,cellS,rgb,(unsigned int)usrdata);
+        COcStruct* ocStruct=geom_createOctreeFromPoints(&inData->at(0).realData[0],inData->at(0).realData.size()/3,&tr,cellS,rgb,(unsigned int)usrdata);
         _octreeData[_nextOctreeDataHandle]=ocStruct;
         D.pushOutData(CScriptFunctionDataItem(_nextOctreeDataHandle));
         _nextOctreeDataHandle++;
@@ -1834,10 +1830,10 @@ void LUA_CREATEOCTREEFROMPOINTS_CALLBACK(SScriptCallBack* p)
 
 const int inArgs_CREATEOCTREEFROMCOLORPOINTS[]={
     6,
-    sim_script_arg_float|sim_lua_arg_table,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
-    sim_script_arg_float,0,
+    sim_script_arg_real|sim_lua_arg_table,0,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
+    sim_script_arg_real,0,
     sim_script_arg_int32|sim_lua_arg_table,0,
     sim_script_arg_int32|sim_lua_arg_table,0,
 };
@@ -1850,24 +1846,24 @@ void LUA_CREATEOCTREEFROMCOLORPOINTS_CALLBACK(SScriptCallBack* p)
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         C3Vector pos;
         pos.clear();
-        if ( (inData->size()>=2)&&(inData->at(1).floatData.size()>=3) )
-            pos.set(&inData->at(1).floatData[0]);
+        if ( (inData->size()>=2)&&(inData->at(1).realData.size()>=3) )
+            pos.set(&inData->at(1).realData[0]);
         C4Vector quat;
         quat.setIdentity();
-        if ( (inData->size()>=3)&&(inData->at(2).floatData.size()>=4) )
+        if ( (inData->size()>=3)&&(inData->at(2).realData.size()>=4) )
         {
-            quat(0)=inData->at(2).floatData[3];
-            quat(1)=inData->at(2).floatData[0];
-            quat(2)=inData->at(2).floatData[1];
-            quat(3)=inData->at(2).floatData[2];
+            quat(0)=inData->at(2).realData[3];
+            quat(1)=inData->at(2).realData[0];
+            quat(2)=inData->at(2).realData[1];
+            quat(3)=inData->at(2).realData[2];
         }
         C7Vector tr(quat,pos);
-        float cellS=0.05f;
-        if ( (inData->size()>=4)&&(inData->at(3).floatData.size()==1) )
-            cellS=inData->at(3).floatData[0];
+        simReal cellS=simReal(0.05);
+        if ( (inData->size()>=4)&&(inData->at(3).realData.size()==1) )
+            cellS=inData->at(3).realData[0];
         unsigned char* rgb=nullptr;
         std::vector<unsigned char> _rgb;
-        if ( (inData->size()>=5)&&(inData->at(4).int32Data.size()>=inData->at(0).floatData.size()) )
+        if ( (inData->size()>=5)&&(inData->at(4).int32Data.size()>=inData->at(0).realData.size()) )
         {
             _rgb.resize(inData->at(4).int32Data.size());
             for (size_t i=0;i<inData->at(4).int32Data.size();i++)
@@ -1876,14 +1872,14 @@ void LUA_CREATEOCTREEFROMCOLORPOINTS_CALLBACK(SScriptCallBack* p)
         }
         unsigned int* usrdata=nullptr;
         std::vector<unsigned int> _usrdata;
-        if ( (inData->size()>=6)&&(inData->at(5).int32Data.size()>=inData->at(0).floatData.size()/3) )
+        if ( (inData->size()>=6)&&(inData->at(5).int32Data.size()>=inData->at(0).realData.size()/3) )
         {
             _usrdata.resize(inData->at(5).int32Data.size());
             for (size_t i=0;i<inData->at(5).int32Data.size();i++)
                 _usrdata[i]=(unsigned int)inData->at(5).int32Data[i];
             usrdata=&_usrdata[0];
         }
-        COcStruct* ocStruct=geom_createOctreeFromColorPoints(&inData->at(0).floatData[0],inData->at(0).floatData.size()/3,&tr,cellS,rgb,usrdata);
+        COcStruct* ocStruct=geom_createOctreeFromColorPoints(&inData->at(0).realData[0],inData->at(0).realData.size()/3,&tr,cellS,rgb,usrdata);
         _octreeData[_nextOctreeDataHandle]=ocStruct;
         D.pushOutData(CScriptFunctionDataItem(_nextOctreeDataHandle));
         _nextOctreeDataHandle++;
@@ -1901,11 +1897,11 @@ void LUA_CREATEOCTREEFROMCOLORPOINTS_CALLBACK(SScriptCallBack* p)
 const int inArgs_CREATEOCTREEFROMMESH[]={
     8,
     sim_script_arg_int32,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
-    sim_script_arg_float,0,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
+    sim_script_arg_real,0,
     sim_script_arg_int32|sim_lua_arg_table,3,
     sim_script_arg_int32,0,
 };
@@ -1920,25 +1916,25 @@ void LUA_CREATEOCTREEFROMMESH_CALLBACK(SScriptCallBack* p)
         std::map<int,CObbStruct*>::iterator it=_meshData.find(h);
         if (it!=_meshData.end())
         {
-            C3Vector meshPos(&(inData->at(1).floatData[0]));
-            C4Vector meshQ(inData->at(2).floatData[3],inData->at(2).floatData[0],inData->at(2).floatData[1],inData->at(2).floatData[2]);
+            C3Vector meshPos(&(inData->at(1).realData[0]));
+            C4Vector meshQ(inData->at(2).realData[3],inData->at(2).realData[0],inData->at(2).realData[1],inData->at(2).realData[2]);
             C3Vector pos;
             pos.clear();
-            if ( (inData->size()>=4)&&(inData->at(3).floatData.size()>=3) )
-                pos.set(&inData->at(3).floatData[0]);
+            if ( (inData->size()>=4)&&(inData->at(3).realData.size()>=3) )
+                pos.set(&inData->at(3).realData[0]);
             C4Vector quat;
             quat.setIdentity();
-            if ( (inData->size()>=5)&&(inData->at(4).floatData.size()>=4) )
+            if ( (inData->size()>=5)&&(inData->at(4).realData.size()>=4) )
             {
-                quat(0)=inData->at(4).floatData[3];
-                quat(1)=inData->at(4).floatData[0];
-                quat(2)=inData->at(4).floatData[1];
-                quat(3)=inData->at(4).floatData[2];
+                quat(0)=inData->at(4).realData[3];
+                quat(1)=inData->at(4).realData[0];
+                quat(2)=inData->at(4).realData[1];
+                quat(3)=inData->at(4).realData[2];
             }
             C7Vector tr(quat,pos);
-            float cellS=0.05f;
-            if ( (inData->size()>=6)&&(inData->at(5).floatData.size()==1) )
-                cellS=inData->at(5).floatData[0];
+            simReal cellS=simReal(0.05);
+            if ( (inData->size()>=6)&&(inData->at(5).realData.size()==1) )
+                cellS=inData->at(5).realData[0];
             unsigned char rgb[3]={0,0,0};
             if ( (inData->size()>=7)&&(inData->at(6).int32Data.size()>=3) )
             {
@@ -1970,11 +1966,11 @@ void LUA_CREATEOCTREEFROMMESH_CALLBACK(SScriptCallBack* p)
 const int inArgs_CREATEOCTREEFROMOCTREE[]={
     8,
     sim_script_arg_int32,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
-    sim_script_arg_float,0,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
+    sim_script_arg_real,0,
     sim_script_arg_int32|sim_lua_arg_table,3,
     sim_script_arg_int32,0,
 };
@@ -1989,25 +1985,25 @@ void LUA_CREATEOCTREEFROMOCTREE_CALLBACK(SScriptCallBack* p)
         std::map<int,COcStruct*>::iterator it=_octreeData.find(h);
         if (it!=_octreeData.end())
         {
-            C3Vector ocPos(&(inData->at(1).floatData[0]));
-            C4Vector ocQ(inData->at(2).floatData[3],inData->at(2).floatData[0],inData->at(2).floatData[1],inData->at(2).floatData[2]);
+            C3Vector ocPos(&(inData->at(1).realData[0]));
+            C4Vector ocQ(inData->at(2).realData[3],inData->at(2).realData[0],inData->at(2).realData[1],inData->at(2).realData[2]);
             C3Vector pos;
             pos.clear();
-            if ( (inData->size()>=4)&&(inData->at(3).floatData.size()>=3) )
-                pos.set(&inData->at(3).floatData[0]);
+            if ( (inData->size()>=4)&&(inData->at(3).realData.size()>=3) )
+                pos.set(&inData->at(3).realData[0]);
             C4Vector quat;
             quat.setIdentity();
-            if ( (inData->size()>=5)&&(inData->at(4).floatData.size()>=4) )
+            if ( (inData->size()>=5)&&(inData->at(4).realData.size()>=4) )
             {
-                quat(0)=inData->at(4).floatData[3];
-                quat(1)=inData->at(4).floatData[0];
-                quat(2)=inData->at(4).floatData[1];
-                quat(3)=inData->at(4).floatData[2];
+                quat(0)=inData->at(4).realData[3];
+                quat(1)=inData->at(4).realData[0];
+                quat(2)=inData->at(4).realData[1];
+                quat(3)=inData->at(4).realData[2];
             }
             C7Vector tr(quat,pos);
-            float cellS=0.05f;
-            if ( (inData->size()>=6)&&(inData->at(5).floatData.size()==1) )
-                cellS=inData->at(5).floatData[0];
+            simReal cellS=simReal(0.05);
+            if ( (inData->size()>=6)&&(inData->at(5).realData.size()==1) )
+                cellS=inData->at(5).realData[0];
             unsigned char rgb[3]={0,0,0};
             if ( (inData->size()>=7)&&(inData->at(6).int32Data.size()>=3) )
             {
@@ -2103,7 +2099,7 @@ void LUA_COPYOCTREE_CALLBACK(SScriptCallBack* p)
 const int inArgs_SCALEOCTREE[]={
     2,
     sim_script_arg_int32,0,
-    sim_script_arg_float,0,
+    sim_script_arg_real,0,
 };
 
 void LUA_SCALEOCTREE_CALLBACK(SScriptCallBack* p)
@@ -2115,7 +2111,7 @@ void LUA_SCALEOCTREE_CALLBACK(SScriptCallBack* p)
         int h=inData->at(0).int32Data[0];
         std::map<int,COcStruct*>::iterator it=_octreeData.find(h);
         if (it!=_octreeData.end())
-            geom_scaleOctree(it->second,inData->at(1).floatData[0]);
+            geom_scaleOctree(it->second,inData->at(1).realData[0]);
         else
             simSetLastError(LUA_SCALEOCTREE_COMMAND,"Invalid handle.");
     }
@@ -2205,19 +2201,19 @@ void LUA_GETOCTREEVOXELS_CALLBACK(SScriptCallBack* p)
         std::map<int,COcStruct*>::iterator it=_octreeData.find(h);
         if (it!=_octreeData.end())
         {
-            std::vector<float> data;
+            std::vector<simReal> data;
             std::vector<unsigned int> usrData;
             geom_getOctreeVoxelData(it->second,data,&usrData);
-            std::vector<float> pos;
+            std::vector<simReal> pos;
             std::vector<int> rgb;
             for (size_t i=0;i<data.size()/6;i++)
             {
                 pos.push_back(data[6*i+0]);
                 pos.push_back(data[6*i+1]);
                 pos.push_back(data[6*i+2]);
-                rgb.push_back(int(data[6*i+3]*255.1f));
-                rgb.push_back(int(data[6*i+4]*255.1f));
-                rgb.push_back(int(data[6*i+5]*255.1f));
+                rgb.push_back(int(data[6*i+3]*simReal(255.1)));
+                rgb.push_back(int(data[6*i+4]*simReal(255.1)));
+                rgb.push_back(int(data[6*i+5]*simReal(255.1)));
             }
             D.pushOutData(CScriptFunctionDataItem(pos));
             D.pushOutData(CScriptFunctionDataItem(rgb));
@@ -2242,9 +2238,9 @@ void LUA_GETOCTREEVOXELS_CALLBACK(SScriptCallBack* p)
 
 const int inArgs_GETTRANSFORMEDPOINTS[]={
     3,
-    sim_script_arg_float|sim_lua_arg_table,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
+    sim_script_arg_real|sim_lua_arg_table,0,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
 };
 
 void LUA_GETTRANSFORMEDPOINTS_CALLBACK(SScriptCallBack* p)
@@ -2253,14 +2249,14 @@ void LUA_GETTRANSFORMEDPOINTS_CALLBACK(SScriptCallBack* p)
     if (D.readDataFromStack(p->stackID,inArgs_GETTRANSFORMEDPOINTS,inArgs_GETTRANSFORMEDPOINTS[0],LUA_GETTRANSFORMEDPOINTS_COMMAND))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
-        std::vector<float> outData;
-        outData.resize(inData->at(0).floatData.size());
-        C3Vector pos(&(inData->at(1).floatData[0]));
-        C4Vector q(inData->at(2).floatData[3],inData->at(2).floatData[0],inData->at(2).floatData[1],inData->at(2).floatData[2]);
+        std::vector<simReal> outData;
+        outData.resize(inData->at(0).realData.size());
+        C3Vector pos(&(inData->at(1).realData[0]));
+        C4Vector q(inData->at(2).realData[3],inData->at(2).realData[0],inData->at(2).realData[1],inData->at(2).realData[2]);
         C7Vector tr(q,pos);
-        for (size_t i=0;i<inData->at(0).floatData.size()/3;i++)
+        for (size_t i=0;i<inData->at(0).realData.size()/3;i++)
         {
-            C3Vector v(&inData->at(0).floatData[0]+3*i);
+            C3Vector v(&inData->at(0).realData[0]+3*i);
             v*=tr;
             outData[3*i+0]=v(0);
             outData[3*i+1]=v(1);
@@ -2281,13 +2277,13 @@ void LUA_GETTRANSFORMEDPOINTS_CALLBACK(SScriptCallBack* p)
 
 const int inArgs_CREATEPTCLOUDFROMPOINTS[]={
     7,
-    sim_script_arg_float|sim_lua_arg_table,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
-    sim_script_arg_float,0, // cell size
+    sim_script_arg_real|sim_lua_arg_table,0,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
+    sim_script_arg_real,0, // cell size
     sim_script_arg_int32,0, // max points in cell
     sim_script_arg_int32|sim_lua_arg_table,3, // color
-    sim_script_arg_float,0, // proximity tolerance
+    sim_script_arg_real,0, // proximity tolerance
 };
 
 void LUA_CREATEPTCLOUDFROMPOINTS_CALLBACK(SScriptCallBack* p)
@@ -2298,21 +2294,21 @@ void LUA_CREATEPTCLOUDFROMPOINTS_CALLBACK(SScriptCallBack* p)
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         C3Vector pos;
         pos.clear();
-        if ( (inData->size()>=2)&&(inData->at(1).floatData.size()>=3) )
-            pos.set(&inData->at(1).floatData[0]);
+        if ( (inData->size()>=2)&&(inData->at(1).realData.size()>=3) )
+            pos.set(&inData->at(1).realData[0]);
         C4Vector quat;
         quat.setIdentity();
-        if ( (inData->size()>=3)&&(inData->at(2).floatData.size()>=4) )
+        if ( (inData->size()>=3)&&(inData->at(2).realData.size()>=4) )
         {
-            quat(0)=inData->at(2).floatData[3];
-            quat(1)=inData->at(2).floatData[0];
-            quat(2)=inData->at(2).floatData[1];
-            quat(3)=inData->at(2).floatData[2];
+            quat(0)=inData->at(2).realData[3];
+            quat(1)=inData->at(2).realData[0];
+            quat(2)=inData->at(2).realData[1];
+            quat(3)=inData->at(2).realData[2];
         }
         C7Vector tr(quat,pos);
-        float cellS=0.05f;
-        if ( (inData->size()>=4)&&(inData->at(3).floatData.size()==1) )
-            cellS=inData->at(3).floatData[0];
+        simReal cellS=simReal(0.05);
+        if ( (inData->size()>=4)&&(inData->at(3).realData.size()==1) )
+            cellS=inData->at(3).realData[0];
         int maxPts=20;
         if ( (inData->size()>=5)&&(inData->at(4).int32Data.size()==1) )
             maxPts=inData->at(4).int32Data[0];
@@ -2323,10 +2319,10 @@ void LUA_CREATEPTCLOUDFROMPOINTS_CALLBACK(SScriptCallBack* p)
             rgb[1]=(unsigned char)inData->at(5).int32Data[1];
             rgb[2]=(unsigned char)inData->at(5).int32Data[2];
         }
-        float proxTol=0.005f;
-        if ( (inData->size()>=7)&&(inData->at(6).floatData.size()==1) )
-            proxTol=inData->at(6).floatData[0];
-        CPcStruct* pcStruct=geom_createPtcloudFromPoints(&inData->at(0).floatData[0],inData->at(0).floatData.size()/3,&tr,cellS,maxPts,rgb,proxTol);
+        simReal proxTol=simReal(0.005);
+        if ( (inData->size()>=7)&&(inData->at(6).realData.size()==1) )
+            proxTol=inData->at(6).realData[0];
+        CPcStruct* pcStruct=geom_createPtcloudFromPoints(&inData->at(0).realData[0],inData->at(0).realData.size()/3,&tr,cellS,maxPts,rgb,proxTol);
         _ptcloudData[_nextPtcloudDataHandle]=pcStruct;
         D.pushOutData(CScriptFunctionDataItem(_nextPtcloudDataHandle));
         _nextPtcloudDataHandle++;
@@ -2343,13 +2339,13 @@ void LUA_CREATEPTCLOUDFROMPOINTS_CALLBACK(SScriptCallBack* p)
 
 const int inArgs_CREATEPTCLOUDFROMCOLORPOINTS[]={
     7,
-    sim_script_arg_float|sim_lua_arg_table,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
-    sim_script_arg_float,0, // cell size
+    sim_script_arg_real|sim_lua_arg_table,0,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
+    sim_script_arg_real,0, // cell size
     sim_script_arg_int32,0, // max points in cell
     sim_script_arg_int32|sim_lua_arg_table,0, // color
-    sim_script_arg_float,0, // proximity tolerance
+    sim_script_arg_real,0, // proximity tolerance
 };
 
 void LUA_CREATEPTCLOUDFROMCOLORPOINTS_CALLBACK(SScriptCallBack* p)
@@ -2360,37 +2356,37 @@ void LUA_CREATEPTCLOUDFROMCOLORPOINTS_CALLBACK(SScriptCallBack* p)
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         C3Vector pos;
         pos.clear();
-        if ( (inData->size()>=2)&&(inData->at(1).floatData.size()>=3) )
-            pos.set(&inData->at(1).floatData[0]);
+        if ( (inData->size()>=2)&&(inData->at(1).realData.size()>=3) )
+            pos.set(&inData->at(1).realData[0]);
         C4Vector quat;
         quat.setIdentity();
-        if ( (inData->size()>=3)&&(inData->at(2).floatData.size()>=4) )
+        if ( (inData->size()>=3)&&(inData->at(2).realData.size()>=4) )
         {
-            quat(0)=inData->at(2).floatData[3];
-            quat(1)=inData->at(2).floatData[0];
-            quat(2)=inData->at(2).floatData[1];
-            quat(3)=inData->at(2).floatData[2];
+            quat(0)=inData->at(2).realData[3];
+            quat(1)=inData->at(2).realData[0];
+            quat(2)=inData->at(2).realData[1];
+            quat(3)=inData->at(2).realData[2];
         }
         C7Vector tr(quat,pos);
-        float cellS=0.05f;
-        if ( (inData->size()>=4)&&(inData->at(3).floatData.size()==1) )
-            cellS=inData->at(3).floatData[0];
+        simReal cellS=simReal(0.05);
+        if ( (inData->size()>=4)&&(inData->at(3).realData.size()==1) )
+            cellS=inData->at(3).realData[0];
         int maxPts=20;
         if ( (inData->size()>=5)&&(inData->at(4).int32Data.size()==1) )
             maxPts=inData->at(4).int32Data[0];
         unsigned char* rgb=nullptr;
         std::vector<unsigned char> _rgb;
-        if ( (inData->size()>=6)&&(inData->at(5).int32Data.size()>=inData->at(0).floatData.size()) )
+        if ( (inData->size()>=6)&&(inData->at(5).int32Data.size()>=inData->at(0).realData.size()) )
         {
             _rgb.resize(inData->at(5).int32Data.size());
             for (size_t i=0;i<inData->at(5).int32Data.size();i++)
                 _rgb[i]=(unsigned char)inData->at(5).int32Data[i];
             rgb=&_rgb[0];
         }
-        float proxTol=0.005f;
-        if ( (inData->size()>=7)&&(inData->at(6).floatData.size()==1) )
-            proxTol=inData->at(6).floatData[0];
-        CPcStruct* pcStruct=geom_createPtcloudFromColorPoints(&inData->at(0).floatData[0],inData->at(0).floatData.size()/3,&tr,cellS,maxPts,rgb,proxTol);
+        simReal proxTol=simReal(0.005);
+        if ( (inData->size()>=7)&&(inData->at(6).realData.size()==1) )
+            proxTol=inData->at(6).realData[0];
+        CPcStruct* pcStruct=geom_createPtcloudFromColorPoints(&inData->at(0).realData[0],inData->at(0).realData.size()/3,&tr,cellS,maxPts,rgb,proxTol);
         _ptcloudData[_nextPtcloudDataHandle]=pcStruct;
         D.pushOutData(CScriptFunctionDataItem(_nextPtcloudDataHandle));
         _nextPtcloudDataHandle++;
@@ -2472,7 +2468,7 @@ void LUA_COPYPTCLOUD_CALLBACK(SScriptCallBack* p)
 const int inArgs_SCALEPTCLOUD[]={
     2,
     sim_script_arg_int32,0,
-    sim_script_arg_float,0,
+    sim_script_arg_real,0,
 };
 
 void LUA_SCALEPTCLOUD_CALLBACK(SScriptCallBack* p)
@@ -2484,7 +2480,7 @@ void LUA_SCALEPTCLOUD_CALLBACK(SScriptCallBack* p)
         int h=inData->at(0).int32Data[0];
         std::map<int,CPcStruct*>::iterator it=_ptcloudData.find(h);
         if (it!=_ptcloudData.end())
-            geom_scalePtcloud(it->second,inData->at(1).floatData[0]);
+            geom_scalePtcloud(it->second,inData->at(1).realData[0]);
         else
             simSetLastError(LUA_SCALEPTCLOUD_COMMAND,"Invalid handle.");
     }
@@ -2562,7 +2558,7 @@ void LUA_CREATEPTCLOUDFROMSERIALIZATIONDATA_CALLBACK(SScriptCallBack* p)
 const int inArgs_GETPTCLOUDPOINTS[]={
     2,
     sim_script_arg_int32,0,
-    sim_script_arg_float,0,
+    sim_script_arg_real,0,
 };
 
 void LUA_GETPTCLOUDPOINTS_CALLBACK(SScriptCallBack* p)
@@ -2575,21 +2571,21 @@ void LUA_GETPTCLOUDPOINTS_CALLBACK(SScriptCallBack* p)
         std::map<int,CPcStruct*>::iterator it=_ptcloudData.find(h);
         if (it!=_ptcloudData.end())
         {
-            float prop=1.0f;
-            if ( (inData->size()>=2)&&(inData->at(1).floatData.size()==1) )
-                prop=inData->at(1).floatData[0];
-            std::vector<float> data;
+            simReal prop=simOne;
+            if ( (inData->size()>=2)&&(inData->at(1).realData.size()==1) )
+                prop=inData->at(1).realData[0];
+            std::vector<simReal> data;
             geom_getPtcloudPoints(it->second,data,prop);
-            std::vector<float> pos;
+            std::vector<simReal> pos;
             std::vector<int> rgb;
             for (size_t i=0;i<data.size()/6;i++)
             {
                 pos.push_back(data[6*i+0]);
                 pos.push_back(data[6*i+1]);
                 pos.push_back(data[6*i+2]);
-                rgb.push_back(int(data[6*i+3]*255.1f));
-                rgb.push_back(int(data[6*i+4]*255.1f));
-                rgb.push_back(int(data[6*i+5]*255.1f));
+                rgb.push_back(int(data[6*i+3]*simReal(255.1)));
+                rgb.push_back(int(data[6*i+4]*simReal(255.1)));
+                rgb.push_back(int(data[6*i+5]*simReal(255.1)));
             }
             D.pushOutData(CScriptFunctionDataItem(pos));
             D.pushOutData(CScriptFunctionDataItem(rgb));
@@ -2610,12 +2606,12 @@ void LUA_GETPTCLOUDPOINTS_CALLBACK(SScriptCallBack* p)
 const int inArgs_GETPTCLOUDPTCLOUDDISTANCE[]={
     8,
     sim_script_arg_int32,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
     sim_script_arg_int32,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
-    sim_script_arg_float,0, // threshold, default is FLT_MAX
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
+    sim_script_arg_real,0, // threshold, default is REAL_MAX
     sim_script_arg_double|sim_lua_arg_table,2, // cachData, default is nil
 };
 
@@ -2631,13 +2627,13 @@ void LUA_GETPTCLOUDPTCLOUDDISTANCE_CALLBACK(SScriptCallBack* p)
         std::map<int,CPcStruct*>::iterator it2=_ptcloudData.find(h2);
         if ( (it1!=_ptcloudData.end())&&(it2!=_ptcloudData.end()) )
         {
-            C3Vector ptcloud1Pos(&(inData->at(1).floatData[0]));
-            C4Vector ptcloud1Q(inData->at(2).floatData[3],inData->at(2).floatData[0],inData->at(2).floatData[1],inData->at(2).floatData[2]);
-            C3Vector ptcloud2Pos(&(inData->at(4).floatData[0]));
-            C4Vector ptcloud2Q(inData->at(5).floatData[3],inData->at(5).floatData[0],inData->at(5).floatData[1],inData->at(5).floatData[2]);
-            float dist=FLT_MAX;
-            if ( (inData->size()>=7)&&(inData->at(6).floatData.size()==1) )
-                dist=inData->at(6).floatData[0];
+            C3Vector ptcloud1Pos(&(inData->at(1).realData[0]));
+            C4Vector ptcloud1Q(inData->at(2).realData[3],inData->at(2).realData[0],inData->at(2).realData[1],inData->at(2).realData[2]);
+            C3Vector ptcloud2Pos(&(inData->at(4).realData[0]));
+            C4Vector ptcloud2Q(inData->at(5).realData[3],inData->at(5).realData[0],inData->at(5).realData[1],inData->at(5).realData[2]);
+            simReal dist=REAL_MAX;
+            if ( (inData->size()>=7)&&(inData->at(6).realData.size()==1) )
+                dist=inData->at(6).realData[0];
             unsigned long long int cache1=0;
             unsigned long long int cache2=0;
             if ( (inData->size()>=8)&&(inData->at(7).doubleData.size()>=2) )
@@ -2650,9 +2646,9 @@ void LUA_GETPTCLOUDPTCLOUDDISTANCE_CALLBACK(SScriptCallBack* p)
             D.pushOutData(CScriptFunctionDataItem(dist));
             if (smaller)
             {
-                std::vector<float> pp1(distPt1.data,distPt1.data+3);
+                std::vector<simReal> pp1(distPt1.data,distPt1.data+3);
                 D.pushOutData(CScriptFunctionDataItem(pp1));
-                std::vector<float> pp2(distPt2.data,distPt2.data+3);
+                std::vector<simReal> pp2(distPt2.data,distPt2.data+3);
                 D.pushOutData(CScriptFunctionDataItem(pp2));
                 std::vector<double> c;
                 c.push_back(cache1);
@@ -2676,12 +2672,12 @@ void LUA_GETPTCLOUDPTCLOUDDISTANCE_CALLBACK(SScriptCallBack* p)
 const int inArgs_GETPTCLOUDTRIANGLEDISTANCE[]={
     8,
     sim_script_arg_int32,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float,0, // threshold, default is FLT_MAX
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real,0, // threshold, default is REAL_MAX
     sim_script_arg_double,0, // cachData, default is nil
 };
 
@@ -2695,14 +2691,14 @@ void LUA_GETPTCLOUDTRIANGLEDISTANCE_CALLBACK(SScriptCallBack* p)
         std::map<int,CPcStruct*>::iterator it=_ptcloudData.find(h);
         if (it!=_ptcloudData.end())
         {
-            C3Vector ptcloudPos(&(inData->at(1).floatData[0]));
-            C4Vector ptcloudQ(inData->at(2).floatData[3],inData->at(2).floatData[0],inData->at(2).floatData[1],inData->at(2).floatData[2]);
-            C3Vector triPt1(&(inData->at(3).floatData[0]));
-            C3Vector triPt2(&(inData->at(4).floatData[0]));
-            C3Vector triPt3(&(inData->at(5).floatData[0]));
-            float dist=FLT_MAX;
-            if ( (inData->size()>=7)&&(inData->at(6).floatData.size()==1) )
-                dist=inData->at(6).floatData[0];
+            C3Vector ptcloudPos(&(inData->at(1).realData[0]));
+            C4Vector ptcloudQ(inData->at(2).realData[3],inData->at(2).realData[0],inData->at(2).realData[1],inData->at(2).realData[2]);
+            C3Vector triPt1(&(inData->at(3).realData[0]));
+            C3Vector triPt2(&(inData->at(4).realData[0]));
+            C3Vector triPt3(&(inData->at(5).realData[0]));
+            simReal dist=REAL_MAX;
+            if ( (inData->size()>=7)&&(inData->at(6).realData.size()==1) )
+                dist=inData->at(6).realData[0];
             unsigned long long int cache=0;
             if ( (inData->size()>=8)&&(inData->at(7).doubleData.size()==1) )
                 cache=(unsigned long long int)inData->at(7).doubleData[0];
@@ -2711,9 +2707,9 @@ void LUA_GETPTCLOUDTRIANGLEDISTANCE_CALLBACK(SScriptCallBack* p)
             D.pushOutData(CScriptFunctionDataItem(dist));
             if (smaller)
             {
-                std::vector<float> pp1(distPt1.data,distPt1.data+3);
+                std::vector<simReal> pp1(distPt1.data,distPt1.data+3);
                 D.pushOutData(CScriptFunctionDataItem(pp1));
-                std::vector<float> pp2(distPt2.data,distPt2.data+3);
+                std::vector<simReal> pp2(distPt2.data,distPt2.data+3);
                 D.pushOutData(CScriptFunctionDataItem(pp2));
                 D.pushOutData(CScriptFunctionDataItem((double)cache));
             }
@@ -2734,11 +2730,11 @@ void LUA_GETPTCLOUDTRIANGLEDISTANCE_CALLBACK(SScriptCallBack* p)
 const int inArgs_GETPTCLOUDSEGMENTDISTANCE[]={
     7,
     sim_script_arg_int32,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float,0, // threshold, default is FLT_MAX
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real,0, // threshold, default is REAL_MAX
     sim_script_arg_double,0, // cachData, default is nil
 };
 
@@ -2752,13 +2748,13 @@ void LUA_GETPTCLOUDSEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
         std::map<int,CPcStruct*>::iterator it=_ptcloudData.find(h);
         if (it!=_ptcloudData.end())
         {
-            C3Vector ptcloudPos(&(inData->at(1).floatData[0]));
-            C4Vector ptcloudQ(inData->at(2).floatData[3],inData->at(2).floatData[0],inData->at(2).floatData[1],inData->at(2).floatData[2]);
-            C3Vector segPt1(&(inData->at(3).floatData[0]));
-            C3Vector segPt2(&(inData->at(4).floatData[0]));
-            float dist=FLT_MAX;
-            if ( (inData->size()>=6)&&(inData->at(5).floatData.size()==1) )
-                dist=inData->at(5).floatData[0];
+            C3Vector ptcloudPos(&(inData->at(1).realData[0]));
+            C4Vector ptcloudQ(inData->at(2).realData[3],inData->at(2).realData[0],inData->at(2).realData[1],inData->at(2).realData[2]);
+            C3Vector segPt1(&(inData->at(3).realData[0]));
+            C3Vector segPt2(&(inData->at(4).realData[0]));
+            simReal dist=REAL_MAX;
+            if ( (inData->size()>=6)&&(inData->at(5).realData.size()==1) )
+                dist=inData->at(5).realData[0];
             unsigned long long int cache=0;
             if ( (inData->size()>=7)&&(inData->at(6).doubleData.size()==1) )
                 cache=(unsigned long long int)inData->at(6).doubleData[0];
@@ -2767,9 +2763,9 @@ void LUA_GETPTCLOUDSEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
             D.pushOutData(CScriptFunctionDataItem(dist));
             if (smaller)
             {
-                std::vector<float> pp1(distPt1.data,distPt1.data+3);
+                std::vector<simReal> pp1(distPt1.data,distPt1.data+3);
                 D.pushOutData(CScriptFunctionDataItem(pp1));
-                std::vector<float> pp2(distPt2.data,distPt2.data+3);
+                std::vector<simReal> pp2(distPt2.data,distPt2.data+3);
                 D.pushOutData(CScriptFunctionDataItem(pp2));
                 D.pushOutData(CScriptFunctionDataItem((double)cache));
             }
@@ -2790,10 +2786,10 @@ void LUA_GETPTCLOUDSEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
 const int inArgs_GETPTCLOUDPOINTDISTANCE[]={
     6,
     sim_script_arg_int32,0,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float|sim_lua_arg_table,4,
-    sim_script_arg_float|sim_lua_arg_table,3,
-    sim_script_arg_float,0, // threshold, default is FLT_MAX
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real|sim_lua_arg_table,4,
+    sim_script_arg_real|sim_lua_arg_table,3,
+    sim_script_arg_real,0, // threshold, default is REAL_MAX
     sim_script_arg_double,0, // cachData, default is nil
 };
 
@@ -2807,12 +2803,12 @@ void LUA_GETPTCLOUDPOINTDISTANCE_CALLBACK(SScriptCallBack* p)
         std::map<int,CPcStruct*>::iterator it=_ptcloudData.find(h);
         if (it!=_ptcloudData.end())
         {
-            C3Vector ptcloudPos(&(inData->at(1).floatData[0]));
-            C4Vector ptcloudQ(inData->at(2).floatData[3],inData->at(2).floatData[0],inData->at(2).floatData[1],inData->at(2).floatData[2]);
-            C3Vector point(&(inData->at(3).floatData[0]));
-            float dist=FLT_MAX;
-            if ( (inData->size()>=5)&&(inData->at(4).floatData.size()==1) )
-                dist=inData->at(4).floatData[0];
+            C3Vector ptcloudPos(&(inData->at(1).realData[0]));
+            C4Vector ptcloudQ(inData->at(2).realData[3],inData->at(2).realData[0],inData->at(2).realData[1],inData->at(2).realData[2]);
+            C3Vector point(&(inData->at(3).realData[0]));
+            simReal dist=REAL_MAX;
+            if ( (inData->size()>=5)&&(inData->at(4).realData.size()==1) )
+                dist=inData->at(4).realData[0];
             unsigned long long int cache=0;
             if ( (inData->size()>=6)&&(inData->at(5).doubleData.size()==1) )
                 cache=(unsigned long long int)inData->at(5).doubleData[0];
@@ -2821,7 +2817,7 @@ void LUA_GETPTCLOUDPOINTDISTANCE_CALLBACK(SScriptCallBack* p)
             D.pushOutData(CScriptFunctionDataItem(dist));
             if (smaller)
             {
-                std::vector<float> pp1(distPt.data,distPt.data+3);
+                std::vector<simReal> pp1(distPt.data,distPt.data+3);
                 D.pushOutData(CScriptFunctionDataItem(pp1));
                 D.pushOutData(CScriptFunctionDataItem((double)cache));
             }
@@ -2861,12 +2857,12 @@ SIM_DLLEXPORT unsigned char simStart(void*,int)
     simLib=loadSimLibrary(temp.c_str());
     if (simLib==NULL)
     {
-        std::cout << "Error, could not find or correctly load the CoppeliaSim library. Cannot start 'Geometric' plugin.\n";
+        outputMsg(sim_verbosity_errors,"simExtGeometric plugin error: could not find or correctly load the CoppeliaSim library. Cannot start 'Geometric' plugin.");
         return(0);
     }
     if (getSimProcAddresses(simLib)==0)
     {
-        std::cout << "Error, could not find all required functions in the CoppeliaSim library. Cannot start 'Geometric' plugin.\n";
+        outputMsg(sim_verbosity_errors,"simExtGeometric plugin error: could not find all required functions in the CoppeliaSim library. Cannot start 'Geometric' plugin.");
         unloadSimLibrary(simLib);
         return(0);
     }
@@ -2885,23 +2881,23 @@ SIM_DLLEXPORT unsigned char simStart(void*,int)
     simRegisterScriptCallbackFunction(LUA_GETOCTREESEGMENTCOLLISION_COMMAND_PLUGIN,strConCat("bool collision,number cache=",LUA_GETOCTREESEGMENTCOLLISION_COMMAND,"(\nnumber octreeHandle,table_3 octreePos,table_4 octreeQuaternion,\ntable_3 segPt1,table_3 segPt2,\nnumber cache=-1)"),LUA_GETOCTREESEGMENTCOLLISION_CALLBACK);
     simRegisterScriptCallbackFunction(LUA_GETOCTREEPOINTCOLLISION_COMMAND_PLUGIN,strConCat("bool collision,number cache=",LUA_GETOCTREEPOINTCOLLISION_COMMAND,"(\nnumber octreeHandle,table_3 octreePos,table_4 octreeQuaternion,\ntable_3 point,number cache=-1)"),LUA_GETOCTREEPOINTCOLLISION_CALLBACK);
 
-    simRegisterScriptCallbackFunction(LUA_GETMESHMESHDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2,table_2 cache=",LUA_GETMESHMESHDISTANCE_COMMAND,"(\nnumber mesh1Handle,table_3 mesh1Pos,table_4 mesh1Quaternion,\nnumber mesh2Handle,table_3 mesh2Pos,table_4 mesh2Quaternion,\nnumber distanceThreshold=FLT_MAX,table_2 cache=nil)"),LUA_GETMESHMESHDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETMESHOCTREEDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2,table_2 cache=",LUA_GETMESHOCTREEDISTANCE_COMMAND,"(\nnumber meshHandle,table_3 meshPos,table_4 meshQuaternion,\nnumber octreeHandle,table_3 octreePos,table_4 octreeQuaternion,\nnumber distanceThreshold=FLT_MAX,table_2 cache=nil)"),LUA_GETMESHOCTREEDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETMESHPTCLOUDDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2,table_2 cache=",LUA_GETMESHPTCLOUDDISTANCE_COMMAND,"(\nnumber meshHandle,table_3 meshPos,table_4 meshQuaternion,\nnumber ptcloudHandle,table_3 ptcloudPos,table_4 ptcloudQuaternion,\nnumber distanceThreshold=FLT_MAX,table_2 cache=nil)"),LUA_GETMESHPTCLOUDDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETMESHTRIANGLEDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2,number cache=",LUA_GETMESHTRIANGLEDISTANCE_COMMAND,"(\nnumber meshHandle,table_3 meshPos,table_4 meshQuaternion,\ntable_3 triPt1,table_3 triPt2,table_3 triPt3,\nnumber distanceThreshold=FLT_MAX,number cache=-1)"),LUA_GETMESHTRIANGLEDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETMESHSEGMENTDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2,number cache=",LUA_GETMESHSEGMENTDISTANCE_COMMAND,"(\nnumber meshHandle,table_3 meshPos,table_4 meshQuaternion,\ntable_3 segmentPt1,table_3 segmentPt2,\nnumber distanceThreshold=FLT_MAX,number cache=-1)"),LUA_GETMESHSEGMENTDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETMESHPOINTDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt,number cache=",LUA_GETMESHPOINTDISTANCE_COMMAND,"(\nnumber meshHandle,table_3 meshPos,table_4 meshQuaternion,\ntable_3 point,number distanceThreshold=FLT_MAX,number cache=-1)"),LUA_GETMESHPOINTDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETMESHMESHDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2,table_2 cache=",LUA_GETMESHMESHDISTANCE_COMMAND,"(\nnumber mesh1Handle,table_3 mesh1Pos,table_4 mesh1Quaternion,\nnumber mesh2Handle,table_3 mesh2Pos,table_4 mesh2Quaternion,\nnumber distanceThreshold=REAL_MAX,table_2 cache=nil)"),LUA_GETMESHMESHDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETMESHOCTREEDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2,table_2 cache=",LUA_GETMESHOCTREEDISTANCE_COMMAND,"(\nnumber meshHandle,table_3 meshPos,table_4 meshQuaternion,\nnumber octreeHandle,table_3 octreePos,table_4 octreeQuaternion,\nnumber distanceThreshold=REAL_MAX,table_2 cache=nil)"),LUA_GETMESHOCTREEDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETMESHPTCLOUDDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2,table_2 cache=",LUA_GETMESHPTCLOUDDISTANCE_COMMAND,"(\nnumber meshHandle,table_3 meshPos,table_4 meshQuaternion,\nnumber ptcloudHandle,table_3 ptcloudPos,table_4 ptcloudQuaternion,\nnumber distanceThreshold=REAL_MAX,table_2 cache=nil)"),LUA_GETMESHPTCLOUDDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETMESHTRIANGLEDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2,number cache=",LUA_GETMESHTRIANGLEDISTANCE_COMMAND,"(\nnumber meshHandle,table_3 meshPos,table_4 meshQuaternion,\ntable_3 triPt1,table_3 triPt2,table_3 triPt3,\nnumber distanceThreshold=REAL_MAX,number cache=-1)"),LUA_GETMESHTRIANGLEDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETMESHSEGMENTDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2,number cache=",LUA_GETMESHSEGMENTDISTANCE_COMMAND,"(\nnumber meshHandle,table_3 meshPos,table_4 meshQuaternion,\ntable_3 segmentPt1,table_3 segmentPt2,\nnumber distanceThreshold=REAL_MAX,number cache=-1)"),LUA_GETMESHSEGMENTDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETMESHPOINTDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt,number cache=",LUA_GETMESHPOINTDISTANCE_COMMAND,"(\nnumber meshHandle,table_3 meshPos,table_4 meshQuaternion,\ntable_3 point,number distanceThreshold=REAL_MAX,number cache=-1)"),LUA_GETMESHPOINTDISTANCE_CALLBACK);
 
-    simRegisterScriptCallbackFunction(LUA_GETOCTREEOCTREEDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2,table_2 cache=",LUA_GETOCTREEOCTREEDISTANCE_COMMAND,"(\nnumber octree1Handle,table_3 octree1Pos,table_4 octree1Quaternion,\nnumber octree2Handle,table_3 octree2Pos,table_4 octree2Quaternion,\nnumber distanceThreshold=FLT_MAX,table_2 cache=nil)"),LUA_GETOCTREEOCTREEDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETOCTREEPTCLOUDDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2,table_2 cache=",LUA_GETOCTREEPTCLOUDDISTANCE_COMMAND,"(\nnumber octreeHandle,table_3 octreePos,table_4 octreeQuaternion,\nnumber ptcloudHandle,table_3 ptcloudPos,table_4 ptcloudQuaternion,\nnumber distanceThreshold=FLT_MAX,table_2 cache=nil)"),LUA_GETOCTREEPTCLOUDDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETOCTREETRIANGLEDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2,number cache=",LUA_GETOCTREETRIANGLEDISTANCE_COMMAND,"(\nnumber octreeHandle,table_3 octreePos,table_4 octreeQuaternion,\ntable_3 triPt1,table_3 triPt2,table_3 triPt3,\nnumber distanceThreshold=FLT_MAX,number cache=-1)"),LUA_GETOCTREETRIANGLEDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETOCTREESEGMENTDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2,number cache=",LUA_GETOCTREESEGMENTDISTANCE_COMMAND,"(\nnumber octreeHandle,table_3 octreePos,table_4 octreeQuaternion,\ntable_3 segPt1,table_3 segPt2,\nnumber distanceThreshold=FLT_MAX,number cache=-1)"),LUA_GETOCTREESEGMENTDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETOCTREEPOINTDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt,number cache=",LUA_GETOCTREEPOINTDISTANCE_COMMAND,"(\nnumber octreeHandle,table_3 octreePos,table_4 octreeQuaternion,\ntable_3 point,number distanceThreshold=FLT_MAX,number cache=-1)"),LUA_GETOCTREEPOINTDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETOCTREEOCTREEDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2,table_2 cache=",LUA_GETOCTREEOCTREEDISTANCE_COMMAND,"(\nnumber octree1Handle,table_3 octree1Pos,table_4 octree1Quaternion,\nnumber octree2Handle,table_3 octree2Pos,table_4 octree2Quaternion,\nnumber distanceThreshold=REAL_MAX,table_2 cache=nil)"),LUA_GETOCTREEOCTREEDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETOCTREEPTCLOUDDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2,table_2 cache=",LUA_GETOCTREEPTCLOUDDISTANCE_COMMAND,"(\nnumber octreeHandle,table_3 octreePos,table_4 octreeQuaternion,\nnumber ptcloudHandle,table_3 ptcloudPos,table_4 ptcloudQuaternion,\nnumber distanceThreshold=REAL_MAX,table_2 cache=nil)"),LUA_GETOCTREEPTCLOUDDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETOCTREETRIANGLEDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2,number cache=",LUA_GETOCTREETRIANGLEDISTANCE_COMMAND,"(\nnumber octreeHandle,table_3 octreePos,table_4 octreeQuaternion,\ntable_3 triPt1,table_3 triPt2,table_3 triPt3,\nnumber distanceThreshold=REAL_MAX,number cache=-1)"),LUA_GETOCTREETRIANGLEDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETOCTREESEGMENTDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2,number cache=",LUA_GETOCTREESEGMENTDISTANCE_COMMAND,"(\nnumber octreeHandle,table_3 octreePos,table_4 octreeQuaternion,\ntable_3 segPt1,table_3 segPt2,\nnumber distanceThreshold=REAL_MAX,number cache=-1)"),LUA_GETOCTREESEGMENTDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETOCTREEPOINTDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt,number cache=",LUA_GETOCTREEPOINTDISTANCE_COMMAND,"(\nnumber octreeHandle,table_3 octreePos,table_4 octreeQuaternion,\ntable_3 point,number distanceThreshold=REAL_MAX,number cache=-1)"),LUA_GETOCTREEPOINTDISTANCE_CALLBACK);
 
-    simRegisterScriptCallbackFunction(LUA_GETPTCLOUDPTCLOUDDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2,table_2 cache=",LUA_GETPTCLOUDPTCLOUDDISTANCE_COMMAND,"(\nnumber ptcloud1Handle,table_3 ptcloud1Pos,table_4 ptcloud1Quaternion,\nnumber ptcloud2Handle,table_3 ptcloud2Pos,table_4 ptcloud2Quaternion,\nnumber distanceThreshold=FLT_MAX,table_2 cache=nil)"),LUA_GETPTCLOUDPTCLOUDDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETPTCLOUDTRIANGLEDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2,number cache=",LUA_GETPTCLOUDTRIANGLEDISTANCE_COMMAND,"(\nnumber ptcloudHandle,table_3 ptcloudPos,table_4 ptcloudQuaternion,\ntable_3 triPt1,table_3 triPt2,table_3 triPt3,\nnumber distanceThreshold=FLT_MAX,number cache=-1)"),LUA_GETPTCLOUDTRIANGLEDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETPTCLOUDSEGMENTDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2,number cache=",LUA_GETPTCLOUDSEGMENTDISTANCE_COMMAND,"(\nnumber ptcloudHandle,table_3 ptcloudPos,table_4 ptcloudQuaternion,\ntable_3 segPt1,table_3 segPt2,\nnumber distanceThreshold=FLT_MAX,number cache=-1)"),LUA_GETPTCLOUDSEGMENTDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETPTCLOUDPOINTDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt,number cache=",LUA_GETPTCLOUDPOINTDISTANCE_COMMAND,"(\nnumber ptcloudHandle,table_3 ptcloudPos,table_4 ptcloudQuaternion,\ntable_3 point,number distanceThreshold=FLT_MAX,number cache=-1)"),LUA_GETPTCLOUDPOINTDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETPTCLOUDPTCLOUDDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2,table_2 cache=",LUA_GETPTCLOUDPTCLOUDDISTANCE_COMMAND,"(\nnumber ptcloud1Handle,table_3 ptcloud1Pos,table_4 ptcloud1Quaternion,\nnumber ptcloud2Handle,table_3 ptcloud2Pos,table_4 ptcloud2Quaternion,\nnumber distanceThreshold=REAL_MAX,table_2 cache=nil)"),LUA_GETPTCLOUDPTCLOUDDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETPTCLOUDTRIANGLEDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2,number cache=",LUA_GETPTCLOUDTRIANGLEDISTANCE_COMMAND,"(\nnumber ptcloudHandle,table_3 ptcloudPos,table_4 ptcloudQuaternion,\ntable_3 triPt1,table_3 triPt2,table_3 triPt3,\nnumber distanceThreshold=REAL_MAX,number cache=-1)"),LUA_GETPTCLOUDTRIANGLEDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETPTCLOUDSEGMENTDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2,number cache=",LUA_GETPTCLOUDSEGMENTDISTANCE_COMMAND,"(\nnumber ptcloudHandle,table_3 ptcloudPos,table_4 ptcloudQuaternion,\ntable_3 segPt1,table_3 segPt2,\nnumber distanceThreshold=REAL_MAX,number cache=-1)"),LUA_GETPTCLOUDSEGMENTDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETPTCLOUDPOINTDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt,number cache=",LUA_GETPTCLOUDPOINTDISTANCE_COMMAND,"(\nnumber ptcloudHandle,table_3 ptcloudPos,table_4 ptcloudQuaternion,\ntable_3 point,number distanceThreshold=REAL_MAX,number cache=-1)"),LUA_GETPTCLOUDPOINTDISTANCE_CALLBACK);
 
     simRegisterScriptCallbackFunction(LUA_GETBOXBOXDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2=",LUA_GETBOXBOXDISTANCE_COMMAND,"(\ntable_3 box1Pos,table_4 box1Quaternion,table_3 box1HalfSize,table_3 box2Pos,\ntable_4 box2Quaternion,table_3 box2HalfSize,bool boxesAreSolid)"),LUA_GETBOXBOXDISTANCE_CALLBACK);
     simRegisterScriptCallbackFunction(LUA_GETBOXTRIANGLEDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2=",LUA_GETBOXTRIANGLEDISTANCE_COMMAND,"(\ntable_3 boxPos,table_4 boxQuaternion,table_3 boxHalfSize,bool boxIsSolid,\ntable_3 triPt1,table_3 triPt2,table_3 triPt3,bool altRoutine=false)"),LUA_GETBOXTRIANGLEDISTANCE_CALLBACK);
@@ -2974,7 +2970,7 @@ SIM_DLLEXPORT void geomPlugin_releaseBuffer(void* buff)
     delete[] ((char*)buff);
 }
 
-SIM_DLLEXPORT void* geomPlugin_createMesh(const float* vertices,int verticesSize,const int* indices,int indicesSize,const float meshOrigin[7],float triangleEdgeMaxLength,int maxTrianglesInBoundingBox)
+SIM_DLLEXPORT void* geomPlugin_createMesh(const simReal* vertices,int verticesSize,const int* indices,int indicesSize,const simReal meshOrigin[7],simReal triangleEdgeMaxLength,int maxTrianglesInBoundingBox)
 {
     C7Vector tr;
     tr.setIdentity();
@@ -2990,7 +2986,7 @@ SIM_DLLEXPORT void* geomPlugin_copyMesh(const void* meshObbStruct)
     return(retVal);
 }
 
-SIM_DLLEXPORT void geomPlugin_scaleMesh(void* meshObbStruct,float scalingFactor)
+SIM_DLLEXPORT void geomPlugin_scaleMesh(void* meshObbStruct,simReal scalingFactor)
 {
     geom_scaleMesh((CObbStruct*)meshObbStruct,scalingFactor);
 }
@@ -3017,12 +3013,12 @@ SIM_DLLEXPORT void geomPlugin_destroyMesh(void* meshObbStruct)
     geom_destroyMesh((CObbStruct*)meshObbStruct);
 }
 
-SIM_DLLEXPORT float geomPlugin_getMeshRootObbVolume(const void* meshObbStruct)
+SIM_DLLEXPORT simReal geomPlugin_getMeshRootObbVolume(const void* meshObbStruct)
 {
     return(geom_getMeshRootObbVolume((const CObbStruct*)meshObbStruct));
 }
 
-SIM_DLLEXPORT void* geomPlugin_createOctreeFromPoints(const float* points,int pointCnt,const float octreeOrigin[7],float cellS,const unsigned char rgbData[3],unsigned int usrData)
+SIM_DLLEXPORT void* geomPlugin_createOctreeFromPoints(const simReal* points,int pointCnt,const simReal octreeOrigin[7],simReal cellS,const unsigned char rgbData[3],unsigned int usrData)
 {
     C7Vector tr;
     tr.setIdentity();
@@ -3031,7 +3027,7 @@ SIM_DLLEXPORT void* geomPlugin_createOctreeFromPoints(const float* points,int po
     COcStruct* retVal=geom_createOctreeFromPoints(points,pointCnt,&tr,cellS,rgbData,usrData);
     return(retVal);
 }
-SIM_DLLEXPORT void* geomPlugin_createOctreeFromColorPoints(const float* points,int pointCnt,const float octreeOrigin[7],float cellS,const unsigned char* rgbData,const unsigned int* usrData)
+SIM_DLLEXPORT void* geomPlugin_createOctreeFromColorPoints(const simReal* points,int pointCnt,const simReal octreeOrigin[7],simReal cellS,const unsigned char* rgbData,const unsigned int* usrData)
 {
     C7Vector tr;
     tr.setIdentity();
@@ -3040,7 +3036,7 @@ SIM_DLLEXPORT void* geomPlugin_createOctreeFromColorPoints(const float* points,i
     COcStruct* retVal=geom_createOctreeFromColorPoints(points,pointCnt,&tr,cellS,rgbData,usrData);
     return(retVal);
 }
-SIM_DLLEXPORT void* geomPlugin_createOctreeFromMesh(const void* meshObbStruct,const float meshTransformation[7],const float octreeOrigin[7],float cellS,const unsigned char rgbData[3],unsigned int usrData)
+SIM_DLLEXPORT void* geomPlugin_createOctreeFromMesh(const void* meshObbStruct,const simReal meshTransformation[7],const simReal octreeOrigin[7],simReal cellS,const unsigned char rgbData[3],unsigned int usrData)
 {
     C7Vector _meshTransformation;
     _meshTransformation.setInternalData(meshTransformation);
@@ -3051,7 +3047,7 @@ SIM_DLLEXPORT void* geomPlugin_createOctreeFromMesh(const void* meshObbStruct,co
     COcStruct* retVal=geom_createOctreeFromMesh((const CObbStruct*)meshObbStruct,_meshTransformation,&tr,cellS,rgbData,usrData);
     return(retVal);
 }
-SIM_DLLEXPORT void* geomPlugin_createOctreeFromOctree(const void* otherOctreeStruct,const float otherOctreeTransformation[7],const float newOctreeOrigin[7],float newOctreeCellS,const unsigned char rgbData[3],unsigned int usrData)
+SIM_DLLEXPORT void* geomPlugin_createOctreeFromOctree(const void* otherOctreeStruct,const simReal otherOctreeTransformation[7],const simReal newOctreeOrigin[7],simReal newOctreeCellS,const unsigned char rgbData[3],unsigned int usrData)
 {
     C7Vector _otherOctreeTransformation;
     _otherOctreeTransformation.setInternalData(otherOctreeTransformation);
@@ -3082,7 +3078,7 @@ SIM_DLLEXPORT unsigned char* geomPlugin_getOctreeSerializationData(const void* o
     serializationDataSize[0]=(int)serData.size();
     return(retVal);
 }
-SIM_DLLEXPORT void geomPlugin_scaleOctree(void* ocStruct,float f)
+SIM_DLLEXPORT void geomPlugin_scaleOctree(void* ocStruct,simReal f)
 {
     geom_scaleOctree((COcStruct*)ocStruct,f);
 }
@@ -3090,11 +3086,11 @@ SIM_DLLEXPORT void geomPlugin_destroyOctree(void* ocStruct)
 {
     geom_destroyOctree((COcStruct*)ocStruct);
 }
-SIM_DLLEXPORT float* geomPlugin_getOctreeVoxelData(const void* ocStruct,int* voxelCount)
+SIM_DLLEXPORT simReal* geomPlugin_getOctreeVoxelData(const void* ocStruct,int* voxelCount)
 { // voxel position + rgb
-    std::vector<float> data;
+    std::vector<simReal> data;
     geom_getOctreeVoxelData((const COcStruct*)ocStruct,data,nullptr);
-    float* retVal=new float[data.size()];
+    simReal* retVal=new simReal[data.size()];
     for (size_t i=0;i<data.size();i++)
         retVal[i]=data[i];
     voxelCount[0]=((int)data.size())/6;
@@ -3102,7 +3098,7 @@ SIM_DLLEXPORT float* geomPlugin_getOctreeVoxelData(const void* ocStruct,int* vox
 }
 SIM_DLLEXPORT unsigned int* geomPlugin_getOctreeUserData(const void* ocStruct,int* voxelCount)
 {
-    std::vector<float> data;
+    std::vector<simReal> data;
     std::vector<unsigned int> usrData;
     geom_getOctreeVoxelData((const COcStruct*)ocStruct,data,&usrData);
     unsigned int* retVal=new unsigned int[usrData.size()];
@@ -3111,30 +3107,30 @@ SIM_DLLEXPORT unsigned int* geomPlugin_getOctreeUserData(const void* ocStruct,in
     voxelCount[0]=(int)usrData.size();
     return(retVal);
 }
-SIM_DLLEXPORT float* geomPlugin_getOctreeCornersFromOctree(const void* ocStruct,int* pointCount)
+SIM_DLLEXPORT simReal* geomPlugin_getOctreeCornersFromOctree(const void* ocStruct,int* pointCount)
 {
-    std::vector<float> data;
+    std::vector<simReal> data;
     geom_getOctreeCornersFromOctree((const COcStruct*)ocStruct,data);
-    float* retVal=new float[data.size()];
+    simReal* retVal=new simReal[data.size()];
     for (size_t i=0;i<data.size();i++)
         retVal[i]=data[i];
     pointCount[0]=((int)data.size())/3;
     return(retVal);
 }
 
-SIM_DLLEXPORT void geomPlugin_insertPointsIntoOctree(void* ocStruct,const float octreeTransformation[7],const float* points,int pointCnt,const unsigned char rgbData[3],unsigned int usrData)
+SIM_DLLEXPORT void geomPlugin_insertPointsIntoOctree(void* ocStruct,const simReal octreeTransformation[7],const simReal* points,int pointCnt,const unsigned char rgbData[3],unsigned int usrData)
 {
     C7Vector tr;
     tr.setInternalData(octreeTransformation);
     geom_insertPointsIntoOctree((COcStruct*)ocStruct,tr,points,pointCnt,rgbData,usrData);
 }
-SIM_DLLEXPORT void geomPlugin_insertColorPointsIntoOctree(void* ocStruct,const float octreeTransformation[7],const float* points,int pointCnt,const unsigned char* rgbData,const unsigned int* usrData)
+SIM_DLLEXPORT void geomPlugin_insertColorPointsIntoOctree(void* ocStruct,const simReal octreeTransformation[7],const simReal* points,int pointCnt,const unsigned char* rgbData,const unsigned int* usrData)
 {
     C7Vector tr;
     tr.setInternalData(octreeTransformation);
     geom_insertColorPointsIntoOctree((COcStruct*)ocStruct,tr,points,pointCnt,rgbData,usrData);
 }
-SIM_DLLEXPORT void geomPlugin_insertMeshIntoOctree(void* ocStruct,const float octreeTransformation[7],const void* obbStruct,const float meshTransformation[7],const unsigned char rgbData[3],unsigned int usrData)
+SIM_DLLEXPORT void geomPlugin_insertMeshIntoOctree(void* ocStruct,const simReal octreeTransformation[7],const void* obbStruct,const simReal meshTransformation[7],const unsigned char rgbData[3],unsigned int usrData)
 {
     C7Vector tr;
     tr.setInternalData(octreeTransformation);
@@ -3142,7 +3138,7 @@ SIM_DLLEXPORT void geomPlugin_insertMeshIntoOctree(void* ocStruct,const float oc
     meshTr.setInternalData(meshTransformation);
     geom_insertMeshIntoOctree((COcStruct*)ocStruct,tr,(const CObbStruct*)obbStruct,meshTr,rgbData,usrData);
 }
-SIM_DLLEXPORT void geomPlugin_insertOctreeIntoOctree(void* oc1Struct,const float octree1Transformation[7],const void* oc2Struct,const float octree2Transformation[7],const unsigned char rgbData[3],unsigned int usrData)
+SIM_DLLEXPORT void geomPlugin_insertOctreeIntoOctree(void* oc1Struct,const simReal octree1Transformation[7],const void* oc2Struct,const simReal octree2Transformation[7],const unsigned char rgbData[3],unsigned int usrData)
 {
     C7Vector tr1;
     tr1.setInternalData(octree1Transformation);
@@ -3150,14 +3146,14 @@ SIM_DLLEXPORT void geomPlugin_insertOctreeIntoOctree(void* oc1Struct,const float
     tr2.setInternalData(octree2Transformation);
     geom_insertOctreeIntoOctree((COcStruct*)oc1Struct,tr1,(const COcStruct*)oc2Struct,tr2,rgbData,usrData);
 }
-SIM_DLLEXPORT bool geomPlugin_removePointsFromOctree(void* ocStruct,const float octreeTransformation[7],const float* points,int pointCnt)
+SIM_DLLEXPORT bool geomPlugin_removePointsFromOctree(void* ocStruct,const simReal octreeTransformation[7],const simReal* points,int pointCnt)
 {
     C7Vector tr;
     tr.setInternalData(octreeTransformation);
     bool retVal=geom_removePointsFromOctree((COcStruct*)ocStruct,tr,points,pointCnt);
     return(retVal);
 }
-SIM_DLLEXPORT bool geomPlugin_removeMeshFromOctree(void* ocStruct,const float octreeTransformation[7],const void* obbStruct,const float meshTransformation[7])
+SIM_DLLEXPORT bool geomPlugin_removeMeshFromOctree(void* ocStruct,const simReal octreeTransformation[7],const void* obbStruct,const simReal meshTransformation[7])
 {
     C7Vector tr;
     tr.setInternalData(octreeTransformation);
@@ -3166,7 +3162,7 @@ SIM_DLLEXPORT bool geomPlugin_removeMeshFromOctree(void* ocStruct,const float oc
     bool retVal=geom_removeMeshFromOctree((COcStruct*)ocStruct,tr,(const CObbStruct*)obbStruct,meshTr);
     return(retVal);
 }
-SIM_DLLEXPORT bool geomPlugin_removeOctreeFromOctree(void* oc1Struct,const float octree1Transformation[7],const void* oc2Struct,const float octree2Transformation[7])
+SIM_DLLEXPORT bool geomPlugin_removeOctreeFromOctree(void* oc1Struct,const simReal octree1Transformation[7],const void* oc2Struct,const simReal octree2Transformation[7])
 {
     C7Vector tr1;
     tr1.setInternalData(octree1Transformation);
@@ -3178,7 +3174,7 @@ SIM_DLLEXPORT bool geomPlugin_removeOctreeFromOctree(void* oc1Struct,const float
 
 
 
-SIM_DLLEXPORT void* geomPlugin_createPtcloudFromPoints(const float* points,int pointCnt,const float ptcloudOrigin[7],float cellS,int maxPointCnt,const unsigned char rgbData[3],float proximityTol)
+SIM_DLLEXPORT void* geomPlugin_createPtcloudFromPoints(const simReal* points,int pointCnt,const simReal ptcloudOrigin[7],simReal cellS,int maxPointCnt,const unsigned char rgbData[3],simReal proximityTol)
 {
     C7Vector tr;
     tr.setIdentity();
@@ -3187,7 +3183,7 @@ SIM_DLLEXPORT void* geomPlugin_createPtcloudFromPoints(const float* points,int p
     void* retVal=geom_createPtcloudFromPoints(points,pointCnt,&tr,cellS,maxPointCnt,rgbData,proximityTol);
     return(retVal);
 }
-SIM_DLLEXPORT void* geomPlugin_createPtcloudFromColorPoints(const float* points,int pointCnt,const float ptcloudOrigin[7],float cellS,int maxPointCnt,const unsigned char* rgbData,float proximityTol)
+SIM_DLLEXPORT void* geomPlugin_createPtcloudFromColorPoints(const simReal* points,int pointCnt,const simReal ptcloudOrigin[7],simReal cellS,int maxPointCnt,const unsigned char* rgbData,simReal proximityTol)
 {
     C7Vector tr;
     tr.setIdentity();
@@ -3216,7 +3212,7 @@ SIM_DLLEXPORT unsigned char* geomPlugin_getPtcloudSerializationData(const void* 
     serializationDataSize[0]=(int)serData.size();
     return(retVal);
 }
-SIM_DLLEXPORT void geomPlugin_scalePtcloud(void* pcStruct,float f)
+SIM_DLLEXPORT void geomPlugin_scalePtcloud(void* pcStruct,simReal f)
 {
     geom_scalePtcloud((CPcStruct*)pcStruct,f);
 }
@@ -3224,21 +3220,21 @@ SIM_DLLEXPORT void geomPlugin_destroyPtcloud(void* pcStruct)
 {
     geom_destroyPtcloud((CPcStruct*)pcStruct);
 }
-SIM_DLLEXPORT float* geomPlugin_getPtcloudPoints(const void* pcStruct,int* pointCount,float prop)
+SIM_DLLEXPORT simReal* geomPlugin_getPtcloudPoints(const void* pcStruct,int* pointCount,simReal prop)
 {
-    std::vector<float> data;
+    std::vector<simReal> data;
     geom_getPtcloudPoints((const CPcStruct*)pcStruct,data,prop);
-    float* retVal=new float[data.size()];
+    simReal* retVal=new simReal[data.size()];
     for (size_t i=0;i<data.size();i++)
         retVal[i]=data[i];
     pointCount[0]=((int)data.size())/6;
     return(retVal);
 }
-SIM_DLLEXPORT float* geomPlugin_getPtcloudOctreeCorners(const void* pcStruct,int* pointCount)
+SIM_DLLEXPORT simReal* geomPlugin_getPtcloudOctreeCorners(const void* pcStruct,int* pointCount)
 {
-    std::vector<float> data;
+    std::vector<simReal> data;
     geom_getPtcloudOctreeCorners((const CPcStruct*)pcStruct,data);
-    float* retVal=new float[data.size()];
+    simReal* retVal=new simReal[data.size()];
     for (size_t i=0;i<data.size();i++)
         retVal[i]=data[i];
     pointCount[0]=((int)data.size())/3;
@@ -3250,26 +3246,26 @@ SIM_DLLEXPORT int geomPlugin_getPtcloudNonEmptyCellCount(const void* pcStruct)
     return(retVal);
 }
 
-SIM_DLLEXPORT void geomPlugin_insertPointsIntoPtcloud(void* pcStruct,const float ptcloudTransformation[7],const float* points,int pointCnt,const unsigned char rgbData[3],float proximityTol)
+SIM_DLLEXPORT void geomPlugin_insertPointsIntoPtcloud(void* pcStruct,const simReal ptcloudTransformation[7],const simReal* points,int pointCnt,const unsigned char rgbData[3],simReal proximityTol)
 {
     C7Vector tr;
     tr.setInternalData(ptcloudTransformation);
     geom_insertPointsIntoPtcloud((CPcStruct*)pcStruct,tr,points,pointCnt,rgbData,proximityTol);
 }
-SIM_DLLEXPORT void geomPlugin_insertColorPointsIntoPtcloud(void* pcStruct,const float ptcloudTransformation[7],const float* points,int pointCnt,const unsigned char* rgbData,float proximityTol)
+SIM_DLLEXPORT void geomPlugin_insertColorPointsIntoPtcloud(void* pcStruct,const simReal ptcloudTransformation[7],const simReal* points,int pointCnt,const unsigned char* rgbData,simReal proximityTol)
 {
     C7Vector tr;
     tr.setInternalData(ptcloudTransformation);
     geom_insertColorPointsIntoPtcloud((CPcStruct*)pcStruct,tr,points,pointCnt,rgbData,proximityTol);
 }
-SIM_DLLEXPORT bool geomPlugin_removePointsFromPtcloud(void* pcStruct,const float ptcloudTransformation[7],const float* points,int pointCnt,float proximityTol,int* countRemoved)
+SIM_DLLEXPORT bool geomPlugin_removePointsFromPtcloud(void* pcStruct,const simReal ptcloudTransformation[7],const simReal* points,int pointCnt,simReal proximityTol,int* countRemoved)
 {
     C7Vector tr;
     tr.setInternalData(ptcloudTransformation);
     bool retVal=geom_removePointsFromPtcloud((CPcStruct*)pcStruct,tr,points,pointCnt,proximityTol,countRemoved);
     return(retVal);
 }
-SIM_DLLEXPORT bool geomPlugin_removeOctreeFromPtcloud(void* pcStruct,const float ptcloudTransformation[7],const void* ocStruct,const float octreeTransformation[7],int* countRemoved)
+SIM_DLLEXPORT bool geomPlugin_removeOctreeFromPtcloud(void* pcStruct,const simReal ptcloudTransformation[7],const void* ocStruct,const simReal octreeTransformation[7],int* countRemoved)
 {
     C7Vector tr;
     tr.setInternalData(ptcloudTransformation);
@@ -3278,7 +3274,7 @@ SIM_DLLEXPORT bool geomPlugin_removeOctreeFromPtcloud(void* pcStruct,const float
     bool retVal=geom_removeOctreeFromPtcloud((CPcStruct*)pcStruct,tr,(const COcStruct*)ocStruct,octreeTr,countRemoved);
     return(retVal);
 }
-SIM_DLLEXPORT bool geomPlugin_intersectPointsWithPtcloud(void* pcStruct,const float ptcloudTransformation[7],const float* points,int pointCnt,float proximityTol)
+SIM_DLLEXPORT bool geomPlugin_intersectPointsWithPtcloud(void* pcStruct,const simReal ptcloudTransformation[7],const simReal* points,int pointCnt,simReal proximityTol)
 {
     C7Vector tr;
     tr.setInternalData(ptcloudTransformation);
@@ -3286,27 +3282,27 @@ SIM_DLLEXPORT bool geomPlugin_intersectPointsWithPtcloud(void* pcStruct,const fl
     return(retVal);
 }
 
-SIM_DLLEXPORT bool geomPlugin_getMeshMeshCollision(const void* mesh1ObbStruct,const float mesh1Transformation[7],const void* mesh2ObbStruct,const float mesh2Transformation[7],float** intersections,int* intersectionsSize,int* mesh1Caching,int* mesh2Caching)
+SIM_DLLEXPORT bool geomPlugin_getMeshMeshCollision(const void* mesh1ObbStruct,const simReal mesh1Transformation[7],const void* mesh2ObbStruct,const simReal mesh2Transformation[7],simReal** intersections,int* intersectionsSize,int* mesh1Caching,int* mesh2Caching)
 {
     C7Vector tr1;
     tr1.setInternalData(mesh1Transformation);
     C7Vector tr2;
     tr2.setInternalData(mesh2Transformation);
-    std::vector<float> _intersections;
-    std::vector<float>* _ints=nullptr;
+    std::vector<simReal> _intersections;
+    std::vector<simReal>* _ints=nullptr;
     if (intersections!=nullptr)
         _ints=&_intersections;
     bool retVal=geom_getMeshMeshCollision((const CObbStruct*)mesh1ObbStruct,tr1,(const CObbStruct*)mesh2ObbStruct,tr2,_ints,mesh1Caching,mesh2Caching);
     if (retVal&&(intersections!=nullptr))
     {
-        intersections[0]=new float[_intersections.size()];
+        intersections[0]=new simReal[_intersections.size()];
         intersectionsSize[0]=int(_intersections.size());
         for (size_t i=0;i<_intersections.size();i++)
             intersections[0][i]=_intersections[i];
     }
     return(retVal);
 }
-SIM_DLLEXPORT bool geomPlugin_getMeshOctreeCollision(const void* meshObbStruct,const float meshTransformation[7],const void* ocStruct,const float octreeTransformation[7],int* meshCaching,unsigned long long int* ocCaching)
+SIM_DLLEXPORT bool geomPlugin_getMeshOctreeCollision(const void* meshObbStruct,const simReal meshTransformation[7],const void* ocStruct,const simReal octreeTransformation[7],int* meshCaching,unsigned long long int* ocCaching)
 {
     C7Vector tr1;
     tr1.setInternalData(meshTransformation);
@@ -3315,41 +3311,41 @@ SIM_DLLEXPORT bool geomPlugin_getMeshOctreeCollision(const void* meshObbStruct,c
     bool retVal=geom_getMeshOctreeCollision((const CObbStruct*)meshObbStruct,tr1,(const COcStruct*)ocStruct,tr2,meshCaching,ocCaching);
     return(retVal);
 }
-SIM_DLLEXPORT bool geomPlugin_getMeshTriangleCollision(const void* meshObbStruct,const float meshTransformation[7],const float p[3],const float v[3],const float w[3],float** intersections,int* intersectionsSize,int* caching)
+SIM_DLLEXPORT bool geomPlugin_getMeshTriangleCollision(const void* meshObbStruct,const simReal meshTransformation[7],const simReal p[3],const simReal v[3],const simReal w[3],simReal** intersections,int* intersectionsSize,int* caching)
 {
     C7Vector tr1;
     tr1.setInternalData(meshTransformation);
     C3Vector _p(p);
     C3Vector _v(v);
     C3Vector _w(w);
-    std::vector<float> _intersections;
-    std::vector<float>* _ints=nullptr;
+    std::vector<simReal> _intersections;
+    std::vector<simReal>* _ints=nullptr;
     if (intersections!=nullptr)
         _ints=&_intersections;
     bool retVal=geom_getMeshTriangleCollision((const CObbStruct*)meshObbStruct,tr1,_p,_v,_w,_ints,caching);
     if (retVal&&(intersections!=nullptr))
     {
-        intersections[0]=new float[_intersections.size()];
+        intersections[0]=new simReal[_intersections.size()];
         intersectionsSize[0]=int(_intersections.size());
         for (size_t i=0;i<_intersections.size();i++)
             intersections[0][i]=_intersections[i];
     }
     return(retVal);
 }
-SIM_DLLEXPORT bool geomPlugin_getMeshSegmentCollision(const void* meshObbStruct,const float meshTransformation[7],const float segmentExtremity[3],const float segmentVector[3],float** intersections,int* intersectionsSize,int* caching)
+SIM_DLLEXPORT bool geomPlugin_getMeshSegmentCollision(const void* meshObbStruct,const simReal meshTransformation[7],const simReal segmentExtremity[3],const simReal segmentVector[3],simReal** intersections,int* intersectionsSize,int* caching)
 {
     C7Vector tr1;
     tr1.setInternalData(meshTransformation);
     C3Vector _segmentExtremity(segmentExtremity);
     C3Vector _segmentVector(segmentVector);
-    std::vector<float> _intersections;
-    std::vector<float>* _ints=nullptr;
+    std::vector<simReal> _intersections;
+    std::vector<simReal>* _ints=nullptr;
     if (intersections!=nullptr)
         _ints=&_intersections;
     bool retVal=geom_getMeshSegmentCollision((const CObbStruct*)meshObbStruct,tr1,_segmentExtremity,_segmentVector,_ints,caching);
     if (retVal&&(intersections!=nullptr))
     {
-        intersections[0]=new float[_intersections.size()];
+        intersections[0]=new simReal[_intersections.size()];
         intersectionsSize[0]=int(_intersections.size());
         for (size_t i=0;i<_intersections.size();i++)
             intersections[0][i]=_intersections[i];
@@ -3357,7 +3353,7 @@ SIM_DLLEXPORT bool geomPlugin_getMeshSegmentCollision(const void* meshObbStruct,
     return(retVal);
 }
 
-SIM_DLLEXPORT bool geomPlugin_getOctreeOctreeCollision(const void* oc1Struct,const float octree1Transformation[7],const void* oc2Struct,const float octree2Transformation[7],unsigned long long int* oc1Caching,unsigned long long int* oc2Caching)
+SIM_DLLEXPORT bool geomPlugin_getOctreeOctreeCollision(const void* oc1Struct,const simReal octree1Transformation[7],const void* oc2Struct,const simReal octree2Transformation[7],unsigned long long int* oc1Caching,unsigned long long int* oc2Caching)
 {
     C7Vector tr1;
     tr1.setInternalData(octree1Transformation);
@@ -3366,7 +3362,7 @@ SIM_DLLEXPORT bool geomPlugin_getOctreeOctreeCollision(const void* oc1Struct,con
     bool retVal=geom_getOctreeOctreeCollision((const COcStruct*)oc1Struct,tr1,(const COcStruct*)oc2Struct,tr2,oc1Caching,oc2Caching);
     return(retVal);
 }
-SIM_DLLEXPORT bool geomPlugin_getOctreePtcloudCollision(const void* ocStruct,const float octreeTransformation[7],const void* pcStruct,const float ptcloudTransformation[7],unsigned long long int* ocCaching,unsigned long long int* pcCaching)
+SIM_DLLEXPORT bool geomPlugin_getOctreePtcloudCollision(const void* ocStruct,const simReal octreeTransformation[7],const void* pcStruct,const simReal ptcloudTransformation[7],unsigned long long int* ocCaching,unsigned long long int* pcCaching)
 {
     C7Vector tr1;
     tr1.setInternalData(octreeTransformation);
@@ -3375,7 +3371,7 @@ SIM_DLLEXPORT bool geomPlugin_getOctreePtcloudCollision(const void* ocStruct,con
     bool retVal=geom_getOctreePtcloudCollision((const COcStruct*)ocStruct,tr1,(const CPcStruct*)pcStruct,tr2,ocCaching,pcCaching);
     return(retVal);
 }
-SIM_DLLEXPORT bool geomPlugin_getOctreeTriangleCollision(const void* ocStruct,const float octreeTransformation[7],const float p[3],const float v[3],const float w[3],unsigned long long int* caching)
+SIM_DLLEXPORT bool geomPlugin_getOctreeTriangleCollision(const void* ocStruct,const simReal octreeTransformation[7],const simReal p[3],const simReal v[3],const simReal w[3],unsigned long long int* caching)
 {
     C7Vector tr1;
     tr1.setInternalData(octreeTransformation);
@@ -3385,7 +3381,7 @@ SIM_DLLEXPORT bool geomPlugin_getOctreeTriangleCollision(const void* ocStruct,co
     bool retVal=geom_getOctreeTriangleCollision((const COcStruct*)ocStruct,tr1,_p,_v,_w,caching);
     return(retVal);
 }
-SIM_DLLEXPORT bool geomPlugin_getOctreeSegmentCollision(const void* ocStruct,const float octreeTransformation[7],const float segmentExtremity[3],const float segmentVector[3],unsigned long long int* caching)
+SIM_DLLEXPORT bool geomPlugin_getOctreeSegmentCollision(const void* ocStruct,const simReal octreeTransformation[7],const simReal segmentExtremity[3],const simReal segmentVector[3],unsigned long long int* caching)
 {
     C7Vector tr1;
     tr1.setInternalData(octreeTransformation);
@@ -3394,7 +3390,7 @@ SIM_DLLEXPORT bool geomPlugin_getOctreeSegmentCollision(const void* ocStruct,con
     bool retVal=geom_getOctreeSegmentCollision((const COcStruct*)ocStruct,tr1,_segmentExtremity,_segmentVector,caching);
     return(retVal);
 }
-SIM_DLLEXPORT bool geomPlugin_getOctreePointsCollision(const void* ocStruct,const float octreeTransformation[7],const float* points,int pointCount)
+SIM_DLLEXPORT bool geomPlugin_getOctreePointsCollision(const void* ocStruct,const simReal octreeTransformation[7],const simReal* points,int pointCount)
 {
     C7Vector tr1;
     tr1.setInternalData(octreeTransformation);
@@ -3402,7 +3398,7 @@ SIM_DLLEXPORT bool geomPlugin_getOctreePointsCollision(const void* ocStruct,cons
     return(retVal);
 }
 
-SIM_DLLEXPORT bool geomPlugin_getOctreePointCollision(const void* ocStruct,const float octreeTransformation[7],const float point[3],unsigned int* usrData,unsigned long long int* caching)
+SIM_DLLEXPORT bool geomPlugin_getOctreePointCollision(const void* ocStruct,const simReal octreeTransformation[7],const simReal point[3],unsigned int* usrData,unsigned long long int* caching)
 {
     C7Vector tr1;
     tr1.setInternalData(octreeTransformation);
@@ -3411,7 +3407,7 @@ SIM_DLLEXPORT bool geomPlugin_getOctreePointCollision(const void* ocStruct,const
     return(retVal);
 }
 
-SIM_DLLEXPORT bool geomPlugin_getBoxBoxCollision(const float box1Transformation[7],const float box1HalfSize[3],const float box2Transformation[7],const float box2HalfSize[3],bool boxesAreSolid)
+SIM_DLLEXPORT bool geomPlugin_getBoxBoxCollision(const simReal box1Transformation[7],const simReal box1HalfSize[3],const simReal box2Transformation[7],const simReal box2HalfSize[3],bool boxesAreSolid)
 {
     C7Vector tr1;
     tr1.setInternalData(box1Transformation);
@@ -3422,7 +3418,7 @@ SIM_DLLEXPORT bool geomPlugin_getBoxBoxCollision(const float box1Transformation[
     bool retVal=geom_getBoxBoxCollision(tr1,b1hs,tr2,b2hs,boxesAreSolid);
     return(retVal);
 }
-SIM_DLLEXPORT bool geomPlugin_getBoxTriangleCollision(const float boxTransformation[7],const float boxHalfSize[3],bool boxIsSolid,const float p[3],const float v[3],const float w[3])
+SIM_DLLEXPORT bool geomPlugin_getBoxTriangleCollision(const simReal boxTransformation[7],const simReal boxHalfSize[3],bool boxIsSolid,const simReal p[3],const simReal v[3],const simReal w[3])
 {
     C7Vector tr;
     tr.setInternalData(boxTransformation);
@@ -3433,7 +3429,7 @@ SIM_DLLEXPORT bool geomPlugin_getBoxTriangleCollision(const float boxTransformat
     bool retVal=geom_getBoxTriangleCollision(tr,bhs,boxIsSolid,_p,_v,_w);
     return(retVal);
 }
-SIM_DLLEXPORT bool geomPlugin_getBoxSegmentCollision(const float boxTransformation[7],const float boxHalfSize[3],bool boxIsSolid,const float segmentEndPoint[3],const float segmentVector[3])
+SIM_DLLEXPORT bool geomPlugin_getBoxSegmentCollision(const simReal boxTransformation[7],const simReal boxHalfSize[3],bool boxIsSolid,const simReal segmentEndPoint[3],const simReal segmentVector[3])
 {
     C7Vector tr;
     tr.setInternalData(boxTransformation);
@@ -3443,7 +3439,7 @@ SIM_DLLEXPORT bool geomPlugin_getBoxSegmentCollision(const float boxTransformati
     bool retVal=geom_getBoxSegmentCollision(tr,bhs,boxIsSolid,_segmentEndPoint,_segmentVector);
     return(retVal);
 }
-SIM_DLLEXPORT bool geomPlugin_getBoxPointCollision(const float boxTransformation[7],const float boxHalfSize[3],const float point[3])
+SIM_DLLEXPORT bool geomPlugin_getBoxPointCollision(const simReal boxTransformation[7],const simReal boxHalfSize[3],const simReal point[3])
 {
     C7Vector tr;
     tr.setInternalData(boxTransformation);
@@ -3453,7 +3449,7 @@ SIM_DLLEXPORT bool geomPlugin_getBoxPointCollision(const float boxTransformation
     return(retVal);
 }
 
-SIM_DLLEXPORT bool geomPlugin_getTriangleTriangleCollision(const float p1[3],const float v1[3],const float w1[3],const float p2[3],const float v2[3],const float w2[3],float** intersections,int* intersectionsSize)
+SIM_DLLEXPORT bool geomPlugin_getTriangleTriangleCollision(const simReal p1[3],const simReal v1[3],const simReal w1[3],const simReal p2[3],const simReal v2[3],const simReal w2[3],simReal** intersections,int* intersectionsSize)
 {
     C3Vector _p1(p1);
     C3Vector _v1(v1);
@@ -3461,35 +3457,35 @@ SIM_DLLEXPORT bool geomPlugin_getTriangleTriangleCollision(const float p1[3],con
     C3Vector _p2(p2);
     C3Vector _v2(v2);
     C3Vector _w2(w2);
-    std::vector<float> _intersections;
-    std::vector<float>* _ints=nullptr;
+    std::vector<simReal> _intersections;
+    std::vector<simReal>* _ints=nullptr;
     if (intersections!=nullptr)
         _ints=&_intersections;
     bool retVal=geom_getTriangleTriangleCollision(_p1,_v1,_w1,_p2,_v2,_w2,_ints);
     if (retVal&&(intersections!=nullptr))
     {
-        intersections[0]=new float[_intersections.size()];
+        intersections[0]=new simReal[_intersections.size()];
         intersectionsSize[0]=int(_intersections.size());
         for (size_t i=0;i<_intersections.size();i++)
             intersections[0][i]=_intersections[i];
     }
     return(retVal);
 }
-SIM_DLLEXPORT bool geomPlugin_getTriangleSegmentCollision(const float p[3],const float v[3],const float w[3],const float segmentEndPoint[3],const float segmentVector[3],float** intersections,int* intersectionsSize)
+SIM_DLLEXPORT bool geomPlugin_getTriangleSegmentCollision(const simReal p[3],const simReal v[3],const simReal w[3],const simReal segmentEndPoint[3],const simReal segmentVector[3],simReal** intersections,int* intersectionsSize)
 {
     C3Vector _p(p);
     C3Vector _v(v);
     C3Vector _w(w);
     C3Vector _segmentEndPoint(segmentEndPoint);
     C3Vector _segmentVector(segmentVector);
-    std::vector<float> _intersections;
-    std::vector<float>* _ints=nullptr;
+    std::vector<simReal> _intersections;
+    std::vector<simReal>* _ints=nullptr;
     if (intersections!=nullptr)
         _ints=&_intersections;
     bool retVal=geom_getTriangleSegmentCollision(_p,_v,_w,_segmentEndPoint,_segmentVector,_ints);
     if (retVal&&(intersections!=nullptr))
     {
-        intersections[0]=new float[_intersections.size()];
+        intersections[0]=new simReal[_intersections.size()];
         intersectionsSize[0]=int(_intersections.size());
         for (size_t i=0;i<_intersections.size();i++)
             intersections[0][i]=_intersections[i];
@@ -3497,7 +3493,7 @@ SIM_DLLEXPORT bool geomPlugin_getTriangleSegmentCollision(const float p[3],const
     return(retVal);
 }
 
-SIM_DLLEXPORT bool geomPlugin_getMeshMeshDistanceIfSmaller(const void* mesh1ObbStruct,const float mesh1Transformation[7],const void* mesh2ObbStruct,const float mesh2Transformation[7],float* dist,float minDistSegPt1[3],float minDistSegPt2[3],int* mesh1Caching,int* mesh2Caching)
+SIM_DLLEXPORT bool geomPlugin_getMeshMeshDistanceIfSmaller(const void* mesh1ObbStruct,const simReal mesh1Transformation[7],const void* mesh2ObbStruct,const simReal mesh2Transformation[7],simReal* dist,simReal minDistSegPt1[3],simReal minDistSegPt2[3],int* mesh1Caching,int* mesh2Caching)
 {
     C7Vector tr1;
     tr1.setInternalData(mesh1Transformation);
@@ -3515,7 +3511,7 @@ SIM_DLLEXPORT bool geomPlugin_getMeshMeshDistanceIfSmaller(const void* mesh1ObbS
     }
     return(retVal);
 }
-SIM_DLLEXPORT bool geomPlugin_getMeshOctreeDistanceIfSmaller(const void* meshObbStruct,const float meshTransformation[7],const void* ocStruct,const float octreeTransformation[7],float* dist,float meshMinDistPt[3],float ocMinDistPt[3],int* meshCaching,unsigned long long int* ocCaching)
+SIM_DLLEXPORT bool geomPlugin_getMeshOctreeDistanceIfSmaller(const void* meshObbStruct,const simReal meshTransformation[7],const void* ocStruct,const simReal octreeTransformation[7],simReal* dist,simReal meshMinDistPt[3],simReal ocMinDistPt[3],int* meshCaching,unsigned long long int* ocCaching)
 {
     C7Vector tr1;
     tr1.setInternalData(meshTransformation);
@@ -3533,7 +3529,7 @@ SIM_DLLEXPORT bool geomPlugin_getMeshOctreeDistanceIfSmaller(const void* meshObb
     }
     return(retVal);
 }
-SIM_DLLEXPORT bool geomPlugin_getMeshPtcloudDistanceIfSmaller(const void* meshObbStruct,const float meshTransformation[7],const void* pcStruct,const float pcTransformation[7],float* dist,float meshMinDistPt[3],float pcMinDistPt[3],int* meshCaching,unsigned long long int* pcCaching)
+SIM_DLLEXPORT bool geomPlugin_getMeshPtcloudDistanceIfSmaller(const void* meshObbStruct,const simReal meshTransformation[7],const void* pcStruct,const simReal pcTransformation[7],simReal* dist,simReal meshMinDistPt[3],simReal pcMinDistPt[3],int* meshCaching,unsigned long long int* pcCaching)
 {
     C7Vector tr1;
     tr1.setInternalData(meshTransformation);
@@ -3551,7 +3547,7 @@ SIM_DLLEXPORT bool geomPlugin_getMeshPtcloudDistanceIfSmaller(const void* meshOb
     }
     return(retVal);
 }
-SIM_DLLEXPORT bool geomPlugin_getMeshTriangleDistanceIfSmaller(const void* meshObbStruct,const float meshTransformation[7],const float p[3],const float v[3],const float w[3],float* dist,float minDistSegPt1[3],float minDistSegPt2[3],int* caching)
+SIM_DLLEXPORT bool geomPlugin_getMeshTriangleDistanceIfSmaller(const void* meshObbStruct,const simReal meshTransformation[7],const simReal p[3],const simReal v[3],const simReal w[3],simReal* dist,simReal minDistSegPt1[3],simReal minDistSegPt2[3],int* caching)
 {
     C7Vector tr1;
     tr1.setInternalData(meshTransformation);
@@ -3570,7 +3566,7 @@ SIM_DLLEXPORT bool geomPlugin_getMeshTriangleDistanceIfSmaller(const void* meshO
     }
     return(retVal);
 }
-SIM_DLLEXPORT bool geomPlugin_getMeshSegmentDistanceIfSmaller(const void* meshObbStruct,const float meshTransformation[7],const float segmentEndPoint[3],const float segmentVector[3],float* dist,float minDistSegPt1[3],float minDistSegPt2[3],int* caching)
+SIM_DLLEXPORT bool geomPlugin_getMeshSegmentDistanceIfSmaller(const void* meshObbStruct,const simReal meshTransformation[7],const simReal segmentEndPoint[3],const simReal segmentVector[3],simReal* dist,simReal minDistSegPt1[3],simReal minDistSegPt2[3],int* caching)
 {
     C7Vector tr1;
     tr1.setInternalData(meshTransformation);
@@ -3588,7 +3584,7 @@ SIM_DLLEXPORT bool geomPlugin_getMeshSegmentDistanceIfSmaller(const void* meshOb
     }
     return(retVal);
 }
-SIM_DLLEXPORT bool geomPlugin_getMeshPointDistanceIfSmaller(const void* meshObbStruct,const float meshTransformation[7],const float point[3],float* dist,float minDistSegPt[3],int* caching)
+SIM_DLLEXPORT bool geomPlugin_getMeshPointDistanceIfSmaller(const void* meshObbStruct,const simReal meshTransformation[7],const simReal point[3],simReal* dist,simReal minDistSegPt[3],int* caching)
 {
     C7Vector tr1;
     tr1.setInternalData(meshTransformation);
@@ -3603,7 +3599,7 @@ SIM_DLLEXPORT bool geomPlugin_getMeshPointDistanceIfSmaller(const void* meshObbS
     return(retVal);
 }
 
-SIM_DLLEXPORT bool geomPlugin_getOctreeOctreeDistanceIfSmaller(const void* oc1Struct,const float octree1Transformation[7],const void* oc2Struct,const float octree2Transformation[7],float* dist,float oc1MinDistPt[3],float oc2MinDistPt[3],unsigned long long int* oc1Caching,unsigned long long int* oc2Caching)
+SIM_DLLEXPORT bool geomPlugin_getOctreeOctreeDistanceIfSmaller(const void* oc1Struct,const simReal octree1Transformation[7],const void* oc2Struct,const simReal octree2Transformation[7],simReal* dist,simReal oc1MinDistPt[3],simReal oc2MinDistPt[3],unsigned long long int* oc1Caching,unsigned long long int* oc2Caching)
 {
     C7Vector tr1;
     tr1.setInternalData(octree1Transformation);
@@ -3621,7 +3617,7 @@ SIM_DLLEXPORT bool geomPlugin_getOctreeOctreeDistanceIfSmaller(const void* oc1St
     }
     return(retVal);
 }
-SIM_DLLEXPORT bool geomPlugin_getOctreePtcloudDistanceIfSmaller(const void* ocStruct,const float octreeTransformation[7],const void* pcStruct,const float pcTransformation[7],float* dist,float ocMinDistPt[3],float pcMinDistPt[3],unsigned long long int* ocCaching,unsigned long long int* pcCaching)
+SIM_DLLEXPORT bool geomPlugin_getOctreePtcloudDistanceIfSmaller(const void* ocStruct,const simReal octreeTransformation[7],const void* pcStruct,const simReal pcTransformation[7],simReal* dist,simReal ocMinDistPt[3],simReal pcMinDistPt[3],unsigned long long int* ocCaching,unsigned long long int* pcCaching)
 {
     C7Vector tr1;
     tr1.setInternalData(octreeTransformation);
@@ -3639,7 +3635,7 @@ SIM_DLLEXPORT bool geomPlugin_getOctreePtcloudDistanceIfSmaller(const void* ocSt
     }
     return(retVal);
 }
-SIM_DLLEXPORT bool geomPlugin_getOctreeTriangleDistanceIfSmaller(const void* ocStruct,const float octreeTransformation[7],const float p[3],const float v[3],const float w[3],float* dist,float ocMinDistPt[3],float triMinDistPt[3],unsigned long long int* ocCaching)
+SIM_DLLEXPORT bool geomPlugin_getOctreeTriangleDistanceIfSmaller(const void* ocStruct,const simReal octreeTransformation[7],const simReal p[3],const simReal v[3],const simReal w[3],simReal* dist,simReal ocMinDistPt[3],simReal triMinDistPt[3],unsigned long long int* ocCaching)
 {
     C7Vector tr;
     tr.setInternalData(octreeTransformation);
@@ -3658,7 +3654,7 @@ SIM_DLLEXPORT bool geomPlugin_getOctreeTriangleDistanceIfSmaller(const void* ocS
     }
     return(retVal);
 }
-SIM_DLLEXPORT bool geomPlugin_getOctreeSegmentDistanceIfSmaller(const void* ocStruct,const float octreeTransformation[7],const float segmentEndPoint[3],const float segmentVector[3],float* dist,float ocMinDistPt[3],float segMinDistPt[3],unsigned long long int* ocCaching)
+SIM_DLLEXPORT bool geomPlugin_getOctreeSegmentDistanceIfSmaller(const void* ocStruct,const simReal octreeTransformation[7],const simReal segmentEndPoint[3],const simReal segmentVector[3],simReal* dist,simReal ocMinDistPt[3],simReal segMinDistPt[3],unsigned long long int* ocCaching)
 {
     C7Vector tr;
     tr.setInternalData(octreeTransformation);
@@ -3676,7 +3672,7 @@ SIM_DLLEXPORT bool geomPlugin_getOctreeSegmentDistanceIfSmaller(const void* ocSt
     }
     return(retVal);
 }
-SIM_DLLEXPORT bool geomPlugin_getOctreePointDistanceIfSmaller(const void* ocStruct,const float octreeTransformation[7],const float point[3],float* dist,float ocMinDistPt[3],unsigned long long int* ocCaching)
+SIM_DLLEXPORT bool geomPlugin_getOctreePointDistanceIfSmaller(const void* ocStruct,const simReal octreeTransformation[7],const simReal point[3],simReal* dist,simReal ocMinDistPt[3],unsigned long long int* ocCaching)
 {
     C7Vector tr;
     tr.setInternalData(octreeTransformation);
@@ -3691,7 +3687,7 @@ SIM_DLLEXPORT bool geomPlugin_getOctreePointDistanceIfSmaller(const void* ocStru
     return(retVal);
 }
 
-SIM_DLLEXPORT bool geomPlugin_getPtcloudPtcloudDistanceIfSmaller(const void* pc1Struct,const float pc1Transformation[7],const void* pc2Struct,const float pc2Transformation[7],float* dist,float* pc1MinDistPt,float* pc2MinDistPt,unsigned long long int* pc1Caching,unsigned long long int* pc2Caching)
+SIM_DLLEXPORT bool geomPlugin_getPtcloudPtcloudDistanceIfSmaller(const void* pc1Struct,const simReal pc1Transformation[7],const void* pc2Struct,const simReal pc2Transformation[7],simReal* dist,simReal* pc1MinDistPt,simReal* pc2MinDistPt,unsigned long long int* pc1Caching,unsigned long long int* pc2Caching)
 {
     C7Vector tr1;
     tr1.setInternalData(pc1Transformation);
@@ -3709,7 +3705,7 @@ SIM_DLLEXPORT bool geomPlugin_getPtcloudPtcloudDistanceIfSmaller(const void* pc1
     }
     return(retVal);
 }
-SIM_DLLEXPORT bool geomPlugin_getPtcloudTriangleDistanceIfSmaller(const void* pcStruct,const float pcTransformation[7],const float p[3],const float v[3],const float w[3],float* dist,float* pcMinDistPt,float* triMinDistPt,unsigned long long int* pcCaching)
+SIM_DLLEXPORT bool geomPlugin_getPtcloudTriangleDistanceIfSmaller(const void* pcStruct,const simReal pcTransformation[7],const simReal p[3],const simReal v[3],const simReal w[3],simReal* dist,simReal* pcMinDistPt,simReal* triMinDistPt,unsigned long long int* pcCaching)
 {
     C7Vector tr;
     tr.setInternalData(pcTransformation);
@@ -3728,7 +3724,7 @@ SIM_DLLEXPORT bool geomPlugin_getPtcloudTriangleDistanceIfSmaller(const void* pc
     }
     return(retVal);
 }
-SIM_DLLEXPORT bool geomPlugin_getPtcloudSegmentDistanceIfSmaller(const void* pcStruct,const float pcTransformation[7],const float segmentEndPoint[3],const float segmentVector[3],float* dist,float* pcMinDistPt,float* segMinDistPt,unsigned long long int* pcCaching)
+SIM_DLLEXPORT bool geomPlugin_getPtcloudSegmentDistanceIfSmaller(const void* pcStruct,const simReal pcTransformation[7],const simReal segmentEndPoint[3],const simReal segmentVector[3],simReal* dist,simReal* pcMinDistPt,simReal* segMinDistPt,unsigned long long int* pcCaching)
 {
     C7Vector tr;
     tr.setInternalData(pcTransformation);
@@ -3746,7 +3742,7 @@ SIM_DLLEXPORT bool geomPlugin_getPtcloudSegmentDistanceIfSmaller(const void* pcS
     }
     return(retVal);
 }
-SIM_DLLEXPORT bool geomPlugin_getPtcloudPointDistanceIfSmaller(const void* pcStruct,const float pcTransformation[7],const float point[3],float* dist,float* pcMinDistPt,unsigned long long int* pcCaching)
+SIM_DLLEXPORT bool geomPlugin_getPtcloudPointDistanceIfSmaller(const void* pcStruct,const simReal pcTransformation[7],const simReal point[3],simReal* dist,simReal* pcMinDistPt,unsigned long long int* pcCaching)
 {
     C7Vector tr;
     tr.setInternalData(pcTransformation);
@@ -3761,7 +3757,7 @@ SIM_DLLEXPORT bool geomPlugin_getPtcloudPointDistanceIfSmaller(const void* pcStr
     return(retVal);
 }
 
-SIM_DLLEXPORT float geomPlugin_getApproxBoxBoxDistance(const float box1Transformation[7],const float box1HalfSize[3],const float box2Transformation[7],const float box2HalfSize[3])
+SIM_DLLEXPORT simReal geomPlugin_getApproxBoxBoxDistance(const simReal box1Transformation[7],const simReal box1HalfSize[3],const simReal box2Transformation[7],const simReal box2HalfSize[3])
 {
     C7Vector tr1;
     tr1.setInternalData(box1Transformation);
@@ -3769,11 +3765,11 @@ SIM_DLLEXPORT float geomPlugin_getApproxBoxBoxDistance(const float box1Transform
     tr2.setInternalData(box2Transformation);
     C3Vector _b1hs(box1HalfSize);
     C3Vector _b2hs(box2HalfSize);
-    float retVal=geom_getApproxBoxBoxDistance(tr1,_b1hs,tr2,_b2hs);
+    simReal retVal=geom_getApproxBoxBoxDistance(tr1,_b1hs,tr2,_b2hs);
     return(retVal);
 }
 
-SIM_DLLEXPORT bool geomPlugin_getBoxBoxDistanceIfSmaller(const float box1Transformation[7],const float box1HalfSize[3],const float box2Transformation[7],const float box2HalfSize[3],bool boxesAreSolid,float* dist,float distSegPt1[3],float distSegPt2[3])
+SIM_DLLEXPORT bool geomPlugin_getBoxBoxDistanceIfSmaller(const simReal box1Transformation[7],const simReal box1HalfSize[3],const simReal box2Transformation[7],const simReal box2HalfSize[3],bool boxesAreSolid,simReal* dist,simReal distSegPt1[3],simReal distSegPt2[3])
 {
     C7Vector tr1;
     tr1.setInternalData(box1Transformation);
@@ -3793,7 +3789,7 @@ SIM_DLLEXPORT bool geomPlugin_getBoxBoxDistanceIfSmaller(const float box1Transfo
     }
     return(retVal);
 }
-SIM_DLLEXPORT bool geomPlugin_getBoxTriangleDistanceIfSmaller(const float boxTransformation[7],const float boxHalfSize[3],bool boxIsSolid,const float p[3],const float v[3],const float w[3],float* dist,float distSegPt1[3],float distSegPt2[3])
+SIM_DLLEXPORT bool geomPlugin_getBoxTriangleDistanceIfSmaller(const simReal boxTransformation[7],const simReal boxHalfSize[3],bool boxIsSolid,const simReal p[3],const simReal v[3],const simReal w[3],simReal* dist,simReal distSegPt1[3],simReal distSegPt2[3])
 {
     C7Vector tr;
     tr.setInternalData(boxTransformation);
@@ -3813,7 +3809,7 @@ SIM_DLLEXPORT bool geomPlugin_getBoxTriangleDistanceIfSmaller(const float boxTra
     }
     return(retVal);
 }
-SIM_DLLEXPORT bool geomPlugin_getBoxSegmentDistanceIfSmaller(const float boxTransformation[7],const float boxHalfSize[3],bool boxIsSolid,const float segmentEndPoint[3],const float segmentVector[3],float* dist,float distSegPt1[3],float distSegPt2[3])
+SIM_DLLEXPORT bool geomPlugin_getBoxSegmentDistanceIfSmaller(const simReal boxTransformation[7],const simReal boxHalfSize[3],bool boxIsSolid,const simReal segmentEndPoint[3],const simReal segmentVector[3],simReal* dist,simReal distSegPt1[3],simReal distSegPt2[3])
 {
     C7Vector tr;
     tr.setInternalData(boxTransformation);
@@ -3832,7 +3828,7 @@ SIM_DLLEXPORT bool geomPlugin_getBoxSegmentDistanceIfSmaller(const float boxTran
     }
     return(retVal);
 }
-SIM_DLLEXPORT bool geomPlugin_getBoxPointDistanceIfSmaller(const float boxTransformation[7],const float boxHalfSize[3],bool boxIsSolid,const float point[3],float* dist,float distSegPt1[3])
+SIM_DLLEXPORT bool geomPlugin_getBoxPointDistanceIfSmaller(const simReal boxTransformation[7],const simReal boxHalfSize[3],bool boxIsSolid,const simReal point[3],simReal* dist,simReal distSegPt1[3])
 {
     C7Vector tr;
     tr.setInternalData(boxTransformation);
@@ -3848,7 +3844,7 @@ SIM_DLLEXPORT bool geomPlugin_getBoxPointDistanceIfSmaller(const float boxTransf
     return(retVal);
 }
 
-SIM_DLLEXPORT bool geomPlugin_getTriangleTriangleDistanceIfSmaller(const float p1[3],const float v1[3],const float w1[3],const float p2[3],const float v2[3],const float w2[3],float* dist,float minDistSegPt1[3],float minDistSegPt2[3])
+SIM_DLLEXPORT bool geomPlugin_getTriangleTriangleDistanceIfSmaller(const simReal p1[3],const simReal v1[3],const simReal w1[3],const simReal p2[3],const simReal v2[3],const simReal w2[3],simReal* dist,simReal minDistSegPt1[3],simReal minDistSegPt2[3])
 {
     C3Vector _p1(p1);
     C3Vector _v1(v1);
@@ -3868,7 +3864,7 @@ SIM_DLLEXPORT bool geomPlugin_getTriangleTriangleDistanceIfSmaller(const float p
     }
     return(retVal);
 }
-SIM_DLLEXPORT bool geomPlugin_getTriangleSegmentDistanceIfSmaller(const float p[3],const float v[3],const float w[3],const float segmentEndPoint[3],const float segmentVector[3],float* dist,float minDistSegPt1[3],float minDistSegPt2[3])
+SIM_DLLEXPORT bool geomPlugin_getTriangleSegmentDistanceIfSmaller(const simReal p[3],const simReal v[3],const simReal w[3],const simReal segmentEndPoint[3],const simReal segmentVector[3],simReal* dist,simReal minDistSegPt1[3],simReal minDistSegPt2[3])
 {
     C3Vector _p(p);
     C3Vector _v(v);
@@ -3887,7 +3883,7 @@ SIM_DLLEXPORT bool geomPlugin_getTriangleSegmentDistanceIfSmaller(const float p[
     }
     return(retVal);
 }
-SIM_DLLEXPORT bool geomPlugin_getTrianglePointDistanceIfSmaller(const float p[3],const float v[3],const float w[3],const float point[3],float* dist,float minDistSegPt[3])
+SIM_DLLEXPORT bool geomPlugin_getTrianglePointDistanceIfSmaller(const simReal p[3],const simReal v[3],const simReal w[3],const simReal point[3],simReal* dist,simReal minDistSegPt[3])
 {
     C3Vector _p(p);
     C3Vector _v(v);
@@ -3903,7 +3899,7 @@ SIM_DLLEXPORT bool geomPlugin_getTrianglePointDistanceIfSmaller(const float p[3]
     return(retVal);
 }
 
-SIM_DLLEXPORT bool geomPlugin_getSegmentSegmentDistanceIfSmaller(const float segment1EndPoint[3],const float segment1Vector[3],const float segment2EndPoint[3],const float segment2Vector[3],float* dist,float minDistSegPt1[3],float minDistSegPt2[3])
+SIM_DLLEXPORT bool geomPlugin_getSegmentSegmentDistanceIfSmaller(const simReal segment1EndPoint[3],const simReal segment1Vector[3],const simReal segment2EndPoint[3],const simReal segment2Vector[3],simReal* dist,simReal minDistSegPt1[3],simReal minDistSegPt2[3])
 {
     C3Vector _segment1EndPoint(segment1EndPoint);
     C3Vector _segment1Vector(segment1Vector);
@@ -3921,7 +3917,7 @@ SIM_DLLEXPORT bool geomPlugin_getSegmentSegmentDistanceIfSmaller(const float seg
     }
     return(retVal);
 }
-SIM_DLLEXPORT bool geomPlugin_getSegmentPointDistanceIfSmaller(const float segmentEndPoint[3],const float segmentVector[3],const float point[3],float* dist,float minDistSegPt[3])
+SIM_DLLEXPORT bool geomPlugin_getSegmentPointDistanceIfSmaller(const simReal segmentEndPoint[3],const simReal segmentVector[3],const simReal point[3],simReal* dist,simReal minDistSegPt[3])
 {
     C3Vector _segmentEndPoint(segmentEndPoint);
     C3Vector _segmentVector(segmentVector);
@@ -3936,7 +3932,7 @@ SIM_DLLEXPORT bool geomPlugin_getSegmentPointDistanceIfSmaller(const float segme
     return(retVal);
 }
 
-SIM_DLLEXPORT bool geomPlugin_volumeSensorDetectMeshIfSmaller(const float* planesIn,int planesInSize,const float* planesOut,int planesOutSize,const void* obbStruct,const float meshTransformationRelative[7],float* dist,bool fast,bool frontDetection,bool backDetection,float maxAngle,float detectPt[3],float triN[3])
+SIM_DLLEXPORT bool geomPlugin_volumeSensorDetectMeshIfSmaller(const simReal* planesIn,int planesInSize,const simReal* planesOut,int planesOutSize,const void* obbStruct,const simReal meshTransformationRelative[7],simReal* dist,bool fast,bool frontDetection,bool backDetection,simReal maxAngle,simReal detectPt[3],simReal triN[3])
 {   // sensor is at the origin. meshTransformationRelative is relative to the sensor
     C7Vector tr;
     tr.setInternalData(meshTransformationRelative);
@@ -3952,7 +3948,7 @@ SIM_DLLEXPORT bool geomPlugin_volumeSensorDetectMeshIfSmaller(const float* plane
     }
     return(retVal);
 }
-SIM_DLLEXPORT bool geomPlugin_volumeSensorDetectOctreeIfSmaller(const float* planesIn,int planesInSize,const float* planesOut,int planesOutSize,const void* ocStruct,const float octreeTransformationRelative[7],float* dist,bool fast,bool frontDetection,bool backDetection,float maxAngle,float detectPt[3],float triN[3])
+SIM_DLLEXPORT bool geomPlugin_volumeSensorDetectOctreeIfSmaller(const simReal* planesIn,int planesInSize,const simReal* planesOut,int planesOutSize,const void* ocStruct,const simReal octreeTransformationRelative[7],simReal* dist,bool fast,bool frontDetection,bool backDetection,simReal maxAngle,simReal detectPt[3],simReal triN[3])
 {   // sensor is at the origin. octreeTransformationRelative is relative to the sensor
     C7Vector tr;
     tr.setInternalData(octreeTransformationRelative);
@@ -3968,7 +3964,7 @@ SIM_DLLEXPORT bool geomPlugin_volumeSensorDetectOctreeIfSmaller(const float* pla
     }
     return(retVal);
 }
-SIM_DLLEXPORT bool geomPlugin_volumeSensorDetectPtcloudIfSmaller(const float* planesIn,int planesInSize,const float* planesOut,int planesOutSize,const void* pcStruct,const float ptcloudTransformationRelative[7],float* dist,bool fast,float detectPt[3])
+SIM_DLLEXPORT bool geomPlugin_volumeSensorDetectPtcloudIfSmaller(const simReal* planesIn,int planesInSize,const simReal* planesOut,int planesOutSize,const void* pcStruct,const simReal ptcloudTransformationRelative[7],simReal* dist,bool fast,simReal detectPt[3])
 {   // sensor is at the origin. ptcloudTransformationRelative is relative to the sensor
     C7Vector tr;
     tr.setInternalData(ptcloudTransformationRelative);
@@ -3981,7 +3977,7 @@ SIM_DLLEXPORT bool geomPlugin_volumeSensorDetectPtcloudIfSmaller(const float* pl
     }
     return(retVal);
 }
-SIM_DLLEXPORT bool geomPlugin_volumeSensorDetectTriangleIfSmaller(const float* planesIn,int planesInSize,const float* planesOut,int planesOutSize,const float p[3],const float v[3],const float w[3],float* dist,bool frontDetection,bool backDetection,float maxAngle,float detectPt[3],float triN[3])
+SIM_DLLEXPORT bool geomPlugin_volumeSensorDetectTriangleIfSmaller(const simReal* planesIn,int planesInSize,const simReal* planesOut,int planesOutSize,const simReal p[3],const simReal v[3],const simReal w[3],simReal* dist,bool frontDetection,bool backDetection,simReal maxAngle,simReal detectPt[3],simReal triN[3])
 {   // sensor is at the origin. triangle is relative to the sensor
     C3Vector _p(p);
     C3Vector _v(v);
@@ -3998,7 +3994,7 @@ SIM_DLLEXPORT bool geomPlugin_volumeSensorDetectTriangleIfSmaller(const float* p
     }
     return(retVal);
 }
-SIM_DLLEXPORT bool geomPlugin_volumeSensorDetectSegmentIfSmaller(const float* planesIn,int planesInSize,const float* planesOut,int planesOutSize,const float segmentEndPoint[3],const float segmentVector[3],float* dist,float maxAngle,float detectPt[3])
+SIM_DLLEXPORT bool geomPlugin_volumeSensorDetectSegmentIfSmaller(const simReal* planesIn,int planesInSize,const simReal* planesOut,int planesOutSize,const simReal segmentEndPoint[3],const simReal segmentVector[3],simReal* dist,simReal maxAngle,simReal detectPt[3])
 {   // sensor is at the origin. segment is relative to the sensor
     C3Vector _segmentEndPoint(segmentEndPoint);
     C3Vector _segmentVector(segmentVector);
@@ -4012,7 +4008,7 @@ SIM_DLLEXPORT bool geomPlugin_volumeSensorDetectSegmentIfSmaller(const float* pl
     return(retVal);
 }
 
-SIM_DLLEXPORT bool geomPlugin_raySensorDetectMeshIfSmaller(const float rayStart[3],const float rayVect[3],const void* obbStruct,const float meshTransformationRelative[7],float* dist,float forbiddenDist,bool fast,bool frontDetection,bool backDetection,float maxAngle,float detectPt[3],float triN[3],bool* forbiddenDistTouched)
+SIM_DLLEXPORT bool geomPlugin_raySensorDetectMeshIfSmaller(const simReal rayStart[3],const simReal rayVect[3],const void* obbStruct,const simReal meshTransformationRelative[7],simReal* dist,simReal forbiddenDist,bool fast,bool frontDetection,bool backDetection,simReal maxAngle,simReal detectPt[3],simReal triN[3],bool* forbiddenDistTouched)
 {   // sensor is at the origin. meshTransformationRelative is relative to the sensor
     C7Vector tr;
     tr.setInternalData(meshTransformationRelative);
@@ -4028,7 +4024,7 @@ SIM_DLLEXPORT bool geomPlugin_raySensorDetectMeshIfSmaller(const float rayStart[
     }
     return(retVal);
 }
-SIM_DLLEXPORT bool geomPlugin_raySensorDetectOctreeIfSmaller(const float rayStart[3],const float rayVect[3],const void* ocStruct,const float octreeTransformationRelative[7],float* dist,float forbiddenDist,bool fast,bool frontDetection,bool backDetection,float maxAngle,float detectPt[3],float triN[3],bool* forbiddenDistTouched)
+SIM_DLLEXPORT bool geomPlugin_raySensorDetectOctreeIfSmaller(const simReal rayStart[3],const simReal rayVect[3],const void* ocStruct,const simReal octreeTransformationRelative[7],simReal* dist,simReal forbiddenDist,bool fast,bool frontDetection,bool backDetection,simReal maxAngle,simReal detectPt[3],simReal triN[3],bool* forbiddenDistTouched)
 {   // sensor is at the origin. octreeTransformationRelative is relative to the sensor
     C7Vector tr;
     tr.setInternalData(octreeTransformationRelative);
@@ -4045,7 +4041,7 @@ SIM_DLLEXPORT bool geomPlugin_raySensorDetectOctreeIfSmaller(const float rayStar
     return(retVal);
 }
 
-SIM_DLLEXPORT bool geomPlugin_isPointInVolume(const float* planesIn,int planesInSize,const float point[3])
+SIM_DLLEXPORT bool geomPlugin_isPointInVolume(const simReal* planesIn,int planesInSize,const simReal point[3])
 {
     bool retVal=geom_isPointInVolume(planesIn,planesInSize,C3Vector(point));
     return(retVal);
