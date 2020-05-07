@@ -2857,12 +2857,12 @@ SIM_DLLEXPORT unsigned char simStart(void*,int)
     simLib=loadSimLibrary(temp.c_str());
     if (simLib==NULL)
     {
-        outputMsg(sim_verbosity_errors,"simExtGeometric plugin error: could not find or correctly load the CoppeliaSim library. Cannot start 'Geometric' plugin.");
+        outputMsg(sim_verbosity_errors,"simExtGeometric: error: could not find or correctly load the CoppeliaSim library. Cannot start 'Geometric' plugin.");
         return(0);
     }
     if (getSimProcAddresses(simLib)==0)
     {
-        outputMsg(sim_verbosity_errors,"simExtGeometric plugin error: could not find all required functions in the CoppeliaSim library. Cannot start 'Geometric' plugin.");
+        outputMsg(sim_verbosity_errors,"simExtGeometric: error: could not find all required functions in the CoppeliaSim library. Cannot start 'Geometric' plugin.");
         unloadSimLibrary(simLib);
         return(0);
     }
