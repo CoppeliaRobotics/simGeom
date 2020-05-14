@@ -36,19 +36,6 @@ static int _nextOctreeDataHandle=0;
 static std::map<int,CPcStruct*> _ptcloudData;
 static int _nextPtcloudDataHandle=0;
 
-bool canOutputMsg(int msgType)
-{
-    int plugin_verbosity = sim_verbosity_default;
-    simGetModuleInfo("Geometric",sim_moduleinfo_verbosity,nullptr,&plugin_verbosity);
-    return(plugin_verbosity>=msgType);
-}
-
-void outputMsg(int msgType,const char* msg)
-{
-    if (canOutputMsg(msgType))
-        printf("%s\n",msg);
-}
-
 // --------------------------------------------------------------------------------------
 // simGeom.getMeshMeshCollision
 // --------------------------------------------------------------------------------------
@@ -2857,12 +2844,12 @@ SIM_DLLEXPORT unsigned char simStart(void*,int)
     simLib=loadSimLibrary(temp.c_str());
     if (simLib==NULL)
     {
-        outputMsg(sim_verbosity_errors,"simExtGeometric: error: could not find or correctly load the CoppeliaSim library. Cannot start 'Geometric' plugin.");
+        simAddLog("Geometric",sim_verbosity_errors,"could not find or correctly load the CoppeliaSim library. Cannot start the plugin.");
         return(0);
     }
     if (getSimProcAddresses(simLib)==0)
     {
-        outputMsg(sim_verbosity_errors,"simExtGeometric: error: could not find all required functions in the CoppeliaSim library. Cannot start 'Geometric' plugin.");
+        simAddLog("Geometric",sim_verbosity_errors,"could not find all required functions in the CoppeliaSim library. Cannot start the plugin.");
         unloadSimLibrary(simLib);
         return(0);
     }
