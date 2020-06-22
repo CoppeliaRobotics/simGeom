@@ -36,6 +36,36 @@ static int _nextOctreeDataHandle=0;
 static std::map<int,CPcStruct*> _ptcloudData;
 static int _nextPtcloudDataHandle=0;
 
+/*
+Following not (yet) implemented in the Lua API:
+simGeom.getBoxBoxCollision
+simGeom.getBoxTriangleCollision
+simGeom.getBoxSegmentCollision
+simGeom.getBoxPointCollision
+simGeom.getTriangleTriangleCollision
+simGeom.getTriangleSegmentCollision
+simGeom.insertColorPointsIntoOctree
+simGeom.insertColorPointsIntoPtcloud
+simGeom.insertMeshIntoOctree
+simGeom.insertOctreeIntoOctree
+simGeom.insertPointsIntoOctree
+simGeom.insertPointsIntoPointcloud
+simGeom.intersectPointsWithPtcloud
+simGeom.isPointInVolume
+simGeom.raySensorDetectMesh
+simGeom.raySensorDetectOctree
+simGeom.removeMeshFromOctree
+simGeom.removeOctreeFromOctree
+simGeom.removePointsFromOctree
+simGeom.removeOctreeFromPtcloud
+simGeom.removePointsFromPtcloud
+simGeom.volumeSensorDetectMesh
+simGeom.volumeSensorDetectOctree
+simGeom.volumeSensorDetectPtcloud
+simGeom.volumeSensorDetectSegment
+simGeom.volumeSensorDetectTriangle
+*/
+
 // --------------------------------------------------------------------------------------
 // simGeom.getMeshMeshCollision
 // --------------------------------------------------------------------------------------
@@ -2225,9 +2255,9 @@ void LUA_GETOCTREEVOXELS_CALLBACK(SScriptCallBack* p)
 
 const int inArgs_GETTRANSFORMEDPOINTS[]={
     3,
-    sim_script_arg_real|sim_lua_arg_table,0,
-    sim_script_arg_real|sim_lua_arg_table,3,
-    sim_script_arg_real|sim_lua_arg_table,4,
+    sim_script_arg_real|sim_lua_arg_table,0, // points
+    sim_script_arg_real|sim_lua_arg_table,3, // position (3 vals) or matrix (12 vals)
+    sim_script_arg_real|sim_lua_arg_table,3, // euler (3 vals) or quaternion (4 vals)
 };
 
 void LUA_GETTRANSFORMEDPOINTS_CALLBACK(SScriptCallBack* p)
@@ -2238,9 +2268,28 @@ void LUA_GETTRANSFORMEDPOINTS_CALLBACK(SScriptCallBack* p)
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         std::vector<simReal> outData;
         outData.resize(inData->at(0).realData.size());
-        C3Vector pos(&(inData->at(1).realData[0]));
-        C4Vector q(inData->at(2).realData[3],inData->at(2).realData[0],inData->at(2).realData[1],inData->at(2).realData[2]);
-        C7Vector tr(q,pos);
+        C7Vector tr;
+        if (inData->at(1).realData.size()<12)
+        { // second argument is a position
+            C3Vector pos(&(inData->at(1).realData[0]));
+            if (inData->at(2).realData.size()<4)
+            { // third argument is a Euler angle value
+                C3Vector e(&inData->at(2).realData[0]);
+                tr.X=pos;
+                tr.Q.setEulerAngles(e);
+            }
+            else
+            { // third argument is a quaternion
+                C4Vector q(inData->at(2).realData[3],inData->at(2).realData[0],inData->at(2).realData[1],inData->at(2).realData[2]);
+                tr=C7Vector(q,pos);
+            }
+        }
+        else
+        { // second argument is a matrix
+            C4X4Matrix m;
+            m.copyFromInterface(&(inData->at(1).realData[0]));
+            tr=m.getTransformation();
+        }
         for (size_t i=0;i<inData->at(0).realData.size()/3;i++)
         {
             C3Vector v(&inData->at(0).realData[0]+3*i);
@@ -2914,7 +2963,7 @@ SIM_DLLEXPORT unsigned char simStart(void*,int)
     simRegisterScriptCallbackFunction(LUA_GETOCTREESERIALIZATIONDATA_COMMAND_PLUGIN,strConCat("string data=",LUA_GETOCTREESERIALIZATIONDATA_COMMAND,"(number octreeHandle)"),LUA_GETOCTREESERIALIZATIONDATA_CALLBACK);
     simRegisterScriptCallbackFunction(LUA_CREATEOCTREEFROMSERIALIZATIONDATA_COMMAND_PLUGIN,strConCat("number octreeHandle=",LUA_CREATEOCTREEFROMSERIALIZATIONDATA_COMMAND,"(string data)"),LUA_CREATEOCTREEFROMSERIALIZATIONDATA_CALLBACK);
     simRegisterScriptCallbackFunction(LUA_DESTROYOCTREE_COMMAND_PLUGIN,strConCat("",LUA_DESTROYOCTREE_COMMAND,"(number octreeHandle)"),LUA_DESTROYOCTREE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETOCTREEVOXELS_COMMAND_PLUGIN,strConCat("table positions,table colors,table userData",LUA_GETOCTREEVOXELS_COMMAND,"(number octreeHandle)"),LUA_GETOCTREEVOXELS_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETOCTREEVOXELS_COMMAND_PLUGIN,strConCat("table positions,table colors,table userData=",LUA_GETOCTREEVOXELS_COMMAND,"(number octreeHandle)"),LUA_GETOCTREEVOXELS_CALLBACK);
 
     simRegisterScriptCallbackFunction(LUA_CREATEPTCLOUDFROMPOINTS_COMMAND_PLUGIN,strConCat("number ptcloudHandle=",LUA_CREATEPTCLOUDFROMPOINTS_COMMAND,"(table points,\ntable_3 octreeOriginPos=nil,table_4 octreeOriginQuaternion=nil,\nnumber maxCellSize=0.05,number maxPtsInCell=20,table_3 pointColor={0,0,0},number proximityTolerance=0.005)"),LUA_CREATEPTCLOUDFROMPOINTS_CALLBACK);
     simRegisterScriptCallbackFunction(LUA_CREATEPTCLOUDFROMCOLORPOINTS_COMMAND_PLUGIN,strConCat("number ptcloudHandle=",LUA_CREATEPTCLOUDFROMCOLORPOINTS_COMMAND,"(table points,\ntable_3 octreeOriginPos=nil,table_4 octreeOriginQuaternion=nil,\nnumber maxCellSize=0.05,number maxPtsInCell=20,table colors=nil,number proximityTolerance=0.005)"),LUA_CREATEPTCLOUDFROMCOLORPOINTS_CALLBACK);
@@ -2923,9 +2972,9 @@ SIM_DLLEXPORT unsigned char simStart(void*,int)
     simRegisterScriptCallbackFunction(LUA_GETPTCLOUDSERIALIZATIONDATA_COMMAND_PLUGIN,strConCat("string data=",LUA_GETPTCLOUDSERIALIZATIONDATA_COMMAND,"(number octreeHandle)"),LUA_GETPTCLOUDSERIALIZATIONDATA_CALLBACK);
     simRegisterScriptCallbackFunction(LUA_CREATEPTCLOUDFROMSERIALIZATIONDATA_COMMAND_PLUGIN,strConCat("number ptcloudHandle=",LUA_CREATEPTCLOUDFROMSERIALIZATIONDATA_COMMAND,"(string data)"),LUA_CREATEPTCLOUDFROMSERIALIZATIONDATA_CALLBACK);
     simRegisterScriptCallbackFunction(LUA_DESTROYPTCLOUD_COMMAND_PLUGIN,strConCat("",LUA_DESTROYPTCLOUD_COMMAND,"(number ptcloudHandle)"),LUA_DESTROYPTCLOUD_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETPTCLOUDPOINTS_COMMAND_PLUGIN,strConCat("table points,table colors",LUA_GETPTCLOUDPOINTS_COMMAND,"(number ptcloudHandle,number subsetProportion=1.0)"),LUA_GETPTCLOUDPOINTS_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETPTCLOUDPOINTS_COMMAND_PLUGIN,strConCat("table points,table colors=",LUA_GETPTCLOUDPOINTS_COMMAND,"(number ptcloudHandle,number subsetProportion=1.0)"),LUA_GETPTCLOUDPOINTS_CALLBACK);
 
-    simRegisterScriptCallbackFunction(LUA_GETTRANSFORMEDPOINTS_COMMAND_PLUGIN,strConCat("table transformedPoints",LUA_GETTRANSFORMEDPOINTS_COMMAND,"(table points,table_3 position,table_4 quaternion)"),LUA_GETTRANSFORMEDPOINTS_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETTRANSFORMEDPOINTS_COMMAND_PLUGIN,"1) table transformedPoints=simGeom.getTransformedPoints(table points,table_3 position,table_4 quaternion)\n2) table transformedPoints=simGeom.getTransformedPoints(table points,table_3 position,table_3 eulerAngles)\n3) table transformedPoints=simGeom.getTransformedPoints(table points,table_12 transformationMatrix)",LUA_GETTRANSFORMEDPOINTS_CALLBACK);
 
 
     return(4);
