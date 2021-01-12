@@ -1,4 +1,4 @@
-#include "simExtGeometric.h"
+#include "simExtGeom.h"
 #include "simLib.h"
 #include <iostream>
 #include <cstdio>
@@ -69,7 +69,7 @@ simGeom.volumeSensorDetectTriangle
 // --------------------------------------------------------------------------------------
 // simGeom.getMeshMeshCollision
 // --------------------------------------------------------------------------------------
-#define LUA_GETMESHMESHCOLLISION_COMMAND_PLUGIN "simGeom.getMeshMeshCollision@Geometric"
+#define LUA_GETMESHMESHCOLLISION_COMMAND_PLUGIN "simGeom.getMeshMeshCollision@Geom"
 #define LUA_GETMESHMESHCOLLISION_COMMAND "simGeom.getMeshMeshCollision"
 
 const int inArgs_GETMESHMESHCOLLISION[]={
@@ -136,7 +136,7 @@ void LUA_GETMESHMESHCOLLISION_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getMeshOctreeCollision
 // --------------------------------------------------------------------------------------
-#define LUA_GETMESHOCTREECOLLISION_COMMAND_PLUGIN "simGeom.getMeshOctreeCollision@Geometric"
+#define LUA_GETMESHOCTREECOLLISION_COMMAND_PLUGIN "simGeom.getMeshOctreeCollision@Geom"
 #define LUA_GETMESHOCTREECOLLISION_COMMAND "simGeom.getMeshOctreeCollision"
 
 const int inArgs_GETMESHOCTREECOLLISION[]={
@@ -194,7 +194,7 @@ void LUA_GETMESHOCTREECOLLISION_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getMeshTriangleCollision
 // --------------------------------------------------------------------------------------
-#define LUA_GETMESHTRIANGLECOLLISION_COMMAND_PLUGIN "simGeom.getMeshTriangleCollision@Geometric"
+#define LUA_GETMESHTRIANGLECOLLISION_COMMAND_PLUGIN "simGeom.getMeshTriangleCollision@Geom"
 #define LUA_GETMESHTRIANGLECOLLISION_COMMAND "simGeom.getMeshTriangleCollision"
 
 const int inArgs_GETMESHTRIANGLECOLLISION[]={
@@ -253,7 +253,7 @@ void LUA_GETMESHTRIANGLECOLLISION_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getMeshSegmentCollision
 // --------------------------------------------------------------------------------------
-#define LUA_GETMESHSEGMENTCOLLISION_COMMAND_PLUGIN "simGeom.getMeshSegmentCollision@Geometric"
+#define LUA_GETMESHSEGMENTCOLLISION_COMMAND_PLUGIN "simGeom.getMeshSegmentCollision@Geom"
 #define LUA_GETMESHSEGMENTCOLLISION_COMMAND "simGeom.getMeshSegmentCollision"
 
 const int inArgs_GETMESHSEGMENTCOLLISION[]={
@@ -310,7 +310,7 @@ void LUA_GETMESHSEGMENTCOLLISION_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getOctreeOctreeCollision
 // --------------------------------------------------------------------------------------
-#define LUA_GETOCTREEOCTREECOLLISION_COMMAND_PLUGIN "simGeom.getOctreeOctreeCollision@Geometric"
+#define LUA_GETOCTREEOCTREECOLLISION_COMMAND_PLUGIN "simGeom.getOctreeOctreeCollision@Geom"
 #define LUA_GETOCTREEOCTREECOLLISION_COMMAND "simGeom.getOctreeOctreeCollision"
 
 const int inArgs_GETOCTREEOCTREECOLLISION[]={
@@ -368,7 +368,7 @@ void LUA_GETOCTREEOCTREECOLLISION_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getOctreePtcloudCollision
 // --------------------------------------------------------------------------------------
-#define LUA_GETOCTREEPTCLOUDCOLLISION_COMMAND_PLUGIN "simGeom.getOctreePtcloudCollision@Geometric"
+#define LUA_GETOCTREEPTCLOUDCOLLISION_COMMAND_PLUGIN "simGeom.getOctreePtcloudCollision@Geom"
 #define LUA_GETOCTREEPTCLOUDCOLLISION_COMMAND "simGeom.getOctreePtcloudCollision"
 
 const int inArgs_GETOCTREEPTCLOUDCOLLISION[]={
@@ -426,7 +426,7 @@ void LUA_GETOCTREEPTCLOUDCOLLISION_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getOctreeTriangleCollision
 // --------------------------------------------------------------------------------------
-#define LUA_GETOCTREETRIANGLECOLLISION_COMMAND_PLUGIN "simGeom.getOctreeTriangleCollision@Geometric"
+#define LUA_GETOCTREETRIANGLECOLLISION_COMMAND_PLUGIN "simGeom.getOctreeTriangleCollision@Geom"
 #define LUA_GETOCTREETRIANGLECOLLISION_COMMAND "simGeom.getOctreeTriangleCollision"
 
 const int inArgs_GETOCTREETRIANGLECOLLISION[]={
@@ -473,7 +473,7 @@ void LUA_GETOCTREETRIANGLECOLLISION_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getOctreeSegmentCollision
 // --------------------------------------------------------------------------------------
-#define LUA_GETOCTREESEGMENTCOLLISION_COMMAND_PLUGIN "simGeom.getOctreeSegmentCollision@Geometric"
+#define LUA_GETOCTREESEGMENTCOLLISION_COMMAND_PLUGIN "simGeom.getOctreeSegmentCollision@Geom"
 #define LUA_GETOCTREESEGMENTCOLLISION_COMMAND "simGeom.getOctreeSegmentCollision"
 
 const int inArgs_GETOCTREESEGMENTCOLLISION[]={
@@ -518,7 +518,7 @@ void LUA_GETOCTREESEGMENTCOLLISION_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getOctreePointCollision
 // --------------------------------------------------------------------------------------
-#define LUA_GETOCTREEPOINTCOLLISION_COMMAND_PLUGIN "simGeom.getOctreePointCollision@Geometric"
+#define LUA_GETOCTREEPOINTCOLLISION_COMMAND_PLUGIN "simGeom.getOctreePointCollision@Geom"
 #define LUA_GETOCTREEPOINTCOLLISION_COMMAND "simGeom.getOctreePointCollision"
 
 const int inArgs_GETOCTREEPOINTCOLLISION[]={
@@ -564,7 +564,7 @@ void LUA_GETOCTREEPOINTCOLLISION_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getMeshMeshDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETMESHMESHDISTANCE_COMMAND_PLUGIN "simGeom.getMeshMeshDistance@Geometric"
+#define LUA_GETMESHMESHDISTANCE_COMMAND_PLUGIN "simGeom.getMeshMeshDistance@Geom"
 #define LUA_GETMESHMESHDISTANCE_COMMAND "simGeom.getMeshMeshDistance"
 
 const int inArgs_GETMESHMESHDISTANCE[]={
@@ -630,7 +630,7 @@ void LUA_GETMESHMESHDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getMeshOctreeDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETMESHOCTREEDISTANCE_COMMAND_PLUGIN "simGeom.getMeshOctreeDistance@Geometric"
+#define LUA_GETMESHOCTREEDISTANCE_COMMAND_PLUGIN "simGeom.getMeshOctreeDistance@Geom"
 #define LUA_GETMESHOCTREEDISTANCE_COMMAND "simGeom.getMeshOctreeDistance"
 
 const int inArgs_GETMESHOCTREEDISTANCE[]={
@@ -696,7 +696,7 @@ void LUA_GETMESHOCTREEDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getMeshPtcloudDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETMESHPTCLOUDDISTANCE_COMMAND_PLUGIN "simGeom.getMeshPtcloudDistance@Geometric"
+#define LUA_GETMESHPTCLOUDDISTANCE_COMMAND_PLUGIN "simGeom.getMeshPtcloudDistance@Geom"
 #define LUA_GETMESHPTCLOUDDISTANCE_COMMAND "simGeom.getMeshPtcloudDistance"
 
 const int inArgs_GETMESHPTCLOUDDISTANCE[]={
@@ -762,7 +762,7 @@ void LUA_GETMESHPTCLOUDDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getOctreeOctreeDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETOCTREEOCTREEDISTANCE_COMMAND_PLUGIN "simGeom.getOctreeOctreeDistance@Geometric"
+#define LUA_GETOCTREEOCTREEDISTANCE_COMMAND_PLUGIN "simGeom.getOctreeOctreeDistance@Geom"
 #define LUA_GETOCTREEOCTREEDISTANCE_COMMAND "simGeom.getOctreeOctreeDistance"
 
 const int inArgs_GETOCTREEOCTREEDISTANCE[]={
@@ -828,7 +828,7 @@ void LUA_GETOCTREEOCTREEDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getOctreePtcloudDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETOCTREEPTCLOUDDISTANCE_COMMAND_PLUGIN "simGeom.getOctreePtcloudDistance@Geometric"
+#define LUA_GETOCTREEPTCLOUDDISTANCE_COMMAND_PLUGIN "simGeom.getOctreePtcloudDistance@Geom"
 #define LUA_GETOCTREEPTCLOUDDISTANCE_COMMAND "simGeom.getOctreePtcloudDistance"
 
 const int inArgs_GETOCTREEPTCLOUDDISTANCE[]={
@@ -894,7 +894,7 @@ void LUA_GETOCTREEPTCLOUDDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getOctreeTriangleDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETOCTREETRIANGLEDISTANCE_COMMAND_PLUGIN "simGeom.getOctreeTriangleDistance@Geometric"
+#define LUA_GETOCTREETRIANGLEDISTANCE_COMMAND_PLUGIN "simGeom.getOctreeTriangleDistance@Geom"
 #define LUA_GETOCTREETRIANGLEDISTANCE_COMMAND "simGeom.getOctreeTriangleDistance"
 
 const int inArgs_GETOCTREETRIANGLEDISTANCE[]={
@@ -952,7 +952,7 @@ void LUA_GETOCTREETRIANGLEDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getOctreeSegmentDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETOCTREESEGMENTDISTANCE_COMMAND_PLUGIN "simGeom.getOctreeSegmentDistance@Geometric"
+#define LUA_GETOCTREESEGMENTDISTANCE_COMMAND_PLUGIN "simGeom.getOctreeSegmentDistance@Geom"
 #define LUA_GETOCTREESEGMENTDISTANCE_COMMAND "simGeom.getOctreeSegmentDistance"
 
 const int inArgs_GETOCTREESEGMENTDISTANCE[]={
@@ -1008,7 +1008,7 @@ void LUA_GETOCTREESEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getOctreePointDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETOCTREEPOINTDISTANCE_COMMAND_PLUGIN "simGeom.getOctreePointDistance@Geometric"
+#define LUA_GETOCTREEPOINTDISTANCE_COMMAND_PLUGIN "simGeom.getOctreePointDistance@Geom"
 #define LUA_GETOCTREEPOINTDISTANCE_COMMAND "simGeom.getOctreePointDistance"
 
 const int inArgs_GETOCTREEPOINTDISTANCE[]={
@@ -1060,7 +1060,7 @@ void LUA_GETOCTREEPOINTDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getMeshTriangleDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETMESHTRIANGLEDISTANCE_COMMAND_PLUGIN "simGeom.getMeshTriangleDistance@Geometric"
+#define LUA_GETMESHTRIANGLEDISTANCE_COMMAND_PLUGIN "simGeom.getMeshTriangleDistance@Geom"
 #define LUA_GETMESHTRIANGLEDISTANCE_COMMAND "simGeom.getMeshTriangleDistance"
 
 const int inArgs_GETMESHTRIANGLEDISTANCE[]={
@@ -1118,7 +1118,7 @@ void LUA_GETMESHTRIANGLEDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getMeshSegmentDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETMESHSEGMENTDISTANCE_COMMAND_PLUGIN "simGeom.getMeshSegmentDistance@Geometric"
+#define LUA_GETMESHSEGMENTDISTANCE_COMMAND_PLUGIN "simGeom.getMeshSegmentDistance@Geom"
 #define LUA_GETMESHSEGMENTDISTANCE_COMMAND "simGeom.getMeshSegmentDistance"
 
 const int inArgs_GETMESHSEGMENTDISTANCE[]={
@@ -1174,7 +1174,7 @@ void LUA_GETMESHSEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getMeshPointDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETMESHPOINTDISTANCE_COMMAND_PLUGIN "simGeom.getMeshPointDistance@Geometric"
+#define LUA_GETMESHPOINTDISTANCE_COMMAND_PLUGIN "simGeom.getMeshPointDistance@Geom"
 #define LUA_GETMESHPOINTDISTANCE_COMMAND "simGeom.getMeshPointDistance"
 
 const int inArgs_GETMESHPOINTDISTANCE[]={
@@ -1226,7 +1226,7 @@ void LUA_GETMESHPOINTDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getBoxBoxDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETBOXBOXDISTANCE_COMMAND_PLUGIN "simGeom.getBoxBoxDistance@Geometric"
+#define LUA_GETBOXBOXDISTANCE_COMMAND_PLUGIN "simGeom.getBoxBoxDistance@Geom"
 #define LUA_GETBOXBOXDISTANCE_COMMAND "simGeom.getBoxBoxDistance"
 
 const int inArgs_GETBOXBOXDISTANCE[]={
@@ -1272,7 +1272,7 @@ void LUA_GETBOXBOXDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getBoxTriangleDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETBOXTRIANGLEDISTANCE_COMMAND_PLUGIN "simGeom.getBoxTriangleDistance@Geometric"
+#define LUA_GETBOXTRIANGLEDISTANCE_COMMAND_PLUGIN "simGeom.getBoxTriangleDistance@Geom"
 #define LUA_GETBOXTRIANGLEDISTANCE_COMMAND "simGeom.getBoxTriangleDistance"
 
 const int inArgs_GETBOXTRIANGLEDISTANCE[]={
@@ -1318,7 +1318,7 @@ void LUA_GETBOXTRIANGLEDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getBoxSegmentDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETBOXSEGMENTDISTANCE_COMMAND_PLUGIN "simGeom.getBoxSegmentDistance@Geometric"
+#define LUA_GETBOXSEGMENTDISTANCE_COMMAND_PLUGIN "simGeom.getBoxSegmentDistance@Geom"
 #define LUA_GETBOXSEGMENTDISTANCE_COMMAND "simGeom.getBoxSegmentDistance"
 
 const int inArgs_GETBOXSEGMENTDISTANCE[]={
@@ -1362,7 +1362,7 @@ void LUA_GETBOXSEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getBoxPointDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETBOXPOINTDISTANCE_COMMAND_PLUGIN "simGeom.getBoxPointDistance@Geometric"
+#define LUA_GETBOXPOINTDISTANCE_COMMAND_PLUGIN "simGeom.getBoxPointDistance@Geom"
 #define LUA_GETBOXPOINTDISTANCE_COMMAND "simGeom.getBoxPointDistance"
 
 const int inArgs_GETBOXPOINTDISTANCE[]={
@@ -1398,7 +1398,7 @@ void LUA_GETBOXPOINTDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getTriangleTriangleDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETTRIANGLETRIANGLEDISTANCE_COMMAND_PLUGIN "simGeom.getTriangleTriangleDistance@Geometric"
+#define LUA_GETTRIANGLETRIANGLEDISTANCE_COMMAND_PLUGIN "simGeom.getTriangleTriangleDistance@Geom"
 #define LUA_GETTRIANGLETRIANGLEDISTANCE_COMMAND "simGeom.getTriangleTriangleDistance"
 
 const int inArgs_GETTRIANGLETRIANGLEDISTANCE[]={
@@ -1438,7 +1438,7 @@ void LUA_GETTRIANGLETRIANGLEDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getTriangleSegmentDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETTRIANGLESEGMENTDISTANCE_COMMAND_PLUGIN "simGeom.getTriangleSegmentDistance@Geometric"
+#define LUA_GETTRIANGLESEGMENTDISTANCE_COMMAND_PLUGIN "simGeom.getTriangleSegmentDistance@Geom"
 #define LUA_GETTRIANGLESEGMENTDISTANCE_COMMAND "simGeom.getTriangleSegmentDistance"
 
 const int inArgs_GETTRIANGLESEGMENTDISTANCE[]={
@@ -1476,7 +1476,7 @@ void LUA_GETTRIANGLESEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getTrianglePointDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETTRIANGLEPOINTDISTANCE_COMMAND_PLUGIN "simGeom.getTrianglePointDistance@Geometric"
+#define LUA_GETTRIANGLEPOINTDISTANCE_COMMAND_PLUGIN "simGeom.getTrianglePointDistance@Geom"
 #define LUA_GETTRIANGLEPOINTDISTANCE_COMMAND "simGeom.getTrianglePointDistance"
 
 const int inArgs_GETTRIANGLEPOINTDISTANCE[]={
@@ -1510,7 +1510,7 @@ void LUA_GETTRIANGLEPOINTDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getSegmentSegmentDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETSEGMENTSEGMENTDISTANCE_COMMAND_PLUGIN "simGeom.getSegmentSegmentDistance@Geometric"
+#define LUA_GETSEGMENTSEGMENTDISTANCE_COMMAND_PLUGIN "simGeom.getSegmentSegmentDistance@Geom"
 #define LUA_GETSEGMENTSEGMENTDISTANCE_COMMAND "simGeom.getSegmentSegmentDistance"
 
 const int inArgs_GETSEGMENTSEGMENTDISTANCE[]={
@@ -1546,7 +1546,7 @@ void LUA_GETSEGMENTSEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getSegmentPointDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETSEGMENTPOINTDISTANCE_COMMAND_PLUGIN "simGeom.getSegmentPointDistance@Geometric"
+#define LUA_GETSEGMENTPOINTDISTANCE_COMMAND_PLUGIN "simGeom.getSegmentPointDistance@Geom"
 #define LUA_GETSEGMENTPOINTDISTANCE_COMMAND "simGeom.getSegmentPointDistance"
 
 const int inArgs_GETSEGMENTPOINTDISTANCE[]={
@@ -1578,7 +1578,7 @@ void LUA_GETSEGMENTPOINTDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.createMesh
 // --------------------------------------------------------------------------------------
-#define LUA_CREATEMESH_COMMAND_PLUGIN "simGeom.createMesh@Geometric"
+#define LUA_CREATEMESH_COMMAND_PLUGIN "simGeom.createMesh@Geom"
 #define LUA_CREATEMESH_COMMAND "simGeom.createMesh"
 
 const int inArgs_CREATEMESH[]={
@@ -1629,7 +1629,7 @@ void LUA_CREATEMESH_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.destroyMesh
 // --------------------------------------------------------------------------------------
-#define LUA_DESTROYMESH_COMMAND_PLUGIN "simGeom.destroyMesh@Geometric"
+#define LUA_DESTROYMESH_COMMAND_PLUGIN "simGeom.destroyMesh@Geom"
 #define LUA_DESTROYMESH_COMMAND "simGeom.destroyMesh"
 
 const int inArgs_DESTROYMESH[]={
@@ -1660,7 +1660,7 @@ void LUA_DESTROYMESH_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.copyMesh
 // --------------------------------------------------------------------------------------
-#define LUA_COPYMESH_COMMAND_PLUGIN "simGeom.copyMesh@Geometric"
+#define LUA_COPYMESH_COMMAND_PLUGIN "simGeom.copyMesh@Geom"
 #define LUA_COPYMESH_COMMAND "simGeom.copyMesh"
 
 const int inArgs_COPYMESH[]={
@@ -1693,7 +1693,7 @@ void LUA_COPYMESH_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.scaleMesh
 // --------------------------------------------------------------------------------------
-#define LUA_SCALEMESH_COMMAND_PLUGIN "simGeom.scaleMesh@Geometric"
+#define LUA_SCALEMESH_COMMAND_PLUGIN "simGeom.scaleMesh@Geom"
 #define LUA_SCALEMESH_COMMAND "simGeom.scaleMesh"
 
 const int inArgs_SCALEMESH[]={
@@ -1722,7 +1722,7 @@ void LUA_SCALEMESH_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getMeshSerializationData
 // --------------------------------------------------------------------------------------
-#define LUA_GETMESHSERIALIZATIONDATA_COMMAND_PLUGIN "simGeom.getMeshSerializationData@Geometric"
+#define LUA_GETMESHSERIALIZATIONDATA_COMMAND_PLUGIN "simGeom.getMeshSerializationData@Geom"
 #define LUA_GETMESHSERIALIZATIONDATA_COMMAND "simGeom.getMeshSerializationData"
 
 const int inArgs_GETMESHSERIALIZATIONDATA[]={
@@ -1754,7 +1754,7 @@ void LUA_GETMESHSERIALIZATIONDATA_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.createMeshFromSerializationData
 // --------------------------------------------------------------------------------------
-#define LUA_CREATEMESHFROMSERIALIZATIONDATA_COMMAND_PLUGIN "simGeom.createMeshFromSerializationData@Geometric"
+#define LUA_CREATEMESHFROMSERIALIZATIONDATA_COMMAND_PLUGIN "simGeom.createMeshFromSerializationData@Geom"
 #define LUA_CREATEMESHFROMSERIALIZATIONDATA_COMMAND "simGeom.createMeshFromSerializationData"
 
 const int inArgs_CREATEMESHFROMSERIALIZATIONDATA[]={
@@ -1783,7 +1783,7 @@ void LUA_CREATEMESHFROMSERIALIZATIONDATA_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.createOctreeFromPoints
 // --------------------------------------------------------------------------------------
-#define LUA_CREATEOCTREEFROMPOINTS_COMMAND_PLUGIN "simGeom.createOctreeFromPoints@Geometric"
+#define LUA_CREATEOCTREEFROMPOINTS_COMMAND_PLUGIN "simGeom.createOctreeFromPoints@Geom"
 #define LUA_CREATEOCTREEFROMPOINTS_COMMAND "simGeom.createOctreeFromPoints"
 
 const int inArgs_CREATEOCTREEFROMPOINTS[]={
@@ -1842,7 +1842,7 @@ void LUA_CREATEOCTREEFROMPOINTS_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.createOctreeFromColorPoints
 // --------------------------------------------------------------------------------------
-#define LUA_CREATEOCTREEFROMCOLORPOINTS_COMMAND_PLUGIN "simGeom.createOctreeFromColorPoints@Geometric"
+#define LUA_CREATEOCTREEFROMCOLORPOINTS_COMMAND_PLUGIN "simGeom.createOctreeFromColorPoints@Geom"
 #define LUA_CREATEOCTREEFROMCOLORPOINTS_COMMAND "simGeom.createOctreeFromColorPoints"
 
 const int inArgs_CREATEOCTREEFROMCOLORPOINTS[]={
@@ -1908,7 +1908,7 @@ void LUA_CREATEOCTREEFROMCOLORPOINTS_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.createOctreeFromMesh
 // --------------------------------------------------------------------------------------
-#define LUA_CREATEOCTREEFROMMESH_COMMAND_PLUGIN "simGeom.createOctreeFromMesh@Geometric"
+#define LUA_CREATEOCTREEFROMMESH_COMMAND_PLUGIN "simGeom.createOctreeFromMesh@Geom"
 #define LUA_CREATEOCTREEFROMMESH_COMMAND "simGeom.createOctreeFromMesh"
 
 const int inArgs_CREATEOCTREEFROMMESH[]={
@@ -1977,7 +1977,7 @@ void LUA_CREATEOCTREEFROMMESH_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.createOctreeFromOctree
 // --------------------------------------------------------------------------------------
-#define LUA_CREATEOCTREEFROMOCTREE_COMMAND_PLUGIN "simGeom.createOctreeFromOctree@Geometric"
+#define LUA_CREATEOCTREEFROMOCTREE_COMMAND_PLUGIN "simGeom.createOctreeFromOctree@Geom"
 #define LUA_CREATEOCTREEFROMOCTREE_COMMAND "simGeom.createOctreeFromOctree"
 
 const int inArgs_CREATEOCTREEFROMOCTREE[]={
@@ -2046,7 +2046,7 @@ void LUA_CREATEOCTREEFROMOCTREE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.destroyOctree
 // --------------------------------------------------------------------------------------
-#define LUA_DESTROYOCTREE_COMMAND_PLUGIN "simGeom.destroyOctree@Geometric"
+#define LUA_DESTROYOCTREE_COMMAND_PLUGIN "simGeom.destroyOctree@Geom"
 #define LUA_DESTROYOCTREE_COMMAND "simGeom.destroyOctree"
 
 const int inArgs_DESTROYOCTREE[]={
@@ -2077,7 +2077,7 @@ void LUA_DESTROYOCTREE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.copyOctree
 // --------------------------------------------------------------------------------------
-#define LUA_COPYOCTREE_COMMAND_PLUGIN "simGeom.copyOctree@Geometric"
+#define LUA_COPYOCTREE_COMMAND_PLUGIN "simGeom.copyOctree@Geom"
 #define LUA_COPYOCTREE_COMMAND "simGeom.copyOctree"
 
 const int inArgs_COPYOCTREE[]={
@@ -2110,7 +2110,7 @@ void LUA_COPYOCTREE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.scaleOctree
 // --------------------------------------------------------------------------------------
-#define LUA_SCALEOCTREE_COMMAND_PLUGIN "simGeom.scaleOctree@Geometric"
+#define LUA_SCALEOCTREE_COMMAND_PLUGIN "simGeom.scaleOctree@Geom"
 #define LUA_SCALEOCTREE_COMMAND "simGeom.scaleOctree"
 
 const int inArgs_SCALEOCTREE[]={
@@ -2139,7 +2139,7 @@ void LUA_SCALEOCTREE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getOctreeSerializationData
 // --------------------------------------------------------------------------------------
-#define LUA_GETOCTREESERIALIZATIONDATA_COMMAND_PLUGIN "simGeom.getOctreeSerializationData@Geometric"
+#define LUA_GETOCTREESERIALIZATIONDATA_COMMAND_PLUGIN "simGeom.getOctreeSerializationData@Geom"
 #define LUA_GETOCTREESERIALIZATIONDATA_COMMAND "simGeom.getOctreeSerializationData"
 
 const int inArgs_GETOCTREESERIALIZATIONDATA[]={
@@ -2171,7 +2171,7 @@ void LUA_GETOCTREESERIALIZATIONDATA_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.createOctreeFromSerializationData
 // --------------------------------------------------------------------------------------
-#define LUA_CREATEOCTREEFROMSERIALIZATIONDATA_COMMAND_PLUGIN "simGeom.createOctreeFromSerializationData@Geometric"
+#define LUA_CREATEOCTREEFROMSERIALIZATIONDATA_COMMAND_PLUGIN "simGeom.createOctreeFromSerializationData@Geom"
 #define LUA_CREATEOCTREEFROMSERIALIZATIONDATA_COMMAND "simGeom.createOctreeFromSerializationData"
 
 const int inArgs_CREATEOCTREEFROMSERIALIZATIONDATA[]={
@@ -2200,7 +2200,7 @@ void LUA_CREATEOCTREEFROMSERIALIZATIONDATA_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getOctreeVoxels
 // --------------------------------------------------------------------------------------
-#define LUA_GETOCTREEVOXELS_COMMAND_PLUGIN "simGeom.getOctreeVoxels@Geometric"
+#define LUA_GETOCTREEVOXELS_COMMAND_PLUGIN "simGeom.getOctreeVoxels@Geom"
 #define LUA_GETOCTREEVOXELS_COMMAND "simGeom.getOctreeVoxels"
 
 const int inArgs_GETOCTREEVOXELS[]={
@@ -2250,7 +2250,7 @@ void LUA_GETOCTREEVOXELS_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getTransformedPoints
 // --------------------------------------------------------------------------------------
-#define LUA_GETTRANSFORMEDPOINTS_COMMAND_PLUGIN "simGeom.getTransformedPoints@Geometric"
+#define LUA_GETTRANSFORMEDPOINTS_COMMAND_PLUGIN "simGeom.getTransformedPoints@Geom"
 #define LUA_GETTRANSFORMEDPOINTS_COMMAND "simGeom.getTransformedPoints"
 
 const int inArgs_GETTRANSFORMEDPOINTS[]={
@@ -2308,7 +2308,7 @@ void LUA_GETTRANSFORMEDPOINTS_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.createPtcloudFromPoints
 // --------------------------------------------------------------------------------------
-#define LUA_CREATEPTCLOUDFROMPOINTS_COMMAND_PLUGIN "simGeom.createPtcloudFromPoints@Geometric"
+#define LUA_CREATEPTCLOUDFROMPOINTS_COMMAND_PLUGIN "simGeom.createPtcloudFromPoints@Geom"
 #define LUA_CREATEPTCLOUDFROMPOINTS_COMMAND "simGeom.createPtcloudFromPoints"
 
 const int inArgs_CREATEPTCLOUDFROMPOINTS[]={
@@ -2370,7 +2370,7 @@ void LUA_CREATEPTCLOUDFROMPOINTS_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.createPtcloudFromColorPoints
 // --------------------------------------------------------------------------------------
-#define LUA_CREATEPTCLOUDFROMCOLORPOINTS_COMMAND_PLUGIN "simGeom.createPtcloudFromColorPoints@Geometric"
+#define LUA_CREATEPTCLOUDFROMCOLORPOINTS_COMMAND_PLUGIN "simGeom.createPtcloudFromColorPoints@Geom"
 #define LUA_CREATEPTCLOUDFROMCOLORPOINTS_COMMAND "simGeom.createPtcloudFromColorPoints"
 
 const int inArgs_CREATEPTCLOUDFROMCOLORPOINTS[]={
@@ -2434,7 +2434,7 @@ void LUA_CREATEPTCLOUDFROMCOLORPOINTS_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.destroyPtcloud
 // --------------------------------------------------------------------------------------
-#define LUA_DESTROYPTCLOUD_COMMAND_PLUGIN "simGeom.destroyPtcloud@Geometric"
+#define LUA_DESTROYPTCLOUD_COMMAND_PLUGIN "simGeom.destroyPtcloud@Geom"
 #define LUA_DESTROYPTCLOUD_COMMAND "simGeom.destroyPtcloud"
 
 const int inArgs_DESTROYPTCLOUD[]={
@@ -2465,7 +2465,7 @@ void LUA_DESTROYPTCLOUD_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.copyPtcloud
 // --------------------------------------------------------------------------------------
-#define LUA_COPYPTCLOUD_COMMAND_PLUGIN "simGeom.copyPtcloud@Geometric"
+#define LUA_COPYPTCLOUD_COMMAND_PLUGIN "simGeom.copyPtcloud@Geom"
 #define LUA_COPYPTCLOUD_COMMAND "simGeom.copyPtcloud"
 
 const int inArgs_COPYPTCLOUD[]={
@@ -2498,7 +2498,7 @@ void LUA_COPYPTCLOUD_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.scalePtcloud
 // --------------------------------------------------------------------------------------
-#define LUA_SCALEPTCLOUD_COMMAND_PLUGIN "simGeom.scalePtcloud@Geometric"
+#define LUA_SCALEPTCLOUD_COMMAND_PLUGIN "simGeom.scalePtcloud@Geom"
 #define LUA_SCALEPTCLOUD_COMMAND "simGeom.scalePtcloud"
 
 const int inArgs_SCALEPTCLOUD[]={
@@ -2527,7 +2527,7 @@ void LUA_SCALEPTCLOUD_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getPtcloudSerializationData
 // --------------------------------------------------------------------------------------
-#define LUA_GETPTCLOUDSERIALIZATIONDATA_COMMAND_PLUGIN "simGeom.getPtcloudSerializationData@Geometric"
+#define LUA_GETPTCLOUDSERIALIZATIONDATA_COMMAND_PLUGIN "simGeom.getPtcloudSerializationData@Geom"
 #define LUA_GETPTCLOUDSERIALIZATIONDATA_COMMAND "simGeom.getPtcloudSerializationData"
 
 const int inArgs_GETPTCLOUDSERIALIZATIONDATA[]={
@@ -2559,7 +2559,7 @@ void LUA_GETPTCLOUDSERIALIZATIONDATA_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.createPtcloudFromSerializationData
 // --------------------------------------------------------------------------------------
-#define LUA_CREATEPTCLOUDFROMSERIALIZATIONDATA_COMMAND_PLUGIN "simGeom.createPtcloudFromSerializationData@Geometric"
+#define LUA_CREATEPTCLOUDFROMSERIALIZATIONDATA_COMMAND_PLUGIN "simGeom.createPtcloudFromSerializationData@Geom"
 #define LUA_CREATEPTCLOUDFROMSERIALIZATIONDATA_COMMAND "simGeom.createPtcloudFromSerializationData"
 
 const int inArgs_CREATEPTCLOUDFROMSERIALIZATIONDATA[]={
@@ -2588,7 +2588,7 @@ void LUA_CREATEPTCLOUDFROMSERIALIZATIONDATA_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getPtcloudPoints
 // --------------------------------------------------------------------------------------
-#define LUA_GETPTCLOUDPOINTS_COMMAND_PLUGIN "simGeom.getPtcloudPoints@Geometric"
+#define LUA_GETPTCLOUDPOINTS_COMMAND_PLUGIN "simGeom.getPtcloudPoints@Geom"
 #define LUA_GETPTCLOUDPOINTS_COMMAND "simGeom.getPtcloudPoints"
 
 const int inArgs_GETPTCLOUDPOINTS[]={
@@ -2636,7 +2636,7 @@ void LUA_GETPTCLOUDPOINTS_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getPtcloudPtcloudDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETPTCLOUDPTCLOUDDISTANCE_COMMAND_PLUGIN "simGeom.getPtcloudPtcloudDistance@Geometric"
+#define LUA_GETPTCLOUDPTCLOUDDISTANCE_COMMAND_PLUGIN "simGeom.getPtcloudPtcloudDistance@Geom"
 #define LUA_GETPTCLOUDPTCLOUDDISTANCE_COMMAND "simGeom.getPtcloudPtcloudDistance"
 
 const int inArgs_GETPTCLOUDPTCLOUDDISTANCE[]={
@@ -2702,7 +2702,7 @@ void LUA_GETPTCLOUDPTCLOUDDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getPtcloudTriangleDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETPTCLOUDTRIANGLEDISTANCE_COMMAND_PLUGIN "simGeom.getPtcloudTriangleDistance@Geometric"
+#define LUA_GETPTCLOUDTRIANGLEDISTANCE_COMMAND_PLUGIN "simGeom.getPtcloudTriangleDistance@Geom"
 #define LUA_GETPTCLOUDTRIANGLEDISTANCE_COMMAND "simGeom.getPtcloudTriangleDistance"
 
 const int inArgs_GETPTCLOUDTRIANGLEDISTANCE[]={
@@ -2760,7 +2760,7 @@ void LUA_GETPTCLOUDTRIANGLEDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getPtcloudSegmentDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETPTCLOUDSEGMENTDISTANCE_COMMAND_PLUGIN "simGeom.getPtcloudSegmentDistance@Geometric"
+#define LUA_GETPTCLOUDSEGMENTDISTANCE_COMMAND_PLUGIN "simGeom.getPtcloudSegmentDistance@Geom"
 #define LUA_GETPTCLOUDSEGMENTDISTANCE_COMMAND "simGeom.getPtcloudSegmentDistance"
 
 const int inArgs_GETPTCLOUDSEGMENTDISTANCE[]={
@@ -2816,7 +2816,7 @@ void LUA_GETPTCLOUDSEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getPtcloudPointDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETPTCLOUDPOINTDISTANCE_COMMAND_PLUGIN "simGeom.getPtcloudPointDistance@Geometric"
+#define LUA_GETPTCLOUDPOINTDISTANCE_COMMAND_PLUGIN "simGeom.getPtcloudPointDistance@Geom"
 #define LUA_GETPTCLOUDPOINTDISTANCE_COMMAND "simGeom.getPtcloudPointDistance"
 
 const int inArgs_GETPTCLOUDPOINTDISTANCE[]={

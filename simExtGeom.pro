@@ -1,4 +1,4 @@
-TARGET = simExtGeometric
+TARGET = simExtGeom
 TEMPLATE = lib
 DEFINES -= UNICODE
 CONFIG += shared plugin
@@ -53,7 +53,7 @@ INCLUDEPATH += "../common"
 INCLUDEPATH += "../simMath"
 INCLUDEPATH += "../coppeliaGeometricRoutines"
 
-HEADERS += simExtGeometric.h \
+HEADERS += simExtGeom.h \
     ../include/simLib.h \
     ../simMath/MyMath.h \
     ../simMath/3Vector.h \
@@ -74,7 +74,7 @@ HEADERS += simExtGeometric.h \
     ../coppeliaGeometricRoutines/pcStruct.h \
     ../coppeliaGeometricRoutines/kdNode.h \
 
-SOURCES += simExtGeometric.cpp \
+SOURCES += simExtGeom.cpp \
     ../common/simLib.cpp \
     ../simMath/MyMath.cpp \
     ../simMath/3Vector.cpp \
