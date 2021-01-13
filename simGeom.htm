@@ -2,14 +2,202 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="Content-Language" content="en-us">
-<title>Coppelia Geometric Routines, Lua API</title>
+<title>simGeom API</title>
 <link rel="stylesheet" type="text/css" href="../../helpFiles/style.css">
-</head>
-<body><div align="center"><table class="allEncompassingTable"><tr><td>
-<h1>Coppelia Geometric Routines<br>Lua API Reference</h1>
-<p class="infoBox">All units, unless otherwise indicated, are specified in meters and radians. Note that mesh-, point cloud- and OC tree-handles mentioned in this reference have no direct relation with CoppeliaSim shape-, point cloud- and OC tree-handles: meshes, point cloud and octrees mentioned in this API reference are internal representations that are exclusively created, manipulated and destroyed with below API functions.<br>
-Below API functions are a sub-set of their <a href="coppeliaGeometricRoutinesApi-alphabetic.htm">C++ API counterpart</a>.</p>
+<script type="text/javascript">
+//
+function getParameterByName(name, url = window.location.href)
+{
+    name = name.replace(/[\[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url);
+    if(!results) return null;
+    if(!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+//
+                </script><style type="text/css">
+td.section { margin: 0; padding: 0; }
+                </style></head>
+<body>
+<div align="center"><table class="allEncompassingTable">
 
+<tr><td id="title" class="section"><h1>Geom plugin API reference</h1></td></tr>
+<tr><td id="info" class="section"><p class="infoBox">All units, unless otherwise indicated, are specified in meters and radians. Note that mesh-, point cloud- and OC tree-handles mentioned in this reference have no direct relation with CoppeliaSim shape-, point cloud- and OC tree-handles: meshes, point cloud and octrees mentioned in this API reference are internal representations that are exclusively created, manipulated and destroyed with below API functions.<br>
+Below API functions are a sub-set of their <a href="coppeliaGeometricRoutinesApi-alphabetic.htm">C++ API counterpart</a>.</p></td></tr>
+
+<tr><td id="alphabetical" class="section"><pre class="lightGreyBox">
+<a href="?#simGeom.copyMesh">simGeom.copyMesh</a>
+<a href="?#simGeom.copyOctree">simGeom.copyOctree</a>
+<a href="?#simGeom.copyPtcloud">simGeom.copyPtcloud</a>
+<a href="?#simGeom.createMesh">simGeom.createMesh</a>
+<a href="?#simGeom.createMeshFromSerializationData">simGeom.createMeshFromSerializationData</a>
+<a href="?#simGeom.createOctreeFromColorPoints">simGeom.createOctreeFromColorPoints</a>
+<a href="?#simGeom.createOctreeFromMesh">simGeom.createOctreeFromMesh</a>
+<a href="?#simGeom.createOctreeFromOctree">simGeom.createOctreeFromOctree</a>
+<a href="?#simGeom.createOctreeFromPoints">simGeom.createOctreeFromPoints</a>
+<a href="?#simGeom.createOctreeFromSerializationData">simGeom.createOctreeFromSerializationData</a>
+<a href="?#simGeom.createPtcloudFromColorPoints">simGeom.createPtcloudFromColorPoints</a>
+<a href="?#simGeom.createPtcloudFromPoints">simGeom.createPtcloudFromPoints</a>
+<a href="?#simGeom.createPtcloudFromSerializationData">simGeom.createPtcloudFromSerializationData</a>
+<a href="?#simGeom.destroyMesh">simGeom.destroyMesh</a>
+<a href="?#simGeom.destroyOctree">simGeom.destroyOctree</a>
+<a href="?#simGeom.destroyPtcloud">simGeom.destroyPtcloud</a>
+<a href="?#simGeom.getBoxBoxDistance">simGeom.getBoxBoxDistance</a>
+<a href="?#simGeom.getBoxPointDistance">simGeom.getBoxPointDistance</a>
+<a href="?#simGeom.getBoxSegmentDistance">simGeom.getBoxSegmentDistance</a>
+<a href="?#simGeom.getBoxTriangleDistance">simGeom.getBoxTriangleDistance</a>
+<a href="?#simGeom.getMeshMeshCollision">simGeom.getMeshMeshCollision</a>
+<a href="?#simGeom.getMeshMeshDistance">simGeom.getMeshMeshDistance</a>
+<a href="?#simGeom.getMeshOctreeCollision">simGeom.getMeshOctreeCollision</a>
+<a href="?#simGeom.getMeshOctreeDistance">simGeom.getMeshOctreeDistance</a>
+<a href="?#simGeom.getMeshPointDistance">simGeom.getMeshPointDistance</a>
+<a href="?#simGeom.getMeshPtcloudDistance">simGeom.getMeshPtcloudDistance</a>
+<a href="?#simGeom.getMeshSegmentCollision">simGeom.getMeshSegmentCollision</a>
+<a href="?#simGeom.getMeshSegmentDistance">simGeom.getMeshSegmentDistance</a>
+<a href="?#simGeom.getMeshSerializationData">simGeom.getMeshSerializationData</a>
+<a href="?#simGeom.getMeshTriangleCollision">simGeom.getMeshTriangleCollision</a>
+<a href="?#simGeom.getMeshTriangleDistance">simGeom.getMeshTriangleDistance</a>
+<a href="?#simGeom.getOctreeOctreeCollision">simGeom.getOctreeOctreeCollision</a>
+<a href="?#simGeom.getOctreeOctreeDistance">simGeom.getOctreeOctreeDistance</a>
+<a href="?#simGeom.getOctreePointCollision">simGeom.getOctreePointCollision</a>
+<a href="?#simGeom.getOctreePointDistance">simGeom.getOctreePointDistance</a>
+<a href="?#simGeom.getOctreePtcloudCollision">simGeom.getOctreePtcloudCollision</a>
+<a href="?#simGeom.getOctreePtcloudDistance">simGeom.getOctreePtcloudDistance</a>
+<a href="?#simGeom.getOctreeSegmentCollision">simGeom.getOctreeSegmentCollision</a>
+<a href="?#simGeom.getOctreeSegmentDistance">simGeom.getOctreeSegmentDistance</a>
+<a href="?#simGeom.getOctreeSerializationData">simGeom.getOctreeSerializationData</a>
+<a href="?#simGeom.getOctreeTriangleCollision">simGeom.getOctreeTriangleCollision</a>
+<a href="?#simGeom.getOctreeTriangleDistance">simGeom.getOctreeTriangleDistance</a>
+<a href="?#simGeom.getOctreeVoxels">simGeom.getOctreeVoxels</a>
+<a href="?#simGeom.getPtcloudPointDistance">simGeom.getPtcloudPointDistance</a>
+<a href="?#simGeom.getPtcloudPoints">simGeom.getPtcloudPoints</a>
+<a href="?#simGeom.getPtcloudPtcloudDistance">simGeom.getPtcloudPtcloudDistance</a>
+<a href="?#simGeom.getPtcloudSegmentDistance">simGeom.getPtcloudSegmentDistance</a>
+<a href="?#simGeom.getPtcloudSerializationData">simGeom.getPtcloudSerializationData</a>
+<a href="?#simGeom.getPtcloudTriangleDistance">simGeom.getPtcloudTriangleDistance</a>
+<a href="?#simGeom.getSegmentPointDistance">simGeom.getSegmentPointDistance</a>
+<a href="?#simGeom.getSegmentSegmentDistance">simGeom.getSegmentSegmentDistance</a>
+<a href="?#simGeom.getTransformedPoints">simGeom.getTransformedPoints</a>
+<a href="?#simGeom.getTrianglePointDistance">simGeom.getTrianglePointDistance</a>
+<a href="?#simGeom.getTriangleSegmentDistance">simGeom.getTriangleSegmentDistance</a>
+<a href="?#simGeom.getTriangleTriangleDistance">simGeom.getTriangleTriangleDistance</a>
+<a href="?#simGeom.scaleMesh">simGeom.scaleMesh</a>
+<a href="?#simGeom.scaleOctree">simGeom.scaleOctree</a>
+<a href="?#simGeom.scalePtcloud">simGeom.scalePtcloud</a></pre></td></tr>
+
+<tr><td id="category" class="section">
+
+<h3 class=subsectionBar><a name="meshCreation"></a>Mesh creation/destruction/manipulation/info</h3>
+<pre class=lightGreyBox>
+<a href="?#simGeom.createMesh">simGeom.createMesh</a>
+<a href="?#simGeom.destroyMesh">simGeom.destroyMesh</a>
+<a href="?#simGeom.copyMesh">simGeom.copyMesh</a>
+<a href="?#simGeom.scaleMesh">simGeom.scaleMesh</a>
+<a href="?#simGeom.getMeshSerializationData">simGeom.getMeshSerializationData</a>
+<a href="?#simGeom.createMeshFromSerializationData">simGeom.createMeshFromSerializationData</a>
+</pre>
+
+<h3 class=subsectionBar><a name="octreeCreation"></a>OC-tree creation/destruction/manipulation/info</h3>
+<pre class=lightGreyBox>
+<a href="?#simGeom.createOctreeFromColorPoints">simGeom.createOctreeFromColorPoints</a>
+<a href="?#simGeom.createOctreeFromMesh">simGeom.createOctreeFromMesh</a>
+<a href="?#simGeom.createOctreeFromOctree">simGeom.createOctreeFromOctree</a>
+<a href="?#simGeom.createOctreeFromPoints">simGeom.createOctreeFromPoints</a>
+<a href="?#simGeom.destroyOctree">simGeom.destroyOctree</a>
+<a href="?#simGeom.copyOctree">simGeom.copyOctree</a>
+<a href="?#simGeom.scaleOctree">simGeom.scaleOctree</a>
+<a href="?#simGeom.getOctreeSerializationData">simGeom.getOctreeSerializationData</a>
+<a href="?#simGeom.createOctreeFromSerializationData">simGeom.createOctreeFromSerializationData</a>
+<a href="?#simGeom.getOctreeVoxels">simGeom.getOctreeVoxels</a>
+</pre>
+
+<h3 class=subsectionBar><a name="ptcloudCreation"></a>Point-cloud creation/destruction/manipulation/info</h3>
+<pre class=lightGreyBox>
+<a href="?#simGeom.createPtcloudFromColorPoints">simGeom.createPtcloudFromColorPoints</a>
+<a href="?#simGeom.createPtcloudFromPoints">simGeom.createPtcloudFromPoints</a>
+<a href="?#simGeom.destroyPtcloud">simGeom.destroyPtcloud</a>
+<a href="?#simGeom.copyPtcloud">simGeom.copyPtcloud</a>
+<a href="?#simGeom.scalePtcloud">simGeom.scalePtcloud</a>
+<a href="?#simGeom.getPtcloudSerializationData">simGeom.getPtcloudSerializationData</a>
+<a href="?#simGeom.createPtcloudFromSerializationData">simGeom.createPtcloudFromSerializationData</a>
+<a href="?#simGeom.getPtcloudPoints">simGeom.getPtcloudPoints</a>
+</pre>
+
+<h3 class=subsectionBar><a name="meshCollision"></a>Mesh collision detection</h3>
+<pre class=lightGreyBox>
+<a href="?#simGeom.getMeshMeshCollision">simGeom.getMeshMeshCollision</a>
+<a href="?#simGeom.getMeshOctreeCollision">simGeom.getMeshOctreeCollision</a>
+<a href="?#simGeom.getMeshTriangleCollision">simGeom.getMeshTriangleCollision</a>
+<a href="?#simGeom.getMeshSegmentCollision">simGeom.getMeshSegmentCollision</a>
+</pre>
+
+<h3 class=subsectionBar><a name="octreeCollision"></a>OC-tree collision detection</h3>
+<pre class=lightGreyBox>
+<a href="?#simGeom.getMeshOctreeCollision">simGeom.getMeshOctreeCollision</a>
+<a href="?#simGeom.getOctreeOctreeCollision">simGeom.getOctreeOctreeCollision</a>
+<a href="?#simGeom.getOctreePtcloudCollision">simGeom.getOctreePtcloudCollision</a>
+<a href="?#simGeom.getOctreeTriangleCollision">simGeom.getOctreeTriangleCollision</a>
+<a href="?#simGeom.getOctreeSegmentCollision">simGeom.getOctreeSegmentCollision</a>
+<a href="?#simGeom.getOctreePointCollision">simGeom.getOctreePointCollision</a>
+</pre>
+
+<h3 class=subsectionBar><a name="ptcloudCollision"></a>Point-cloud collision detection</h3>
+<pre class=lightGreyBox>
+<a href="?#simGeom.getOctreePtcloudCollision">simGeom.getOctreePtcloudCollision</a>
+</pre>
+
+<h3 class=subsectionBar><a name="meshDistance"></a>Mesh minimum distance calculation</h3>
+<pre class=lightGreyBox>
+<a href="?#simGeom.getMeshMeshDistance">simGeom.getMeshMeshDistance</a>
+<a href="?#simGeom.getMeshOctreeDistance">simGeom.getMeshOctreeDistance</a>
+<a href="?#simGeom.getMeshPtcloudDistance">simGeom.getMeshPtcloudDistance</a>
+<a href="?#simGeom.getMeshTriangleDistance">simGeom.getMeshTriangleDistance</a>
+<a href="?#simGeom.getMeshSegmentDistance">simGeom.getMeshSegmentDistance</a>
+<a href="?#simGeom.getMeshPointDistance">simGeom.getMeshPointDistance</a>
+</pre>
+
+<h3 class=subsectionBar><a name="octreeDistance"></a>OC-tree minimum distance calculation</h3>
+<pre class=lightGreyBox>
+<a href="?#simGeom.getMeshOctreeDistance">simGeom.getMeshOctreeDistance</a>
+<a href="?#simGeom.getOctreeOctreeDistance">simGeom.getOctreeOctreeDistance</a>
+<a href="?#simGeom.getOctreePtcloudDistance">simGeom.getOctreePtcloudDistance</a>
+<a href="?#simGeom.getOctreeTriangleDistance">simGeom.getOctreeTriangleDistance</a>
+<a href="?#simGeom.getOctreeSegmentDistance">simGeom.getOctreeSegmentDistance</a>
+<a href="?#simGeom.getOctreePointDistance">simGeom.getOctreePointDistance</a>
+</pre>
+
+<h3 class=subsectionBar><a name="ptcloudDistance"></a>Point-cloud minimum distance calculation</h3>
+<pre class=lightGreyBox>
+<a href="?#simGeom.getOctreePtcloudDistance">simGeom.getOctreePtcloudDistance</a>
+<a href="?#simGeom.getMeshPtcloudDistance">simGeom.getMeshPtcloudDistance</a>
+<a href="?#simGeom.getPtcloudPtcloudDistance">simGeom.getPtcloudPtcloudDistance</a>
+<a href="?#simGeom.getPtcloudTriangleDistance">simGeom.getPtcloudTriangleDistance</a>
+<a href="?#simGeom.getPtcloudSegmentDistance">simGeom.getPtcloudSegmentDistance</a>
+<a href="?#simGeom.getPtcloudPointDistance">simGeom.getPtcloudPointDistance</a>
+</pre>
+
+<h3 class=subsectionBar><a name="primitiveDistance"></a>Primitives minimum distance calculation</h3>
+<pre class=lightGreyBox>
+<a href="?#simGeom.getBoxBoxDistance">simGeom.getBoxBoxDistance</a>
+<a href="?#simGeom.getBoxTriangleDistance">simGeom.getBoxTriangleDistance</a>
+<a href="?#simGeom.getBoxSegmentDistance">simGeom.getBoxSegmentDistance</a>
+<a href="?#simGeom.getBoxPointDistance">simGeom.getBoxPointDistance</a>
+<a href="?#simGeom.getTriangleTriangleDistance">simGeom.getTriangleTriangleDistance</a>
+<a href="?#simGeom.getTriangleSegmentDistance">simGeom.getTriangleSegmentDistance</a>
+<a href="?#simGeom.getTrianglePointDistance">simGeom.getTrianglePointDistance</a>
+<a href="?#simGeom.getSegmentSegmentDistance">simGeom.getSegmentSegmentDistance</a>
+<a href="?#simGeom.getSegmentPointDistance">simGeom.getSegmentPointDistance</a>
+</pre>
+
+<h3 class=subsectionBar><a name="other"></a>Other API functions</h3>
+<pre class=lightGreyBox>
+<a href="?#simGeom.getTransformedPoints">simGeom.getTransformedPoints</a>
+</pre>
+
+</td></tr>
+
+<tr><td id="commands" class="section">
 <h3 class="subsectionBar">
 <a name="simGeom.copyMesh" id="simGeom.copyMesh"></a>simGeom.copyMesh</h3>
 <table class="apiTable">
@@ -2020,14 +2208,20 @@ Below API functions are a sub-set of their <a href="coppeliaGeometricRoutinesApi
 <td class="apiTableRightDescr"></td>
 </tr>
 </table>
-<br>
-
 
 <br>
-
-
-
-
-
-</td></tr></table></div></body>
+</td></tr>
+</table></div>
+<script type="text/javascript">
+//
+view = getParameterByName('view')
+document.getElementById('alphabetical').style.display = view == 'alphabetical' ? 'table-cell' : 'none'
+document.getElementById('category').style.display = view == 'category' ? 'table-cell' : 'none'
+document.getElementById('commands').style.display = view == null ? 'table-cell' : 'none'
+document.getElementById('enums').style.display = view == null ? 'table-cell' : 'none'
+document.getElementById('structs').style.display = view == null ? 'table-cell' : 'none'
+document.getElementById('scriptFunctions').style.display = view == null ? 'table-cell' : 'none'
+//
+                </script>
+</body>
 </html>
