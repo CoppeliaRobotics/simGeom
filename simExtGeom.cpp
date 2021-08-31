@@ -2903,8 +2903,6 @@ SIM_DLLEXPORT unsigned char simStart(void*,int)
         return(0);
     }
 
-    simRegisterScriptVariable("simGeom","require('simExtGeometric')",0);
-
     // Register the new Lua commands:
     simRegisterScriptCallbackFunction(LUA_GETMESHMESHCOLLISION_COMMAND_PLUGIN,strConCat("bool collision,table_2 cache,table intersections=",LUA_GETMESHMESHCOLLISION_COMMAND,"(\nnumber mesh1Handle,table_3 mesh1Pos,table_4 mesh1Quaternion,\nnumber mesh2Handle,table_3 mesh2Pos,table_4 mesh2Quaternion,\ntable_2 cache=nil,bool returnIntersections=false)"),LUA_GETMESHMESHCOLLISION_CALLBACK);
     simRegisterScriptCallbackFunction(LUA_GETMESHOCTREECOLLISION_COMMAND_PLUGIN,strConCat("bool collision,table_2 cache=",LUA_GETMESHOCTREECOLLISION_COMMAND,"(\nnumber meshHandle,table_3 meshPos,table_4 meshQuaternion,\nnumber octreeHandle,table_3 octreePos,table_4 octreeQuaternion,\ntable_2 cache=nil)"),LUA_GETMESHOCTREECOLLISION_CALLBACK);
