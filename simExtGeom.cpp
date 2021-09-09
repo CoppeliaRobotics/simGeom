@@ -20,6 +20,7 @@
 #define CONCAT(x,y,z) x y z
 #define strConCat(x,y,z)    CONCAT(x,y,z)
 #ifdef SIM_MATH_DOUBLE
+#error double precision floats are not yet supported
 #define realData doubleData
 #define sim_script_arg_real sim_script_arg_double
 #else
