@@ -597,7 +597,7 @@ void LUA_GETMESHMESHDISTANCE_CALLBACK(SScriptCallBack* p)
             C3Vector mesh2Pos(&(inData->at(4).realData[0]));
             C4Vector mesh2Q(inData->at(5).realData[3],inData->at(5).realData[0],inData->at(5).realData[1],inData->at(5).realData[2]);
             simReal dist=REAL_MAX;
-            if ( (inData->size()>=7)&&(inData->at(6).realData.size()==1) )
+            if ( (inData->size()>=7)&&(inData->at(6).realData.size()==1)&&(inData->at(6).realData[0]!=simZero) )
                 dist=inData->at(6).realData[0];
             int cache1=-1;
             int cache2=-1;
@@ -663,7 +663,7 @@ void LUA_GETMESHOCTREEDISTANCE_CALLBACK(SScriptCallBack* p)
             C3Vector octreePos(&(inData->at(4).realData[0]));
             C4Vector octreeQ(inData->at(5).realData[3],inData->at(5).realData[0],inData->at(5).realData[1],inData->at(5).realData[2]);
             simReal dist=REAL_MAX;
-            if ( (inData->size()>=7)&&(inData->at(6).realData.size()==1) )
+            if ( (inData->size()>=7)&&(inData->at(6).realData.size()==1)&&(inData->at(6).realData[0]!=simZero) )
                 dist=inData->at(6).realData[0];
             int cache1=-1;
             unsigned long long int cache2=0;
@@ -729,7 +729,7 @@ void LUA_GETMESHPTCLOUDDISTANCE_CALLBACK(SScriptCallBack* p)
             C3Vector ptcloudPos(&(inData->at(4).realData[0]));
             C4Vector ptcloudQ(inData->at(5).realData[3],inData->at(5).realData[0],inData->at(5).realData[1],inData->at(5).realData[2]);
             simReal dist=REAL_MAX;
-            if ( (inData->size()>=7)&&(inData->at(6).realData.size()==1) )
+            if ( (inData->size()>=7)&&(inData->at(6).realData.size()==1)&&(inData->at(6).realData[0]!=simZero) )
                 dist=inData->at(6).realData[0];
             int cache1=-1;
             unsigned long long int cache2=0;
@@ -795,7 +795,7 @@ void LUA_GETOCTREEOCTREEDISTANCE_CALLBACK(SScriptCallBack* p)
             C3Vector octree2Pos(&(inData->at(4).realData[0]));
             C4Vector octree2Q(inData->at(5).realData[3],inData->at(5).realData[0],inData->at(5).realData[1],inData->at(5).realData[2]);
             simReal dist=REAL_MAX;
-            if ( (inData->size()>=7)&&(inData->at(6).realData.size()==1) )
+            if ( (inData->size()>=7)&&(inData->at(6).realData.size()==1)&&(inData->at(6).realData[0]!=simZero) )
                 dist=inData->at(6).realData[0];
             unsigned long long int cache1=0;
             unsigned long long int cache2=0;
@@ -861,7 +861,7 @@ void LUA_GETOCTREEPTCLOUDDISTANCE_CALLBACK(SScriptCallBack* p)
             C3Vector ptcloudPos(&(inData->at(4).realData[0]));
             C4Vector ptcloudQ(inData->at(5).realData[3],inData->at(5).realData[0],inData->at(5).realData[1],inData->at(5).realData[2]);
             simReal dist=REAL_MAX;
-            if ( (inData->size()>=7)&&(inData->at(6).realData.size()==1) )
+            if ( (inData->size()>=7)&&(inData->at(6).realData.size()==1)&&(inData->at(6).realData[0]!=simZero) )
                 dist=inData->at(6).realData[0];
             unsigned long long int cache1=0;
             unsigned long long int cache2=0;
@@ -926,7 +926,7 @@ void LUA_GETOCTREETRIANGLEDISTANCE_CALLBACK(SScriptCallBack* p)
             C3Vector triPt2(&(inData->at(4).realData[0]));
             C3Vector triPt3(&(inData->at(5).realData[0]));
             simReal dist=REAL_MAX;
-            if ( (inData->size()>=7)&&(inData->at(6).realData.size()==1) )
+            if ( (inData->size()>=7)&&(inData->at(6).realData.size()==1)&&(inData->at(6).realData[0]!=simZero) )
                 dist=inData->at(6).realData[0];
             unsigned long long int cache=0;
             if ( (inData->size()>=8)&&(inData->at(7).doubleData.size()==1) )
@@ -982,7 +982,7 @@ void LUA_GETOCTREESEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
             C3Vector segPt1(&(inData->at(3).realData[0]));
             C3Vector segPt2(&(inData->at(4).realData[0]));
             simReal dist=REAL_MAX;
-            if ( (inData->size()>=6)&&(inData->at(5).realData.size()==1) )
+            if ( (inData->size()>=6)&&(inData->at(5).realData.size()==1)&&(inData->at(5).realData[0]!=simZero) )
                 dist=inData->at(5).realData[0];
             unsigned long long int cache=0;
             if ( (inData->size()>=7)&&(inData->at(6).doubleData.size()==1) )
@@ -1036,7 +1036,7 @@ void LUA_GETOCTREEPOINTDISTANCE_CALLBACK(SScriptCallBack* p)
             C4Vector octreeQ(inData->at(2).realData[3],inData->at(2).realData[0],inData->at(2).realData[1],inData->at(2).realData[2]);
             C3Vector point(&(inData->at(3).realData[0]));
             simReal dist=REAL_MAX;
-            if ( (inData->size()>=5)&&(inData->at(4).realData.size()==1) )
+            if ( (inData->size()>=5)&&(inData->at(4).realData.size()==1)&&(inData->at(4).realData[0]!=simZero) )
                 dist=inData->at(4).realData[0];
             unsigned long long int cache=0;
             if ( (inData->size()>=6)&&(inData->at(5).doubleData.size()==1) )
@@ -1092,7 +1092,7 @@ void LUA_GETMESHTRIANGLEDISTANCE_CALLBACK(SScriptCallBack* p)
             C3Vector triPt2(&inData->at(4).realData[0]);
             C3Vector triPt3(&inData->at(5).realData[0]);
             simReal dist=REAL_MAX;
-            if ( (inData->size()>=7)&&(inData->at(6).realData.size()==1) )
+            if ( (inData->size()>=7)&&(inData->at(6).realData.size()==1)&&(inData->at(6).realData[0]!=simZero) )
                 dist=inData->at(6).realData[0];
             int cache=-1;
             if ( (inData->size()>=8)&&(inData->at(7).int32Data.size()==1) )
@@ -1148,7 +1148,7 @@ void LUA_GETMESHSEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
             C3Vector segPt1(&inData->at(3).realData[0]);
             C3Vector segPt2(&inData->at(4).realData[0]);
             simReal dist=REAL_MAX;
-            if ( (inData->size()>=6)&&(inData->at(5).realData.size()==1) )
+            if ( (inData->size()>=6)&&(inData->at(5).realData.size()==1)&&(inData->at(5).realData[0]!=simZero) )
                 dist=inData->at(5).realData[0];
             int cache=-1;
             if ( (inData->size()>=7)&&(inData->at(6).int32Data.size()==1) )
@@ -1202,7 +1202,7 @@ void LUA_GETMESHPOINTDISTANCE_CALLBACK(SScriptCallBack* p)
             C4Vector meshQ(inData->at(2).realData[3],inData->at(2).realData[0],inData->at(2).realData[1],inData->at(2).realData[2]);
             C3Vector pt1(&inData->at(3).realData[0]);
             simReal dist=REAL_MAX;
-            if ( (inData->size()>=5)&&(inData->at(4).realData.size()==1) )
+            if ( (inData->size()>=5)&&(inData->at(4).realData.size()==1)&&(inData->at(4).realData[0]!=simZero) )
                 dist=inData->at(4).realData[0];
             int cache=-1;
             if ( (inData->size()>=6)&&(inData->at(5).int32Data.size()==1) )
@@ -2669,7 +2669,7 @@ void LUA_GETPTCLOUDPTCLOUDDISTANCE_CALLBACK(SScriptCallBack* p)
             C3Vector ptcloud2Pos(&(inData->at(4).realData[0]));
             C4Vector ptcloud2Q(inData->at(5).realData[3],inData->at(5).realData[0],inData->at(5).realData[1],inData->at(5).realData[2]);
             simReal dist=REAL_MAX;
-            if ( (inData->size()>=7)&&(inData->at(6).realData.size()==1) )
+            if ( (inData->size()>=7)&&(inData->at(6).realData.size()==1)&&(inData->at(6).realData[0]!=simZero) )
                 dist=inData->at(6).realData[0];
             unsigned long long int cache1=0;
             unsigned long long int cache2=0;
@@ -2734,7 +2734,7 @@ void LUA_GETPTCLOUDTRIANGLEDISTANCE_CALLBACK(SScriptCallBack* p)
             C3Vector triPt2(&(inData->at(4).realData[0]));
             C3Vector triPt3(&(inData->at(5).realData[0]));
             simReal dist=REAL_MAX;
-            if ( (inData->size()>=7)&&(inData->at(6).realData.size()==1) )
+            if ( (inData->size()>=7)&&(inData->at(6).realData.size()==1)&&(inData->at(6).realData[0]!=simZero) )
                 dist=inData->at(6).realData[0];
             unsigned long long int cache=0;
             if ( (inData->size()>=8)&&(inData->at(7).doubleData.size()==1) )
@@ -2790,7 +2790,7 @@ void LUA_GETPTCLOUDSEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
             C3Vector segPt1(&(inData->at(3).realData[0]));
             C3Vector segPt2(&(inData->at(4).realData[0]));
             simReal dist=REAL_MAX;
-            if ( (inData->size()>=6)&&(inData->at(5).realData.size()==1) )
+            if ( (inData->size()>=6)&&(inData->at(5).realData.size()==1)&&(inData->at(5).realData[0]!=simZero) )
                 dist=inData->at(5).realData[0];
             unsigned long long int cache=0;
             if ( (inData->size()>=7)&&(inData->at(6).doubleData.size()==1) )
@@ -2844,7 +2844,7 @@ void LUA_GETPTCLOUDPOINTDISTANCE_CALLBACK(SScriptCallBack* p)
             C4Vector ptcloudQ(inData->at(2).realData[3],inData->at(2).realData[0],inData->at(2).realData[1],inData->at(2).realData[2]);
             C3Vector point(&(inData->at(3).realData[0]));
             simReal dist=REAL_MAX;
-            if ( (inData->size()>=5)&&(inData->at(4).realData.size()==1) )
+            if ( (inData->size()>=5)&&(inData->at(4).realData.size()==1)&&(inData->at(4).realData[0]!=simZero) )
                 dist=inData->at(4).realData[0];
             unsigned long long int cache=0;
             if ( (inData->size()>=6)&&(inData->at(5).doubleData.size()==1) )
@@ -2905,75 +2905,75 @@ SIM_DLLEXPORT unsigned char simStart(void*,int)
     }
 
     // Register the new Lua commands:
-    simRegisterScriptCallbackFunction(LUA_GETMESHMESHCOLLISION_COMMAND_PLUGIN,strConCat("bool collision,table_2 cache,table intersections=",LUA_GETMESHMESHCOLLISION_COMMAND,"(\nnumber mesh1Handle,table_3 mesh1Pos,table_4 mesh1Quaternion,\nnumber mesh2Handle,table_3 mesh2Pos,table_4 mesh2Quaternion,\ntable_2 cache=nil,bool returnIntersections=false)"),LUA_GETMESHMESHCOLLISION_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETMESHOCTREECOLLISION_COMMAND_PLUGIN,strConCat("bool collision,table_2 cache=",LUA_GETMESHOCTREECOLLISION_COMMAND,"(\nnumber meshHandle,table_3 meshPos,table_4 meshQuaternion,\nnumber octreeHandle,table_3 octreePos,table_4 octreeQuaternion,\ntable_2 cache=nil)"),LUA_GETMESHOCTREECOLLISION_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETMESHTRIANGLECOLLISION_COMMAND_PLUGIN,strConCat("bool collision,number cache,table intersections=",LUA_GETMESHTRIANGLECOLLISION_COMMAND,"(\nnumber meshHandle,table_3 meshPos,table_4 meshQuaternion,\ntable_3 triPt1,table_3 triPt2,table_3 triPt3,\nnumber cache=-1,bool returnIntersections=false)"),LUA_GETMESHTRIANGLECOLLISION_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETMESHSEGMENTCOLLISION_COMMAND_PLUGIN,strConCat("bool collision,number cache,table intersections=",LUA_GETMESHSEGMENTCOLLISION_COMMAND,"(\nnumber meshHandle,table_3 meshPos,table_4 meshQuaternion,\ntable_3 segmentPt1,table_3 segmentPt2,\nnumber cache=-1,bool returnIntersections=false)"),LUA_GETMESHSEGMENTCOLLISION_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETMESHMESHCOLLISION_COMMAND_PLUGIN,strConCat("bool collision,int[2] cache,float[] intersections=",LUA_GETMESHMESHCOLLISION_COMMAND,"(int mesh1Handle,float[3] mesh1Pos,float[4] mesh1Quaternion,int mesh2Handle,float[3] mesh2Pos,float[4] mesh2Quaternion,int[2] cache=nil,bool returnIntersections=false)"),LUA_GETMESHMESHCOLLISION_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETMESHOCTREECOLLISION_COMMAND_PLUGIN,strConCat("bool collision,int[2] cache=",LUA_GETMESHOCTREECOLLISION_COMMAND,"(int meshHandle,float[3] meshPos,float[4] meshQuaternion,int octreeHandle,float[3] octreePos,float[4] octreeQuaternion,int[2] cache=nil)"),LUA_GETMESHOCTREECOLLISION_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETMESHTRIANGLECOLLISION_COMMAND_PLUGIN,strConCat("bool collision,int cache,float[] intersections=",LUA_GETMESHTRIANGLECOLLISION_COMMAND,"(int meshHandle,float[3] meshPos,float[4] meshQuaternion,float[3] triPt1,float[3] triPt2,float[3] triPt3,int cache=-1,bool returnIntersections=false)"),LUA_GETMESHTRIANGLECOLLISION_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETMESHSEGMENTCOLLISION_COMMAND_PLUGIN,strConCat("bool collision,int cache,float[] intersections=",LUA_GETMESHSEGMENTCOLLISION_COMMAND,"(int meshHandle,float[3] meshPos,float[4] meshQuaternion,float[3] segmentPt1,float[3] segmentPt2,int cache=-1,bool returnIntersections=false)"),LUA_GETMESHSEGMENTCOLLISION_CALLBACK);
 
-    simRegisterScriptCallbackFunction(LUA_GETOCTREEOCTREECOLLISION_COMMAND_PLUGIN,strConCat("bool collision,table_2 cache=",LUA_GETOCTREEOCTREECOLLISION_COMMAND,"(\nnumber octree1Handle,table_3 octree1Pos,table_4 octree1Quaternion,\nnumber octree2Handle,table_3 octree2Pos,table_4 octree2Quaternion,\ntable_2 cache=nil)"),LUA_GETOCTREEOCTREECOLLISION_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETOCTREEPTCLOUDCOLLISION_COMMAND_PLUGIN,strConCat("bool collision,table_2 cache=",LUA_GETOCTREEPTCLOUDCOLLISION_COMMAND,"(\nnumber octreeHandle,table_3 octreePos,table_4 octreeQuaternion,\nnumber ptcloudHandle,table_3 ptcloudPos,table_4 ptcloudQuaternion,\ntable_2 cache=nil)"),LUA_GETOCTREEPTCLOUDCOLLISION_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETOCTREETRIANGLECOLLISION_COMMAND_PLUGIN,strConCat("bool collision,number cache=",LUA_GETOCTREETRIANGLECOLLISION_COMMAND,"(\nnumber octreeHandle,table_3 octreePos,table_4 octreeQuaternion,\ntable_3 triPt1,table_3 triPt2,table_3 triPt3,\nnumber cache=-1)"),LUA_GETOCTREETRIANGLECOLLISION_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETOCTREESEGMENTCOLLISION_COMMAND_PLUGIN,strConCat("bool collision,number cache=",LUA_GETOCTREESEGMENTCOLLISION_COMMAND,"(\nnumber octreeHandle,table_3 octreePos,table_4 octreeQuaternion,\ntable_3 segPt1,table_3 segPt2,\nnumber cache=-1)"),LUA_GETOCTREESEGMENTCOLLISION_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETOCTREEPOINTCOLLISION_COMMAND_PLUGIN,strConCat("bool collision,number cache=",LUA_GETOCTREEPOINTCOLLISION_COMMAND,"(\nnumber octreeHandle,table_3 octreePos,table_4 octreeQuaternion,\ntable_3 point,number cache=-1)"),LUA_GETOCTREEPOINTCOLLISION_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETOCTREEOCTREECOLLISION_COMMAND_PLUGIN,strConCat("bool collision,int[2] cache=",LUA_GETOCTREEOCTREECOLLISION_COMMAND,"(int octree1Handle,float[3] octree1Pos,float[4] octree1Quaternion,int octree2Handle,float[3] octree2Pos,float[4] octree2Quaternion,int[2] cache=nil)"),LUA_GETOCTREEOCTREECOLLISION_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETOCTREEPTCLOUDCOLLISION_COMMAND_PLUGIN,strConCat("bool collision,int[2] cache=",LUA_GETOCTREEPTCLOUDCOLLISION_COMMAND,"(int octreeHandle,float[3] octreePos,float[4] octreeQuaternion,int ptcloudHandle,float[3] ptcloudPos,float[4] ptcloudQuaternion,int[2] cache=nil)"),LUA_GETOCTREEPTCLOUDCOLLISION_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETOCTREETRIANGLECOLLISION_COMMAND_PLUGIN,strConCat("bool collision,int cache=",LUA_GETOCTREETRIANGLECOLLISION_COMMAND,"(int octreeHandle,float[3] octreePos,float[4] octreeQuaternion,float[3] triPt1,float[3] triPt2,float[3] triPt3,int cache=-1)"),LUA_GETOCTREETRIANGLECOLLISION_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETOCTREESEGMENTCOLLISION_COMMAND_PLUGIN,strConCat("bool collision,int cache=",LUA_GETOCTREESEGMENTCOLLISION_COMMAND,"(int octreeHandle,float[3] octreePos,float[4] octreeQuaternion,float[3] segPt1,float[3] segPt2,int cache=-1)"),LUA_GETOCTREESEGMENTCOLLISION_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETOCTREEPOINTCOLLISION_COMMAND_PLUGIN,strConCat("bool collision,int cache=",LUA_GETOCTREEPOINTCOLLISION_COMMAND,"(int octreeHandle,float[3] octreePos,float[4] octreeQuaternion,float[3] point,int cache=-1)"),LUA_GETOCTREEPOINTCOLLISION_CALLBACK);
 
-    simRegisterScriptCallbackFunction(LUA_GETMESHMESHDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2,table_2 cache=",LUA_GETMESHMESHDISTANCE_COMMAND,"(\nnumber mesh1Handle,table_3 mesh1Pos,table_4 mesh1Quaternion,\nnumber mesh2Handle,table_3 mesh2Pos,table_4 mesh2Quaternion,\nnumber distanceThreshold=REAL_MAX,table_2 cache=nil)"),LUA_GETMESHMESHDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETMESHOCTREEDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2,table_2 cache=",LUA_GETMESHOCTREEDISTANCE_COMMAND,"(\nnumber meshHandle,table_3 meshPos,table_4 meshQuaternion,\nnumber octreeHandle,table_3 octreePos,table_4 octreeQuaternion,\nnumber distanceThreshold=REAL_MAX,table_2 cache=nil)"),LUA_GETMESHOCTREEDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETMESHPTCLOUDDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2,table_2 cache=",LUA_GETMESHPTCLOUDDISTANCE_COMMAND,"(\nnumber meshHandle,table_3 meshPos,table_4 meshQuaternion,\nnumber ptcloudHandle,table_3 ptcloudPos,table_4 ptcloudQuaternion,\nnumber distanceThreshold=REAL_MAX,table_2 cache=nil)"),LUA_GETMESHPTCLOUDDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETMESHTRIANGLEDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2,number cache=",LUA_GETMESHTRIANGLEDISTANCE_COMMAND,"(\nnumber meshHandle,table_3 meshPos,table_4 meshQuaternion,\ntable_3 triPt1,table_3 triPt2,table_3 triPt3,\nnumber distanceThreshold=REAL_MAX,number cache=-1)"),LUA_GETMESHTRIANGLEDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETMESHSEGMENTDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2,number cache=",LUA_GETMESHSEGMENTDISTANCE_COMMAND,"(\nnumber meshHandle,table_3 meshPos,table_4 meshQuaternion,\ntable_3 segmentPt1,table_3 segmentPt2,\nnumber distanceThreshold=REAL_MAX,number cache=-1)"),LUA_GETMESHSEGMENTDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETMESHPOINTDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt,number cache=",LUA_GETMESHPOINTDISTANCE_COMMAND,"(\nnumber meshHandle,table_3 meshPos,table_4 meshQuaternion,\ntable_3 point,number distanceThreshold=REAL_MAX,number cache=-1)"),LUA_GETMESHPOINTDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETMESHMESHDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt1,float[3] distSegPt2,int[2] cache=",LUA_GETMESHMESHDISTANCE_COMMAND,"(int mesh1Handle,float[3] mesh1Pos,float[4] mesh1Quaternion,int mesh2Handle,float[3] mesh2Pos,float[4] mesh2Quaternion,float distanceThreshold=0,int[2] cache=nil)"),LUA_GETMESHMESHDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETMESHOCTREEDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt1,float[3] distSegPt2,int[2] cache=",LUA_GETMESHOCTREEDISTANCE_COMMAND,"(int meshHandle,float[3] meshPos,float[4] meshQuaternion,int octreeHandle,float[3] octreePos,float[4] octreeQuaternion,float distanceThreshold=0,int[2] cache=nil)"),LUA_GETMESHOCTREEDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETMESHPTCLOUDDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt1,float[3] distSegPt2,int[2] cache=",LUA_GETMESHPTCLOUDDISTANCE_COMMAND,"(int meshHandle,float[3] meshPos,float[4] meshQuaternion,int ptcloudHandle,float[3] ptcloudPos,float[4] ptcloudQuaternion,float distanceThreshold=0,int[2] cache=nil)"),LUA_GETMESHPTCLOUDDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETMESHTRIANGLEDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt1,float[3] distSegPt2,int cache=",LUA_GETMESHTRIANGLEDISTANCE_COMMAND,"(int meshHandle,float[3] meshPos,float[4] meshQuaternion,float[3] triPt1,float[3] triPt2,float[3] triPt3,float distanceThreshold=0,int cache=-1)"),LUA_GETMESHTRIANGLEDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETMESHSEGMENTDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt1,float[3] distSegPt2,int cache=",LUA_GETMESHSEGMENTDISTANCE_COMMAND,"(int meshHandle,float[3] meshPos,float[4] meshQuaternion,float[3] segmentPt1,float[3] segmentPt2,float distanceThreshold=0,int cache=-1)"),LUA_GETMESHSEGMENTDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETMESHPOINTDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt,int cache=",LUA_GETMESHPOINTDISTANCE_COMMAND,"(int meshHandle,float[3] meshPos,float[4] meshQuaternion,float[3] point,float distanceThreshold=0,int cache=-1)"),LUA_GETMESHPOINTDISTANCE_CALLBACK);
 
-    simRegisterScriptCallbackFunction(LUA_GETOCTREEOCTREEDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2,table_2 cache=",LUA_GETOCTREEOCTREEDISTANCE_COMMAND,"(\nnumber octree1Handle,table_3 octree1Pos,table_4 octree1Quaternion,\nnumber octree2Handle,table_3 octree2Pos,table_4 octree2Quaternion,\nnumber distanceThreshold=REAL_MAX,table_2 cache=nil)"),LUA_GETOCTREEOCTREEDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETOCTREEPTCLOUDDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2,table_2 cache=",LUA_GETOCTREEPTCLOUDDISTANCE_COMMAND,"(\nnumber octreeHandle,table_3 octreePos,table_4 octreeQuaternion,\nnumber ptcloudHandle,table_3 ptcloudPos,table_4 ptcloudQuaternion,\nnumber distanceThreshold=REAL_MAX,table_2 cache=nil)"),LUA_GETOCTREEPTCLOUDDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETOCTREETRIANGLEDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2,number cache=",LUA_GETOCTREETRIANGLEDISTANCE_COMMAND,"(\nnumber octreeHandle,table_3 octreePos,table_4 octreeQuaternion,\ntable_3 triPt1,table_3 triPt2,table_3 triPt3,\nnumber distanceThreshold=REAL_MAX,number cache=-1)"),LUA_GETOCTREETRIANGLEDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETOCTREESEGMENTDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2,number cache=",LUA_GETOCTREESEGMENTDISTANCE_COMMAND,"(\nnumber octreeHandle,table_3 octreePos,table_4 octreeQuaternion,\ntable_3 segPt1,table_3 segPt2,\nnumber distanceThreshold=REAL_MAX,number cache=-1)"),LUA_GETOCTREESEGMENTDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETOCTREEPOINTDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt,number cache=",LUA_GETOCTREEPOINTDISTANCE_COMMAND,"(\nnumber octreeHandle,table_3 octreePos,table_4 octreeQuaternion,\ntable_3 point,number distanceThreshold=REAL_MAX,number cache=-1)"),LUA_GETOCTREEPOINTDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETOCTREEOCTREEDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt1,float[3] distSegPt2,int[2] cache=",LUA_GETOCTREEOCTREEDISTANCE_COMMAND,"(int octree1Handle,float[3] octree1Pos,float[4] octree1Quaternion,int octree2Handle,float[3] octree2Pos,float[4] octree2Quaternion,float distanceThreshold=0,int[2] cache=nil)"),LUA_GETOCTREEOCTREEDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETOCTREEPTCLOUDDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt1,float[3] distSegPt2,int[2] cache=",LUA_GETOCTREEPTCLOUDDISTANCE_COMMAND,"(int octreeHandle,float[3] octreePos,float[4] octreeQuaternion,int ptcloudHandle,float[3] ptcloudPos,float[4] ptcloudQuaternion,float distanceThreshold=0,int[2] cache=nil)"),LUA_GETOCTREEPTCLOUDDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETOCTREETRIANGLEDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt1,float[3] distSegPt2,int cache=",LUA_GETOCTREETRIANGLEDISTANCE_COMMAND,"(int octreeHandle,float[3] octreePos,float[4] octreeQuaternion,float[3] triPt1,float[3] triPt2,float[3] triPt3,float distanceThreshold=0,int cache=-1)"),LUA_GETOCTREETRIANGLEDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETOCTREESEGMENTDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt1,float[3] distSegPt2,int cache=",LUA_GETOCTREESEGMENTDISTANCE_COMMAND,"(int octreeHandle,float[3] octreePos,float[4] octreeQuaternion,float[3] segPt1,float[3] segPt2,float distanceThreshold=0,int cache=-1)"),LUA_GETOCTREESEGMENTDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETOCTREEPOINTDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt,int cache=",LUA_GETOCTREEPOINTDISTANCE_COMMAND,"(int octreeHandle,float[3] octreePos,float[4] octreeQuaternion,float[3] point,float distanceThreshold=0,int cache=-1)"),LUA_GETOCTREEPOINTDISTANCE_CALLBACK);
 
-    simRegisterScriptCallbackFunction(LUA_GETPTCLOUDPTCLOUDDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2,table_2 cache=",LUA_GETPTCLOUDPTCLOUDDISTANCE_COMMAND,"(\nnumber ptcloud1Handle,table_3 ptcloud1Pos,table_4 ptcloud1Quaternion,\nnumber ptcloud2Handle,table_3 ptcloud2Pos,table_4 ptcloud2Quaternion,\nnumber distanceThreshold=REAL_MAX,table_2 cache=nil)"),LUA_GETPTCLOUDPTCLOUDDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETPTCLOUDTRIANGLEDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2,number cache=",LUA_GETPTCLOUDTRIANGLEDISTANCE_COMMAND,"(\nnumber ptcloudHandle,table_3 ptcloudPos,table_4 ptcloudQuaternion,\ntable_3 triPt1,table_3 triPt2,table_3 triPt3,\nnumber distanceThreshold=REAL_MAX,number cache=-1)"),LUA_GETPTCLOUDTRIANGLEDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETPTCLOUDSEGMENTDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2,number cache=",LUA_GETPTCLOUDSEGMENTDISTANCE_COMMAND,"(\nnumber ptcloudHandle,table_3 ptcloudPos,table_4 ptcloudQuaternion,\ntable_3 segPt1,table_3 segPt2,\nnumber distanceThreshold=REAL_MAX,number cache=-1)"),LUA_GETPTCLOUDSEGMENTDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETPTCLOUDPOINTDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt,number cache=",LUA_GETPTCLOUDPOINTDISTANCE_COMMAND,"(\nnumber ptcloudHandle,table_3 ptcloudPos,table_4 ptcloudQuaternion,\ntable_3 point,number distanceThreshold=REAL_MAX,number cache=-1)"),LUA_GETPTCLOUDPOINTDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETPTCLOUDPTCLOUDDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt1,float[3] distSegPt2,int[2] cache=",LUA_GETPTCLOUDPTCLOUDDISTANCE_COMMAND,"(int ptcloud1Handle,float[3] ptcloud1Pos,float[4] ptcloud1Quaternion,int ptcloud2Handle,float[3] ptcloud2Pos,float[4] ptcloud2Quaternion,float distanceThreshold=0,int[2] cache=nil)"),LUA_GETPTCLOUDPTCLOUDDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETPTCLOUDTRIANGLEDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt1,float[3] distSegPt2,int cache=",LUA_GETPTCLOUDTRIANGLEDISTANCE_COMMAND,"(int ptcloudHandle,float[3] ptcloudPos,float[4] ptcloudQuaternion,float[3] triPt1,float[3] triPt2,float[3] triPt3,float distanceThreshold=0,int cache=-1)"),LUA_GETPTCLOUDTRIANGLEDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETPTCLOUDSEGMENTDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt1,float[3] distSegPt2,int cache=",LUA_GETPTCLOUDSEGMENTDISTANCE_COMMAND,"(int ptcloudHandle,float[3] ptcloudPos,float[4] ptcloudQuaternion,float[3] segPt1,float[3] segPt2,float distanceThreshold=0,int cache=-1)"),LUA_GETPTCLOUDSEGMENTDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETPTCLOUDPOINTDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt,int cache=",LUA_GETPTCLOUDPOINTDISTANCE_COMMAND,"(int ptcloudHandle,float[3] ptcloudPos,float[4] ptcloudQuaternion,float[3] point,float distanceThreshold=0,int cache=-1)"),LUA_GETPTCLOUDPOINTDISTANCE_CALLBACK);
 
-    simRegisterScriptCallbackFunction(LUA_GETBOXBOXDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2=",LUA_GETBOXBOXDISTANCE_COMMAND,"(\ntable_3 box1Pos,table_4 box1Quaternion,table_3 box1HalfSize,table_3 box2Pos,\ntable_4 box2Quaternion,table_3 box2HalfSize,bool boxesAreSolid)"),LUA_GETBOXBOXDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETBOXTRIANGLEDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2=",LUA_GETBOXTRIANGLEDISTANCE_COMMAND,"(\ntable_3 boxPos,table_4 boxQuaternion,table_3 boxHalfSize,bool boxIsSolid,\ntable_3 triPt1,table_3 triPt2,table_3 triPt3,bool altRoutine=false)"),LUA_GETBOXTRIANGLEDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETBOXSEGMENTDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2=",LUA_GETBOXSEGMENTDISTANCE_COMMAND,"(\ntable_3 boxPos,table_4 boxQuaternion,table_3 boxHalfSize,bool boxIsSolid\n,table_3 segmentPt1,table_3 segmentPt2,bool altRoutine=false)"),LUA_GETBOXSEGMENTDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETBOXPOINTDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt=",LUA_GETBOXPOINTDISTANCE_COMMAND,"(\ntable_3 boxPos,table_4 boxQuaternion,table_3 boxHalfSize,\nbool boxIsSolid,table_3 point)"),LUA_GETBOXPOINTDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETBOXBOXDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt1,float[3] distSegPt2=",LUA_GETBOXBOXDISTANCE_COMMAND,"(float[3] box1Pos,float[4] box1Quaternion,float[3] box1HalfSize,float[3] box2Pos,float[4] box2Quaternion,float[3] box2HalfSize,bool boxesAreSolid)"),LUA_GETBOXBOXDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETBOXTRIANGLEDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt1,float[3] distSegPt2=",LUA_GETBOXTRIANGLEDISTANCE_COMMAND,"(float[3] boxPos,float[4] boxQuaternion,float[3] boxHalfSize,bool boxIsSolid,float[3] triPt1,float[3] triPt2,float[3] triPt3,bool altRoutine=false)"),LUA_GETBOXTRIANGLEDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETBOXSEGMENTDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt1,float[3] distSegPt2=",LUA_GETBOXSEGMENTDISTANCE_COMMAND,"(float[3] boxPos,float[4] boxQuaternion,float[3] boxHalfSize,bool boxIsSolid,float[3] segmentPt1,float[3] segmentPt2,bool altRoutine=false)"),LUA_GETBOXSEGMENTDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETBOXPOINTDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt=",LUA_GETBOXPOINTDISTANCE_COMMAND,"(float[3] boxPos,float[4] boxQuaternion,float[3] boxHalfSize,bool boxIsSolid,float[3] point)"),LUA_GETBOXPOINTDISTANCE_CALLBACK);
 
-    simRegisterScriptCallbackFunction(LUA_GETTRIANGLETRIANGLEDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2=",LUA_GETTRIANGLETRIANGLEDISTANCE_COMMAND,"(\ntable_3 tri1Pt1,table_3 tri1Pt2,table_3 tri1Pt3\n,table_3 tri2Pt1,table_3 tri2Pt2,table_3 tri2Pt3)"),LUA_GETTRIANGLETRIANGLEDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETTRIANGLESEGMENTDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2=",LUA_GETTRIANGLESEGMENTDISTANCE_COMMAND,"(\ntable_3 triPt1,table_3 triPt2,table_3 triPt3\n,table_3 segmentPt1,table_3 segmentPt2)"),LUA_GETTRIANGLESEGMENTDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETTRIANGLEPOINTDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt=",LUA_GETTRIANGLEPOINTDISTANCE_COMMAND,"(\ntable_3 triPt1,table_3 triPt2,table_3 triPt3,table_3 point)"),LUA_GETTRIANGLEPOINTDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETTRIANGLETRIANGLEDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt1,float[3] distSegPt2=",LUA_GETTRIANGLETRIANGLEDISTANCE_COMMAND,"(float[3] tri1Pt1,float[3] tri1Pt2,float[3] tri1Pt3,float[3] tri2Pt1,float[3] tri2Pt2,float[3] tri2Pt3)"),LUA_GETTRIANGLETRIANGLEDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETTRIANGLESEGMENTDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt1,float[3] distSegPt2=",LUA_GETTRIANGLESEGMENTDISTANCE_COMMAND,"(float[3] triPt1,float[3] triPt2,float[3] triPt3,float[3] segmentPt1,float[3] segmentPt2)"),LUA_GETTRIANGLESEGMENTDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETTRIANGLEPOINTDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt=",LUA_GETTRIANGLEPOINTDISTANCE_COMMAND,"(float[3] triPt1,float[3] triPt2,float[3] triPt3,float[3] point)"),LUA_GETTRIANGLEPOINTDISTANCE_CALLBACK);
 
-    simRegisterScriptCallbackFunction(LUA_GETSEGMENTSEGMENTDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt1,table_3 distSegPt2=",LUA_GETSEGMENTSEGMENTDISTANCE_COMMAND,"(\ntable_3 segment1Pt1,table_3 segment1Pt2,table_3 segment2Pt1,table_3 segment2Pt2)"),LUA_GETSEGMENTSEGMENTDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETSEGMENTPOINTDISTANCE_COMMAND_PLUGIN,strConCat("number dist,table_3 distSegPt=",LUA_GETSEGMENTPOINTDISTANCE_COMMAND,"(\ntable_3 segmentPt1,table_3 segmentPt2,table_3 point)"),LUA_GETSEGMENTPOINTDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETSEGMENTSEGMENTDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt1,float[3] distSegPt2=",LUA_GETSEGMENTSEGMENTDISTANCE_COMMAND,"(float[3] segment1Pt1,float[3] segment1Pt2,float[3] segment2Pt1,float[3] segment2Pt2)"),LUA_GETSEGMENTSEGMENTDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETSEGMENTPOINTDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt=",LUA_GETSEGMENTPOINTDISTANCE_COMMAND,"(float[3] segmentPt1,float[3] segmentPt2,float[3] point)"),LUA_GETSEGMENTPOINTDISTANCE_CALLBACK);
 
-    simRegisterScriptCallbackFunction(LUA_CREATEMESH_COMMAND_PLUGIN,strConCat("number meshHandle=",LUA_CREATEMESH_COMMAND,"(table vertices,table indices,\ntable_3 meshOriginPos=nil,table_4 meshOriginQuaternion=nil,\nnumber maxTriangleEdgeLength=0.3,number maxTriangleCountInLeafObb=8)"),LUA_CREATEMESH_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_COPYMESH_COMMAND_PLUGIN,strConCat("number meshHandle=",LUA_COPYMESH_COMMAND,"(number meshHandle)"),LUA_COPYMESH_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_SCALEMESH_COMMAND_PLUGIN,strConCat("",LUA_SCALEMESH_COMMAND,"(number meshHandle,number scaleFactor)"),LUA_SCALEMESH_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETMESHSERIALIZATIONDATA_COMMAND_PLUGIN,strConCat("string data=",LUA_GETMESHSERIALIZATIONDATA_COMMAND,"(number meshHandle)"),LUA_GETMESHSERIALIZATIONDATA_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_CREATEMESHFROMSERIALIZATIONDATA_COMMAND_PLUGIN,strConCat("number meshHandle=",LUA_CREATEMESHFROMSERIALIZATIONDATA_COMMAND,"(string data)"),LUA_CREATEMESHFROMSERIALIZATIONDATA_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_DESTROYMESH_COMMAND_PLUGIN,strConCat("",LUA_DESTROYMESH_COMMAND,"(number meshHandle)"),LUA_DESTROYMESH_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_CREATEMESH_COMMAND_PLUGIN,strConCat("int meshHandle=",LUA_CREATEMESH_COMMAND,"(float[] vertices,int[] indices,float[3] meshOriginPos=nil,float[4] meshOriginQuaternion=nil,float maxTriangleEdgeLength=0.3,int maxTriangleCountInLeafObb=8)"),LUA_CREATEMESH_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_COPYMESH_COMMAND_PLUGIN,strConCat("int meshHandle=",LUA_COPYMESH_COMMAND,"(int meshHandle)"),LUA_COPYMESH_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_SCALEMESH_COMMAND_PLUGIN,strConCat("",LUA_SCALEMESH_COMMAND,"(int meshHandle,float scaleFactor)"),LUA_SCALEMESH_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETMESHSERIALIZATIONDATA_COMMAND_PLUGIN,strConCat("string data=",LUA_GETMESHSERIALIZATIONDATA_COMMAND,"(int meshHandle)"),LUA_GETMESHSERIALIZATIONDATA_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_CREATEMESHFROMSERIALIZATIONDATA_COMMAND_PLUGIN,strConCat("int meshHandle=",LUA_CREATEMESHFROMSERIALIZATIONDATA_COMMAND,"(string data)"),LUA_CREATEMESHFROMSERIALIZATIONDATA_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_DESTROYMESH_COMMAND_PLUGIN,strConCat("",LUA_DESTROYMESH_COMMAND,"(int meshHandle)"),LUA_DESTROYMESH_CALLBACK);
 
-    simRegisterScriptCallbackFunction(LUA_CREATEOCTREEFROMPOINTS_COMMAND_PLUGIN,strConCat("number octreeHandle=",LUA_CREATEOCTREEFROMPOINTS_COMMAND,"(table points,\ntable_3 octreeOriginPos=nil,table_4 octreeOriginQuaternion=nil,\nnumber maxCellSize=0.05,table_3 pointColor={0,0,0},number userData=0)"),LUA_CREATEOCTREEFROMPOINTS_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_CREATEOCTREEFROMCOLORPOINTS_COMMAND_PLUGIN,strConCat("number octreeHandle=",LUA_CREATEOCTREEFROMCOLORPOINTS_COMMAND,"(table points,\ntable_3 octreeOriginPos=nil,table_4 octreeOriginQuaternion=nil,\nnumber maxCellSize=0.05,table colors=nil,table userData=nil)"),LUA_CREATEOCTREEFROMCOLORPOINTS_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_CREATEOCTREEFROMMESH_COMMAND_PLUGIN,strConCat("number octreeHandle=",LUA_CREATEOCTREEFROMMESH_COMMAND,"(number meshHandle,table_3 meshPos,table_4 meshQuaternion,\ntable_3 octreeOriginPos=nil,table_4 octreeOriginQuaternion=nil,\nnumber maxCellSize=0.05,table_3 pointColor={0,0,0},number userData=0)"),LUA_CREATEOCTREEFROMMESH_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_CREATEOCTREEFROMOCTREE_COMMAND_PLUGIN,strConCat("number octreeHandle=",LUA_CREATEOCTREEFROMOCTREE_COMMAND,"(number octreeHandle,table_3 octreePos,table_4 octreeQuaternion,\ntable_3 newOctreeOriginPos=nil,table_4 newOctreeOriginQuaternion=nil,\nnumber maxCellSize=0.05,table_3 pointColor={0,0,0},number userData=0)"),LUA_CREATEOCTREEFROMOCTREE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_COPYOCTREE_COMMAND_PLUGIN,strConCat("number octreeHandle=",LUA_COPYOCTREE_COMMAND,"(number octreeHandle)"),LUA_COPYOCTREE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_SCALEOCTREE_COMMAND_PLUGIN,strConCat("",LUA_SCALEOCTREE_COMMAND,"(number octreeHandle,number scaleFactor)"),LUA_SCALEOCTREE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETOCTREESERIALIZATIONDATA_COMMAND_PLUGIN,strConCat("string data=",LUA_GETOCTREESERIALIZATIONDATA_COMMAND,"(number octreeHandle)"),LUA_GETOCTREESERIALIZATIONDATA_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_CREATEOCTREEFROMSERIALIZATIONDATA_COMMAND_PLUGIN,strConCat("number octreeHandle=",LUA_CREATEOCTREEFROMSERIALIZATIONDATA_COMMAND,"(string data)"),LUA_CREATEOCTREEFROMSERIALIZATIONDATA_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_DESTROYOCTREE_COMMAND_PLUGIN,strConCat("",LUA_DESTROYOCTREE_COMMAND,"(number octreeHandle)"),LUA_DESTROYOCTREE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETOCTREEVOXELS_COMMAND_PLUGIN,strConCat("table positions,table colors,table userData=",LUA_GETOCTREEVOXELS_COMMAND,"(number octreeHandle)"),LUA_GETOCTREEVOXELS_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_CREATEOCTREEFROMPOINTS_COMMAND_PLUGIN,strConCat("int octreeHandle=",LUA_CREATEOCTREEFROMPOINTS_COMMAND,"(float[] points,float[3] octreeOriginPos=nil,float[4] octreeOriginQuaternion=nil,float maxCellSize=0.05,int[3] pointColor={0,0,0},int userData=0)"),LUA_CREATEOCTREEFROMPOINTS_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_CREATEOCTREEFROMCOLORPOINTS_COMMAND_PLUGIN,strConCat("int octreeHandle=",LUA_CREATEOCTREEFROMCOLORPOINTS_COMMAND,"(float[] points,float[3] octreeOriginPos=nil,float[4] octreeOriginQuaternion=nil,float maxCellSize=0.05,float[] colors=nil,int[] userData=nil)"),LUA_CREATEOCTREEFROMCOLORPOINTS_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_CREATEOCTREEFROMMESH_COMMAND_PLUGIN,strConCat("int octreeHandle=",LUA_CREATEOCTREEFROMMESH_COMMAND,"(int meshHandle,float[3] meshPos,float[4] meshQuaternion,float[3] octreeOriginPos=nil,float[4] octreeOriginQuaternion=nil,float maxCellSize=0.05,int[3] pointColor={0,0,0},int userData=0)"),LUA_CREATEOCTREEFROMMESH_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_CREATEOCTREEFROMOCTREE_COMMAND_PLUGIN,strConCat("int octreeHandle=",LUA_CREATEOCTREEFROMOCTREE_COMMAND,"(int octreeHandle,float[3] octreePos,float[4] octreeQuaternion,float[3] newOctreeOriginPos=nil,float[4] newOctreeOriginQuaternion=nil,float maxCellSize=0.05,int[3] pointColor={0,0,0},int userData=0)"),LUA_CREATEOCTREEFROMOCTREE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_COPYOCTREE_COMMAND_PLUGIN,strConCat("int octreeHandle=",LUA_COPYOCTREE_COMMAND,"(int octreeHandle)"),LUA_COPYOCTREE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_SCALEOCTREE_COMMAND_PLUGIN,strConCat("",LUA_SCALEOCTREE_COMMAND,"(int octreeHandle,float scaleFactor)"),LUA_SCALEOCTREE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETOCTREESERIALIZATIONDATA_COMMAND_PLUGIN,strConCat("string data=",LUA_GETOCTREESERIALIZATIONDATA_COMMAND,"(int octreeHandle)"),LUA_GETOCTREESERIALIZATIONDATA_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_CREATEOCTREEFROMSERIALIZATIONDATA_COMMAND_PLUGIN,strConCat("int octreeHandle=",LUA_CREATEOCTREEFROMSERIALIZATIONDATA_COMMAND,"(string data)"),LUA_CREATEOCTREEFROMSERIALIZATIONDATA_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_DESTROYOCTREE_COMMAND_PLUGIN,strConCat("",LUA_DESTROYOCTREE_COMMAND,"(int octreeHandle)"),LUA_DESTROYOCTREE_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETOCTREEVOXELS_COMMAND_PLUGIN,strConCat("float[] positions,float[] colors,int[] userData=",LUA_GETOCTREEVOXELS_COMMAND,"(int octreeHandle)"),LUA_GETOCTREEVOXELS_CALLBACK);
 
-    simRegisterScriptCallbackFunction(LUA_CREATEPTCLOUDFROMPOINTS_COMMAND_PLUGIN,strConCat("number ptcloudHandle=",LUA_CREATEPTCLOUDFROMPOINTS_COMMAND,"(table points,\ntable_3 octreeOriginPos=nil,table_4 octreeOriginQuaternion=nil,\nnumber maxCellSize=0.05,number maxPtsInCell=20,table_3 pointColor={0,0,0},number proximityTolerance=0.005)"),LUA_CREATEPTCLOUDFROMPOINTS_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_CREATEPTCLOUDFROMCOLORPOINTS_COMMAND_PLUGIN,strConCat("number ptcloudHandle=",LUA_CREATEPTCLOUDFROMCOLORPOINTS_COMMAND,"(table points,\ntable_3 octreeOriginPos=nil,table_4 octreeOriginQuaternion=nil,\nnumber maxCellSize=0.05,number maxPtsInCell=20,table colors=nil,number proximityTolerance=0.005)"),LUA_CREATEPTCLOUDFROMCOLORPOINTS_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_COPYPTCLOUD_COMMAND_PLUGIN,strConCat("number ptcloudHandle=",LUA_COPYPTCLOUD_COMMAND,"(number ptcloudHandle)"),LUA_COPYPTCLOUD_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_SCALEPTCLOUD_COMMAND_PLUGIN,strConCat("",LUA_SCALEPTCLOUD_COMMAND,"(number ptcloudHandle,number scaleFactor)"),LUA_SCALEPTCLOUD_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETPTCLOUDSERIALIZATIONDATA_COMMAND_PLUGIN,strConCat("string data=",LUA_GETPTCLOUDSERIALIZATIONDATA_COMMAND,"(number octreeHandle)"),LUA_GETPTCLOUDSERIALIZATIONDATA_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_CREATEPTCLOUDFROMSERIALIZATIONDATA_COMMAND_PLUGIN,strConCat("number ptcloudHandle=",LUA_CREATEPTCLOUDFROMSERIALIZATIONDATA_COMMAND,"(string data)"),LUA_CREATEPTCLOUDFROMSERIALIZATIONDATA_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_DESTROYPTCLOUD_COMMAND_PLUGIN,strConCat("",LUA_DESTROYPTCLOUD_COMMAND,"(number ptcloudHandle)"),LUA_DESTROYPTCLOUD_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETPTCLOUDPOINTS_COMMAND_PLUGIN,strConCat("table points,table colors=",LUA_GETPTCLOUDPOINTS_COMMAND,"(number ptcloudHandle,number subsetProportion=1.0)"),LUA_GETPTCLOUDPOINTS_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_CREATEPTCLOUDFROMPOINTS_COMMAND_PLUGIN,strConCat("int ptcloudHandle=",LUA_CREATEPTCLOUDFROMPOINTS_COMMAND,"(float[] points,float[3] octreeOriginPos=nil,float[4] octreeOriginQuaternion=nil,float maxCellSize=0.05,int maxPtsInCell=20,int[3] pointColor={0,0,0},float proximityTolerance=0.005)"),LUA_CREATEPTCLOUDFROMPOINTS_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_CREATEPTCLOUDFROMCOLORPOINTS_COMMAND_PLUGIN,strConCat("int ptcloudHandle=",LUA_CREATEPTCLOUDFROMCOLORPOINTS_COMMAND,"(float[] points,float[3] octreeOriginPos=nil,float[4] octreeOriginQuaternion=nil,float maxCellSize=0.05,int maxPtsInCell=20,float[] colors=nil,float proximityTolerance=0.005)"),LUA_CREATEPTCLOUDFROMCOLORPOINTS_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_COPYPTCLOUD_COMMAND_PLUGIN,strConCat("int ptcloudHandle=",LUA_COPYPTCLOUD_COMMAND,"(int ptcloudHandle)"),LUA_COPYPTCLOUD_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_SCALEPTCLOUD_COMMAND_PLUGIN,strConCat("",LUA_SCALEPTCLOUD_COMMAND,"(int ptcloudHandle,float scaleFactor)"),LUA_SCALEPTCLOUD_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETPTCLOUDSERIALIZATIONDATA_COMMAND_PLUGIN,strConCat("string data=",LUA_GETPTCLOUDSERIALIZATIONDATA_COMMAND,"(int octreeHandle)"),LUA_GETPTCLOUDSERIALIZATIONDATA_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_CREATEPTCLOUDFROMSERIALIZATIONDATA_COMMAND_PLUGIN,strConCat("int ptcloudHandle=",LUA_CREATEPTCLOUDFROMSERIALIZATIONDATA_COMMAND,"(string data)"),LUA_CREATEPTCLOUDFROMSERIALIZATIONDATA_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_DESTROYPTCLOUD_COMMAND_PLUGIN,strConCat("",LUA_DESTROYPTCLOUD_COMMAND,"(int ptcloudHandle)"),LUA_DESTROYPTCLOUD_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETPTCLOUDPOINTS_COMMAND_PLUGIN,strConCat("float[] points,float[] colors=",LUA_GETPTCLOUDPOINTS_COMMAND,"(int ptcloudHandle,float subsetProportion=1.0)"),LUA_GETPTCLOUDPOINTS_CALLBACK);
 
-    simRegisterScriptCallbackFunction(LUA_GETTRANSFORMEDPOINTS_COMMAND_PLUGIN,"1) table transformedPoints=simGeom.getTransformedPoints(table points,table_3 position,table_4 quaternion)\n2) table transformedPoints=simGeom.getTransformedPoints(table points,table_3 position,table_3 eulerAngles)\n3) table transformedPoints=simGeom.getTransformedPoints(table points,table_12 transformationMatrix)",LUA_GETTRANSFORMEDPOINTS_CALLBACK);
+    simRegisterScriptCallbackFunction(LUA_GETTRANSFORMEDPOINTS_COMMAND_PLUGIN,"float[] transformedPoints=simGeom.getTransformedPoints(float[] points,float[3] position,float[4] quaternion)\nfloat[] transformedPoints=simGeom.getTransformedPoints(float[] points,float[3] position,float[3] eulerAngles)\nfloat[] transformedPoints=simGeom.getTransformedPoints(float[] points,float[12] transformationMatrix)",LUA_GETTRANSFORMEDPOINTS_CALLBACK);
 
 
     return(4);
