@@ -61,6 +61,7 @@ HEADERS += simExtGeom.h \
     ../simMath/7Vector.h \
     ../simMath/3X3Matrix.h \
     ../simMath/4X4Matrix.h \
+    ../simMath/MMatrix.h \
     ../include/scriptFunctionData.h \
     ../include/scriptFunctionDataItem.h \
     ../coppeliaGeometricRoutines/geom.h \
@@ -82,6 +83,7 @@ SOURCES += simExtGeom.cpp \
     ../simMath/7Vector.cpp \
     ../simMath/3X3Matrix.cpp \
     ../simMath/4X4Matrix.cpp \
+    ../simMath/MMatrix.cpp \
     ../common/scriptFunctionData.cpp \
     ../common/scriptFunctionDataItem.cpp \
     ../coppeliaGeometricRoutines/geom.cpp \

@@ -1602,7 +1602,7 @@ void LUA_CREATEMESH_CALLBACK(SScriptCallBack* p)
         C3Vector pos;
         pos.clear();
         if ( (inData->size()>=3)&&(inData->at(2).realData.size()>=3) )
-            pos.set(&inData->at(2).realData[0]);
+            pos.setData(&inData->at(2).realData[0]);
         C4Vector quat;
         quat.setIdentity();
         if ( (inData->size()>=4)&&(inData->at(3).realData.size()>=4) )
@@ -1806,7 +1806,7 @@ void LUA_CREATEOCTREEFROMPOINTS_CALLBACK(SScriptCallBack* p)
         C3Vector pos;
         pos.clear();
         if ( (inData->size()>=2)&&(inData->at(1).realData.size()>=3) )
-            pos.set(&inData->at(1).realData[0]);
+            pos.setData(&inData->at(1).realData[0]);
         C4Vector quat;
         quat.setIdentity();
         if ( (inData->size()>=3)&&(inData->at(2).realData.size()>=4) )
@@ -1865,7 +1865,7 @@ void LUA_CREATEOCTREEFROMCOLORPOINTS_CALLBACK(SScriptCallBack* p)
         C3Vector pos;
         pos.clear();
         if ( (inData->size()>=2)&&(inData->at(1).realData.size()>=3) )
-            pos.set(&inData->at(1).realData[0]);
+            pos.setData(&inData->at(1).realData[0]);
         C4Vector quat;
         quat.setIdentity();
         if ( (inData->size()>=3)&&(inData->at(2).realData.size()>=4) )
@@ -1939,7 +1939,7 @@ void LUA_CREATEOCTREEFROMMESH_CALLBACK(SScriptCallBack* p)
             C3Vector pos;
             pos.clear();
             if ( (inData->size()>=4)&&(inData->at(3).realData.size()>=3) )
-                pos.set(&inData->at(3).realData[0]);
+                pos.setData(&inData->at(3).realData[0]);
             C4Vector quat;
             quat.setIdentity();
             if ( (inData->size()>=5)&&(inData->at(4).realData.size()>=4) )
@@ -2008,7 +2008,7 @@ void LUA_CREATEOCTREEFROMOCTREE_CALLBACK(SScriptCallBack* p)
             C3Vector pos;
             pos.clear();
             if ( (inData->size()>=4)&&(inData->at(3).realData.size()>=3) )
-                pos.set(&inData->at(3).realData[0]);
+                pos.setData(&inData->at(3).realData[0]);
             C4Vector quat;
             quat.setIdentity();
             if ( (inData->size()>=5)&&(inData->at(4).realData.size()>=4) )
@@ -2288,7 +2288,7 @@ void LUA_GETTRANSFORMEDPOINTS_CALLBACK(SScriptCallBack* p)
         else
         { // second argument is a matrix
             C4X4Matrix m;
-            m.copyFromInterface(&(inData->at(1).realData[0]));
+            m.setData(&(inData->at(1).realData[0]));
             tr=m.getTransformation();
         }
         for (size_t i=0;i<inData->at(0).realData.size()/3;i++)
@@ -2332,7 +2332,7 @@ void LUA_CREATEPTCLOUDFROMPOINTS_CALLBACK(SScriptCallBack* p)
         C3Vector pos;
         pos.clear();
         if ( (inData->size()>=2)&&(inData->at(1).realData.size()>=3) )
-            pos.set(&inData->at(1).realData[0]);
+            pos.setData(&inData->at(1).realData[0]);
         C4Vector quat;
         quat.setIdentity();
         if ( (inData->size()>=3)&&(inData->at(2).realData.size()>=4) )
@@ -2394,7 +2394,7 @@ void LUA_CREATEPTCLOUDFROMCOLORPOINTS_CALLBACK(SScriptCallBack* p)
         C3Vector pos;
         pos.clear();
         if ( (inData->size()>=2)&&(inData->at(1).realData.size()>=3) )
-            pos.set(&inData->at(1).realData[0]);
+            pos.setData(&inData->at(1).realData[0]);
         C4Vector quat;
         quat.setIdentity();
         if ( (inData->size()>=3)&&(inData->at(2).realData.size()>=4) )
@@ -3010,7 +3010,7 @@ SIM_DLLEXPORT void* geomPlugin_createMesh(const simReal* vertices,int verticesSi
     C7Vector tr;
     tr.setIdentity();
     if (meshOrigin!=nullptr)
-        tr.setInternalData(meshOrigin);
+        tr.setData(meshOrigin);
     void* retVal=geom_createMesh(vertices,verticesSize,indices,indicesSize,&tr,triangleEdgeMaxLength,maxTrianglesInBoundingBox);
     return(retVal);
 }
@@ -3058,7 +3058,7 @@ SIM_DLLEXPORT void* geomPlugin_createOctreeFromPoints(const simReal* points,int 
     C7Vector tr;
     tr.setIdentity();
     if (octreeOrigin!=nullptr)
-        tr.setInternalData(octreeOrigin);
+        tr.setData(octreeOrigin);
     COcStruct* retVal=geom_createOctreeFromPoints(points,pointCnt,&tr,cellS,rgbData,usrData);
     return(retVal);
 }
@@ -3067,29 +3067,29 @@ SIM_DLLEXPORT void* geomPlugin_createOctreeFromColorPoints(const simReal* points
     C7Vector tr;
     tr.setIdentity();
     if (octreeOrigin!=nullptr)
-        tr.setInternalData(octreeOrigin);
+        tr.setData(octreeOrigin);
     COcStruct* retVal=geom_createOctreeFromColorPoints(points,pointCnt,&tr,cellS,rgbData,usrData);
     return(retVal);
 }
 SIM_DLLEXPORT void* geomPlugin_createOctreeFromMesh(const void* meshObbStruct,const simReal meshTransformation[7],const simReal octreeOrigin[7],simReal cellS,const unsigned char rgbData[3],unsigned int usrData)
 {
     C7Vector _meshTransformation;
-    _meshTransformation.setInternalData(meshTransformation);
+    _meshTransformation.setData(meshTransformation);
     C7Vector tr;
     tr.setIdentity();
     if (octreeOrigin!=nullptr)
-        tr.setInternalData(octreeOrigin);
+        tr.setData(octreeOrigin);
     COcStruct* retVal=geom_createOctreeFromMesh((const CObbStruct*)meshObbStruct,_meshTransformation,&tr,cellS,rgbData,usrData);
     return(retVal);
 }
 SIM_DLLEXPORT void* geomPlugin_createOctreeFromOctree(const void* otherOctreeStruct,const simReal otherOctreeTransformation[7],const simReal newOctreeOrigin[7],simReal newOctreeCellS,const unsigned char rgbData[3],unsigned int usrData)
 {
     C7Vector _otherOctreeTransformation;
-    _otherOctreeTransformation.setInternalData(otherOctreeTransformation);
+    _otherOctreeTransformation.setData(otherOctreeTransformation);
     C7Vector tr;
     tr.setIdentity();
     if (newOctreeOrigin!=nullptr)
-        tr.setInternalData(newOctreeOrigin);
+        tr.setData(newOctreeOrigin);
     COcStruct* retVal=geom_createOctreeFromOctree((const COcStruct*)otherOctreeStruct,_otherOctreeTransformation,&tr,newOctreeCellS,rgbData,usrData);
     return(retVal);
 }
@@ -3156,53 +3156,53 @@ SIM_DLLEXPORT simReal* geomPlugin_getOctreeCornersFromOctree(const void* ocStruc
 SIM_DLLEXPORT void geomPlugin_insertPointsIntoOctree(void* ocStruct,const simReal octreeTransformation[7],const simReal* points,int pointCnt,const unsigned char rgbData[3],unsigned int usrData)
 {
     C7Vector tr;
-    tr.setInternalData(octreeTransformation);
+    tr.setData(octreeTransformation);
     geom_insertPointsIntoOctree((COcStruct*)ocStruct,tr,points,pointCnt,rgbData,usrData);
 }
 SIM_DLLEXPORT void geomPlugin_insertColorPointsIntoOctree(void* ocStruct,const simReal octreeTransformation[7],const simReal* points,int pointCnt,const unsigned char* rgbData,const unsigned int* usrData)
 {
     C7Vector tr;
-    tr.setInternalData(octreeTransformation);
+    tr.setData(octreeTransformation);
     geom_insertColorPointsIntoOctree((COcStruct*)ocStruct,tr,points,pointCnt,rgbData,usrData);
 }
 SIM_DLLEXPORT void geomPlugin_insertMeshIntoOctree(void* ocStruct,const simReal octreeTransformation[7],const void* obbStruct,const simReal meshTransformation[7],const unsigned char rgbData[3],unsigned int usrData)
 {
     C7Vector tr;
-    tr.setInternalData(octreeTransformation);
+    tr.setData(octreeTransformation);
     C7Vector meshTr;
-    meshTr.setInternalData(meshTransformation);
+    meshTr.setData(meshTransformation);
     geom_insertMeshIntoOctree((COcStruct*)ocStruct,tr,(const CObbStruct*)obbStruct,meshTr,rgbData,usrData);
 }
 SIM_DLLEXPORT void geomPlugin_insertOctreeIntoOctree(void* oc1Struct,const simReal octree1Transformation[7],const void* oc2Struct,const simReal octree2Transformation[7],const unsigned char rgbData[3],unsigned int usrData)
 {
     C7Vector tr1;
-    tr1.setInternalData(octree1Transformation);
+    tr1.setData(octree1Transformation);
     C7Vector tr2;
-    tr2.setInternalData(octree2Transformation);
+    tr2.setData(octree2Transformation);
     geom_insertOctreeIntoOctree((COcStruct*)oc1Struct,tr1,(const COcStruct*)oc2Struct,tr2,rgbData,usrData);
 }
 SIM_DLLEXPORT bool geomPlugin_removePointsFromOctree(void* ocStruct,const simReal octreeTransformation[7],const simReal* points,int pointCnt)
 {
     C7Vector tr;
-    tr.setInternalData(octreeTransformation);
+    tr.setData(octreeTransformation);
     bool retVal=geom_removePointsFromOctree((COcStruct*)ocStruct,tr,points,pointCnt);
     return(retVal);
 }
 SIM_DLLEXPORT bool geomPlugin_removeMeshFromOctree(void* ocStruct,const simReal octreeTransformation[7],const void* obbStruct,const simReal meshTransformation[7])
 {
     C7Vector tr;
-    tr.setInternalData(octreeTransformation);
+    tr.setData(octreeTransformation);
     C7Vector meshTr;
-    meshTr.setInternalData(meshTransformation);
+    meshTr.setData(meshTransformation);
     bool retVal=geom_removeMeshFromOctree((COcStruct*)ocStruct,tr,(const CObbStruct*)obbStruct,meshTr);
     return(retVal);
 }
 SIM_DLLEXPORT bool geomPlugin_removeOctreeFromOctree(void* oc1Struct,const simReal octree1Transformation[7],const void* oc2Struct,const simReal octree2Transformation[7])
 {
     C7Vector tr1;
-    tr1.setInternalData(octree1Transformation);
+    tr1.setData(octree1Transformation);
     C7Vector tr2;
-    tr2.setInternalData(octree2Transformation);
+    tr2.setData(octree2Transformation);
     bool retVal=geom_removeOctreeFromOctree((COcStruct*)oc1Struct,tr1,(const COcStruct*)oc2Struct,tr2);
     return(retVal);
 }
@@ -3214,7 +3214,7 @@ SIM_DLLEXPORT void* geomPlugin_createPtcloudFromPoints(const simReal* points,int
     C7Vector tr;
     tr.setIdentity();
     if (ptcloudOrigin!=nullptr)
-        tr.setInternalData(ptcloudOrigin);
+        tr.setData(ptcloudOrigin);
     void* retVal=geom_createPtcloudFromPoints(points,pointCnt,&tr,cellS,maxPointCnt,rgbData,proximityTol);
     return(retVal);
 }
@@ -3223,7 +3223,7 @@ SIM_DLLEXPORT void* geomPlugin_createPtcloudFromColorPoints(const simReal* point
     C7Vector tr;
     tr.setIdentity();
     if (ptcloudOrigin!=nullptr)
-        tr.setInternalData(ptcloudOrigin);
+        tr.setData(ptcloudOrigin);
     void* retVal=geom_createPtcloudFromColorPoints(points,pointCnt,&tr,cellS,maxPointCnt,rgbData,proximityTol);
     return(retVal);
 }
@@ -3284,35 +3284,35 @@ SIM_DLLEXPORT int geomPlugin_getPtcloudNonEmptyCellCount(const void* pcStruct)
 SIM_DLLEXPORT void geomPlugin_insertPointsIntoPtcloud(void* pcStruct,const simReal ptcloudTransformation[7],const simReal* points,int pointCnt,const unsigned char rgbData[3],simReal proximityTol)
 {
     C7Vector tr;
-    tr.setInternalData(ptcloudTransformation);
+    tr.setData(ptcloudTransformation);
     geom_insertPointsIntoPtcloud((CPcStruct*)pcStruct,tr,points,pointCnt,rgbData,proximityTol);
 }
 SIM_DLLEXPORT void geomPlugin_insertColorPointsIntoPtcloud(void* pcStruct,const simReal ptcloudTransformation[7],const simReal* points,int pointCnt,const unsigned char* rgbData,simReal proximityTol)
 {
     C7Vector tr;
-    tr.setInternalData(ptcloudTransformation);
+    tr.setData(ptcloudTransformation);
     geom_insertColorPointsIntoPtcloud((CPcStruct*)pcStruct,tr,points,pointCnt,rgbData,proximityTol);
 }
 SIM_DLLEXPORT bool geomPlugin_removePointsFromPtcloud(void* pcStruct,const simReal ptcloudTransformation[7],const simReal* points,int pointCnt,simReal proximityTol,int* countRemoved)
 {
     C7Vector tr;
-    tr.setInternalData(ptcloudTransformation);
+    tr.setData(ptcloudTransformation);
     bool retVal=geom_removePointsFromPtcloud((CPcStruct*)pcStruct,tr,points,pointCnt,proximityTol,countRemoved);
     return(retVal);
 }
 SIM_DLLEXPORT bool geomPlugin_removeOctreeFromPtcloud(void* pcStruct,const simReal ptcloudTransformation[7],const void* ocStruct,const simReal octreeTransformation[7],int* countRemoved)
 {
     C7Vector tr;
-    tr.setInternalData(ptcloudTransformation);
+    tr.setData(ptcloudTransformation);
     C7Vector octreeTr;
-    octreeTr.setInternalData(octreeTransformation);
+    octreeTr.setData(octreeTransformation);
     bool retVal=geom_removeOctreeFromPtcloud((CPcStruct*)pcStruct,tr,(const COcStruct*)ocStruct,octreeTr,countRemoved);
     return(retVal);
 }
 SIM_DLLEXPORT bool geomPlugin_intersectPointsWithPtcloud(void* pcStruct,const simReal ptcloudTransformation[7],const simReal* points,int pointCnt,simReal proximityTol)
 {
     C7Vector tr;
-    tr.setInternalData(ptcloudTransformation);
+    tr.setData(ptcloudTransformation);
     bool retVal=geom_intersectPointsWithPtcloud((CPcStruct*)pcStruct,tr,points,pointCnt,proximityTol);
     return(retVal);
 }
@@ -3320,9 +3320,9 @@ SIM_DLLEXPORT bool geomPlugin_intersectPointsWithPtcloud(void* pcStruct,const si
 SIM_DLLEXPORT bool geomPlugin_getMeshMeshCollision(const void* mesh1ObbStruct,const simReal mesh1Transformation[7],const void* mesh2ObbStruct,const simReal mesh2Transformation[7],simReal** intersections,int* intersectionsSize,int* mesh1Caching,int* mesh2Caching)
 {
     C7Vector tr1;
-    tr1.setInternalData(mesh1Transformation);
+    tr1.setData(mesh1Transformation);
     C7Vector tr2;
-    tr2.setInternalData(mesh2Transformation);
+    tr2.setData(mesh2Transformation);
     std::vector<simReal> _intersections;
     std::vector<simReal>* _ints=nullptr;
     if (intersections!=nullptr)
@@ -3340,16 +3340,16 @@ SIM_DLLEXPORT bool geomPlugin_getMeshMeshCollision(const void* mesh1ObbStruct,co
 SIM_DLLEXPORT bool geomPlugin_getMeshOctreeCollision(const void* meshObbStruct,const simReal meshTransformation[7],const void* ocStruct,const simReal octreeTransformation[7],int* meshCaching,unsigned long long int* ocCaching)
 {
     C7Vector tr1;
-    tr1.setInternalData(meshTransformation);
+    tr1.setData(meshTransformation);
     C7Vector tr2;
-    tr2.setInternalData(octreeTransformation);
+    tr2.setData(octreeTransformation);
     bool retVal=geom_getMeshOctreeCollision((const CObbStruct*)meshObbStruct,tr1,(const COcStruct*)ocStruct,tr2,meshCaching,ocCaching);
     return(retVal);
 }
 SIM_DLLEXPORT bool geomPlugin_getMeshTriangleCollision(const void* meshObbStruct,const simReal meshTransformation[7],const simReal p[3],const simReal v[3],const simReal w[3],simReal** intersections,int* intersectionsSize,int* caching)
 {
     C7Vector tr1;
-    tr1.setInternalData(meshTransformation);
+    tr1.setData(meshTransformation);
     C3Vector _p(p);
     C3Vector _v(v);
     C3Vector _w(w);
@@ -3370,7 +3370,7 @@ SIM_DLLEXPORT bool geomPlugin_getMeshTriangleCollision(const void* meshObbStruct
 SIM_DLLEXPORT bool geomPlugin_getMeshSegmentCollision(const void* meshObbStruct,const simReal meshTransformation[7],const simReal segmentExtremity[3],const simReal segmentVector[3],simReal** intersections,int* intersectionsSize,int* caching)
 {
     C7Vector tr1;
-    tr1.setInternalData(meshTransformation);
+    tr1.setData(meshTransformation);
     C3Vector _segmentExtremity(segmentExtremity);
     C3Vector _segmentVector(segmentVector);
     std::vector<simReal> _intersections;
@@ -3391,25 +3391,25 @@ SIM_DLLEXPORT bool geomPlugin_getMeshSegmentCollision(const void* meshObbStruct,
 SIM_DLLEXPORT bool geomPlugin_getOctreeOctreeCollision(const void* oc1Struct,const simReal octree1Transformation[7],const void* oc2Struct,const simReal octree2Transformation[7],unsigned long long int* oc1Caching,unsigned long long int* oc2Caching)
 {
     C7Vector tr1;
-    tr1.setInternalData(octree1Transformation);
+    tr1.setData(octree1Transformation);
     C7Vector tr2;
-    tr2.setInternalData(octree2Transformation);
+    tr2.setData(octree2Transformation);
     bool retVal=geom_getOctreeOctreeCollision((const COcStruct*)oc1Struct,tr1,(const COcStruct*)oc2Struct,tr2,oc1Caching,oc2Caching);
     return(retVal);
 }
 SIM_DLLEXPORT bool geomPlugin_getOctreePtcloudCollision(const void* ocStruct,const simReal octreeTransformation[7],const void* pcStruct,const simReal ptcloudTransformation[7],unsigned long long int* ocCaching,unsigned long long int* pcCaching)
 {
     C7Vector tr1;
-    tr1.setInternalData(octreeTransformation);
+    tr1.setData(octreeTransformation);
     C7Vector tr2;
-    tr2.setInternalData(ptcloudTransformation);
+    tr2.setData(ptcloudTransformation);
     bool retVal=geom_getOctreePtcloudCollision((const COcStruct*)ocStruct,tr1,(const CPcStruct*)pcStruct,tr2,ocCaching,pcCaching);
     return(retVal);
 }
 SIM_DLLEXPORT bool geomPlugin_getOctreeTriangleCollision(const void* ocStruct,const simReal octreeTransformation[7],const simReal p[3],const simReal v[3],const simReal w[3],unsigned long long int* caching)
 {
     C7Vector tr1;
-    tr1.setInternalData(octreeTransformation);
+    tr1.setData(octreeTransformation);
     C3Vector _p(p);
     C3Vector _v(v);
     C3Vector _w(w);
@@ -3419,7 +3419,7 @@ SIM_DLLEXPORT bool geomPlugin_getOctreeTriangleCollision(const void* ocStruct,co
 SIM_DLLEXPORT bool geomPlugin_getOctreeSegmentCollision(const void* ocStruct,const simReal octreeTransformation[7],const simReal segmentExtremity[3],const simReal segmentVector[3],unsigned long long int* caching)
 {
     C7Vector tr1;
-    tr1.setInternalData(octreeTransformation);
+    tr1.setData(octreeTransformation);
     C3Vector _segmentExtremity(segmentExtremity);
     C3Vector _segmentVector(segmentVector);
     bool retVal=geom_getOctreeSegmentCollision((const COcStruct*)ocStruct,tr1,_segmentExtremity,_segmentVector,caching);
@@ -3428,7 +3428,7 @@ SIM_DLLEXPORT bool geomPlugin_getOctreeSegmentCollision(const void* ocStruct,con
 SIM_DLLEXPORT bool geomPlugin_getOctreePointsCollision(const void* ocStruct,const simReal octreeTransformation[7],const simReal* points,int pointCount)
 {
     C7Vector tr1;
-    tr1.setInternalData(octreeTransformation);
+    tr1.setData(octreeTransformation);
     bool retVal=geom_getOctreePointsCollision((const COcStruct*)ocStruct,tr1,points,pointCount);
     return(retVal);
 }
@@ -3436,7 +3436,7 @@ SIM_DLLEXPORT bool geomPlugin_getOctreePointsCollision(const void* ocStruct,cons
 SIM_DLLEXPORT bool geomPlugin_getOctreePointCollision(const void* ocStruct,const simReal octreeTransformation[7],const simReal point[3],unsigned int* usrData,unsigned long long int* caching)
 {
     C7Vector tr1;
-    tr1.setInternalData(octreeTransformation);
+    tr1.setData(octreeTransformation);
     C3Vector _point(point);
     bool retVal=geom_getOctreePointCollision((const COcStruct*)ocStruct,tr1,_point,usrData,caching);
     return(retVal);
@@ -3445,9 +3445,9 @@ SIM_DLLEXPORT bool geomPlugin_getOctreePointCollision(const void* ocStruct,const
 SIM_DLLEXPORT bool geomPlugin_getBoxBoxCollision(const simReal box1Transformation[7],const simReal box1HalfSize[3],const simReal box2Transformation[7],const simReal box2HalfSize[3],bool boxesAreSolid)
 {
     C7Vector tr1;
-    tr1.setInternalData(box1Transformation);
+    tr1.setData(box1Transformation);
     C7Vector tr2;
-    tr2.setInternalData(box2Transformation);
+    tr2.setData(box2Transformation);
     C3Vector b1hs(box1HalfSize);
     C3Vector b2hs(box2HalfSize);
     bool retVal=geom_getBoxBoxCollision(tr1,b1hs,tr2,b2hs,boxesAreSolid);
@@ -3456,7 +3456,7 @@ SIM_DLLEXPORT bool geomPlugin_getBoxBoxCollision(const simReal box1Transformatio
 SIM_DLLEXPORT bool geomPlugin_getBoxTriangleCollision(const simReal boxTransformation[7],const simReal boxHalfSize[3],bool boxIsSolid,const simReal p[3],const simReal v[3],const simReal w[3])
 {
     C7Vector tr;
-    tr.setInternalData(boxTransformation);
+    tr.setData(boxTransformation);
     C3Vector bhs(boxHalfSize);
     C3Vector _p(p);
     C3Vector _v(v);
@@ -3467,7 +3467,7 @@ SIM_DLLEXPORT bool geomPlugin_getBoxTriangleCollision(const simReal boxTransform
 SIM_DLLEXPORT bool geomPlugin_getBoxSegmentCollision(const simReal boxTransformation[7],const simReal boxHalfSize[3],bool boxIsSolid,const simReal segmentEndPoint[3],const simReal segmentVector[3])
 {
     C7Vector tr;
-    tr.setInternalData(boxTransformation);
+    tr.setData(boxTransformation);
     C3Vector bhs(boxHalfSize);
     C3Vector _segmentEndPoint(segmentEndPoint);
     C3Vector _segmentVector(segmentVector);
@@ -3477,7 +3477,7 @@ SIM_DLLEXPORT bool geomPlugin_getBoxSegmentCollision(const simReal boxTransforma
 SIM_DLLEXPORT bool geomPlugin_getBoxPointCollision(const simReal boxTransformation[7],const simReal boxHalfSize[3],const simReal point[3])
 {
     C7Vector tr;
-    tr.setInternalData(boxTransformation);
+    tr.setData(boxTransformation);
     C3Vector bhs(boxHalfSize);
     C3Vector _point(point);
     bool retVal=geom_getBoxPointCollision(tr,bhs,_point);
@@ -3531,61 +3531,61 @@ SIM_DLLEXPORT bool geomPlugin_getTriangleSegmentCollision(const simReal p[3],con
 SIM_DLLEXPORT bool geomPlugin_getMeshMeshDistanceIfSmaller(const void* mesh1ObbStruct,const simReal mesh1Transformation[7],const void* mesh2ObbStruct,const simReal mesh2Transformation[7],simReal* dist,simReal minDistSegPt1[3],simReal minDistSegPt2[3],int* mesh1Caching,int* mesh2Caching)
 {
     C7Vector tr1;
-    tr1.setInternalData(mesh1Transformation);
+    tr1.setData(mesh1Transformation);
     C7Vector tr2;
-    tr2.setInternalData(mesh2Transformation);
+    tr2.setData(mesh2Transformation);
     C3Vector _minDistSegPt1;
     C3Vector _minDistSegPt2;
     bool retVal=geom_getMeshMeshDistanceIfSmaller((const CObbStruct*)mesh1ObbStruct,tr1,(const CObbStruct*)mesh2ObbStruct,tr2,dist[0],&_minDistSegPt1,&_minDistSegPt2,mesh1Caching,mesh2Caching);
     if (retVal)
     {
         if (minDistSegPt1!=nullptr)
-            _minDistSegPt1.getInternalData(minDistSegPt1);
+            _minDistSegPt1.getData(minDistSegPt1);
         if (minDistSegPt2!=nullptr)
-            _minDistSegPt2.getInternalData(minDistSegPt2);
+            _minDistSegPt2.getData(minDistSegPt2);
     }
     return(retVal);
 }
 SIM_DLLEXPORT bool geomPlugin_getMeshOctreeDistanceIfSmaller(const void* meshObbStruct,const simReal meshTransformation[7],const void* ocStruct,const simReal octreeTransformation[7],simReal* dist,simReal meshMinDistPt[3],simReal ocMinDistPt[3],int* meshCaching,unsigned long long int* ocCaching)
 {
     C7Vector tr1;
-    tr1.setInternalData(meshTransformation);
+    tr1.setData(meshTransformation);
     C7Vector tr2;
-    tr2.setInternalData(octreeTransformation);
+    tr2.setData(octreeTransformation);
     C3Vector _meshMinDistPt;
     C3Vector _ocMinDistPt;
     bool retVal=geom_getMeshOctreeDistanceIfSmaller((const CObbStruct*)meshObbStruct,tr1,(const COcStruct*)ocStruct,tr2,dist[0],&_meshMinDistPt,&_ocMinDistPt,meshCaching,ocCaching);
     if (retVal)
     {
         if (meshMinDistPt!=nullptr)
-            _meshMinDistPt.getInternalData(meshMinDistPt);
+            _meshMinDistPt.getData(meshMinDistPt);
         if (ocMinDistPt!=nullptr)
-            _ocMinDistPt.getInternalData(ocMinDistPt);
+            _ocMinDistPt.getData(ocMinDistPt);
     }
     return(retVal);
 }
 SIM_DLLEXPORT bool geomPlugin_getMeshPtcloudDistanceIfSmaller(const void* meshObbStruct,const simReal meshTransformation[7],const void* pcStruct,const simReal pcTransformation[7],simReal* dist,simReal meshMinDistPt[3],simReal pcMinDistPt[3],int* meshCaching,unsigned long long int* pcCaching)
 {
     C7Vector tr1;
-    tr1.setInternalData(meshTransformation);
+    tr1.setData(meshTransformation);
     C7Vector tr2;
-    tr2.setInternalData(pcTransformation);
+    tr2.setData(pcTransformation);
     C3Vector _meshMinDistPt;
     C3Vector _pcMinDistPt;
     bool retVal=geom_getMeshPtcloudDistanceIfSmaller((const CObbStruct*)meshObbStruct,tr1,(const CPcStruct*)pcStruct,tr2,dist[0],&_meshMinDistPt,&_pcMinDistPt,meshCaching,pcCaching);
     if (retVal)
     {
         if (meshMinDistPt!=nullptr)
-            _meshMinDistPt.getInternalData(meshMinDistPt);
+            _meshMinDistPt.getData(meshMinDistPt);
         if (pcMinDistPt!=nullptr)
-            _pcMinDistPt.getInternalData(pcMinDistPt);
+            _pcMinDistPt.getData(pcMinDistPt);
     }
     return(retVal);
 }
 SIM_DLLEXPORT bool geomPlugin_getMeshTriangleDistanceIfSmaller(const void* meshObbStruct,const simReal meshTransformation[7],const simReal p[3],const simReal v[3],const simReal w[3],simReal* dist,simReal minDistSegPt1[3],simReal minDistSegPt2[3],int* caching)
 {
     C7Vector tr1;
-    tr1.setInternalData(meshTransformation);
+    tr1.setData(meshTransformation);
     C3Vector _p(p);
     C3Vector _v(v);
     C3Vector _w(w);
@@ -3595,16 +3595,16 @@ SIM_DLLEXPORT bool geomPlugin_getMeshTriangleDistanceIfSmaller(const void* meshO
     if (retVal)
     {
         if (minDistSegPt1!=nullptr)
-            _minDistSegPt1.getInternalData(minDistSegPt1);
+            _minDistSegPt1.getData(minDistSegPt1);
         if (minDistSegPt2!=nullptr)
-            _minDistSegPt2.getInternalData(minDistSegPt2);
+            _minDistSegPt2.getData(minDistSegPt2);
     }
     return(retVal);
 }
 SIM_DLLEXPORT bool geomPlugin_getMeshSegmentDistanceIfSmaller(const void* meshObbStruct,const simReal meshTransformation[7],const simReal segmentEndPoint[3],const simReal segmentVector[3],simReal* dist,simReal minDistSegPt1[3],simReal minDistSegPt2[3],int* caching)
 {
     C7Vector tr1;
-    tr1.setInternalData(meshTransformation);
+    tr1.setData(meshTransformation);
     C3Vector _segmentEndPoint(segmentEndPoint);
     C3Vector _segmentVector(segmentVector);
     C3Vector _minDistSegPt1;
@@ -3613,23 +3613,23 @@ SIM_DLLEXPORT bool geomPlugin_getMeshSegmentDistanceIfSmaller(const void* meshOb
     if (retVal)
     {
         if (minDistSegPt1!=nullptr)
-            _minDistSegPt1.getInternalData(minDistSegPt1);
+            _minDistSegPt1.getData(minDistSegPt1);
         if (minDistSegPt2!=nullptr)
-            _minDistSegPt2.getInternalData(minDistSegPt2);
+            _minDistSegPt2.getData(minDistSegPt2);
     }
     return(retVal);
 }
 SIM_DLLEXPORT bool geomPlugin_getMeshPointDistanceIfSmaller(const void* meshObbStruct,const simReal meshTransformation[7],const simReal point[3],simReal* dist,simReal minDistSegPt[3],int* caching)
 {
     C7Vector tr1;
-    tr1.setInternalData(meshTransformation);
+    tr1.setData(meshTransformation);
     C3Vector _point(point);
     C3Vector _minDistSegPt;
     bool retVal=geom_getMeshPointDistanceIfSmaller((const CObbStruct*)meshObbStruct,tr1,_point,dist[0],&_minDistSegPt,caching);
     if (retVal)
     {
         if (minDistSegPt!=nullptr)
-            _minDistSegPt.getInternalData(minDistSegPt);
+            _minDistSegPt.getData(minDistSegPt);
     }
     return(retVal);
 }
@@ -3637,43 +3637,43 @@ SIM_DLLEXPORT bool geomPlugin_getMeshPointDistanceIfSmaller(const void* meshObbS
 SIM_DLLEXPORT bool geomPlugin_getOctreeOctreeDistanceIfSmaller(const void* oc1Struct,const simReal octree1Transformation[7],const void* oc2Struct,const simReal octree2Transformation[7],simReal* dist,simReal oc1MinDistPt[3],simReal oc2MinDistPt[3],unsigned long long int* oc1Caching,unsigned long long int* oc2Caching)
 {
     C7Vector tr1;
-    tr1.setInternalData(octree1Transformation);
+    tr1.setData(octree1Transformation);
     C7Vector tr2;
-    tr2.setInternalData(octree2Transformation);
+    tr2.setData(octree2Transformation);
     C3Vector _oc1MinDistPt;
     C3Vector _oc2MinDistPt;
     bool retVal=geom_getOctreeOctreeDistanceIfSmaller((const COcStruct*)oc1Struct,tr1,(const COcStruct*)oc2Struct,tr2,dist[0],&_oc1MinDistPt,&_oc2MinDistPt,oc1Caching,oc2Caching);
     if (retVal)
     {
         if (oc1MinDistPt!=nullptr)
-            _oc1MinDistPt.getInternalData(oc1MinDistPt);
+            _oc1MinDistPt.getData(oc1MinDistPt);
         if (oc2MinDistPt!=nullptr)
-            _oc2MinDistPt.getInternalData(oc2MinDistPt);
+            _oc2MinDistPt.getData(oc2MinDistPt);
     }
     return(retVal);
 }
 SIM_DLLEXPORT bool geomPlugin_getOctreePtcloudDistanceIfSmaller(const void* ocStruct,const simReal octreeTransformation[7],const void* pcStruct,const simReal pcTransformation[7],simReal* dist,simReal ocMinDistPt[3],simReal pcMinDistPt[3],unsigned long long int* ocCaching,unsigned long long int* pcCaching)
 {
     C7Vector tr1;
-    tr1.setInternalData(octreeTransformation);
+    tr1.setData(octreeTransformation);
     C7Vector tr2;
-    tr2.setInternalData(pcTransformation);
+    tr2.setData(pcTransformation);
     C3Vector _ocMinDistPt;
     C3Vector _pcMinDistPt;
     bool retVal=geom_getOctreePtcloudDistanceIfSmaller((const COcStruct*)ocStruct,tr1,(const CPcStruct*)pcStruct,tr2,dist[0],&_ocMinDistPt,&_pcMinDistPt,ocCaching,pcCaching);
     if (retVal)
     {
         if (ocMinDistPt!=nullptr)
-            _ocMinDistPt.getInternalData(ocMinDistPt);
+            _ocMinDistPt.getData(ocMinDistPt);
         if (pcMinDistPt!=nullptr)
-            _pcMinDistPt.getInternalData(pcMinDistPt);
+            _pcMinDistPt.getData(pcMinDistPt);
     }
     return(retVal);
 }
 SIM_DLLEXPORT bool geomPlugin_getOctreeTriangleDistanceIfSmaller(const void* ocStruct,const simReal octreeTransformation[7],const simReal p[3],const simReal v[3],const simReal w[3],simReal* dist,simReal ocMinDistPt[3],simReal triMinDistPt[3],unsigned long long int* ocCaching)
 {
     C7Vector tr;
-    tr.setInternalData(octreeTransformation);
+    tr.setData(octreeTransformation);
     C3Vector _p(p);
     C3Vector _v(v);
     C3Vector _w(w);
@@ -3683,16 +3683,16 @@ SIM_DLLEXPORT bool geomPlugin_getOctreeTriangleDistanceIfSmaller(const void* ocS
     if (retVal)
     {
         if (ocMinDistPt!=nullptr)
-            _ocMinDistPt.getInternalData(ocMinDistPt);
+            _ocMinDistPt.getData(ocMinDistPt);
         if (triMinDistPt!=nullptr)
-            _triMinDistPt.getInternalData(triMinDistPt);
+            _triMinDistPt.getData(triMinDistPt);
     }
     return(retVal);
 }
 SIM_DLLEXPORT bool geomPlugin_getOctreeSegmentDistanceIfSmaller(const void* ocStruct,const simReal octreeTransformation[7],const simReal segmentEndPoint[3],const simReal segmentVector[3],simReal* dist,simReal ocMinDistPt[3],simReal segMinDistPt[3],unsigned long long int* ocCaching)
 {
     C7Vector tr;
-    tr.setInternalData(octreeTransformation);
+    tr.setData(octreeTransformation);
     C3Vector _segmentEndPoint(segmentEndPoint);
     C3Vector _segmentVector(segmentVector);
     C3Vector _ocMinDistPt;
@@ -3701,23 +3701,23 @@ SIM_DLLEXPORT bool geomPlugin_getOctreeSegmentDistanceIfSmaller(const void* ocSt
     if (retVal)
     {
         if (ocMinDistPt!=nullptr)
-            _ocMinDistPt.getInternalData(ocMinDistPt);
+            _ocMinDistPt.getData(ocMinDistPt);
         if (segMinDistPt!=nullptr)
-            _segMinDistPt.getInternalData(segMinDistPt);
+            _segMinDistPt.getData(segMinDistPt);
     }
     return(retVal);
 }
 SIM_DLLEXPORT bool geomPlugin_getOctreePointDistanceIfSmaller(const void* ocStruct,const simReal octreeTransformation[7],const simReal point[3],simReal* dist,simReal ocMinDistPt[3],unsigned long long int* ocCaching)
 {
     C7Vector tr;
-    tr.setInternalData(octreeTransformation);
+    tr.setData(octreeTransformation);
     C3Vector _point(point);
     C3Vector _ocMinDistPt;
     bool retVal=geom_getOctreePointDistanceIfSmaller((const COcStruct*)ocStruct,tr,_point,dist[0],&_ocMinDistPt,ocCaching);
     if (retVal)
     {
         if (ocMinDistPt!=nullptr)
-            _ocMinDistPt.getInternalData(ocMinDistPt);
+            _ocMinDistPt.getData(ocMinDistPt);
     }
     return(retVal);
 }
@@ -3725,25 +3725,25 @@ SIM_DLLEXPORT bool geomPlugin_getOctreePointDistanceIfSmaller(const void* ocStru
 SIM_DLLEXPORT bool geomPlugin_getPtcloudPtcloudDistanceIfSmaller(const void* pc1Struct,const simReal pc1Transformation[7],const void* pc2Struct,const simReal pc2Transformation[7],simReal* dist,simReal* pc1MinDistPt,simReal* pc2MinDistPt,unsigned long long int* pc1Caching,unsigned long long int* pc2Caching)
 {
     C7Vector tr1;
-    tr1.setInternalData(pc1Transformation);
+    tr1.setData(pc1Transformation);
     C7Vector tr2;
-    tr2.setInternalData(pc2Transformation);
+    tr2.setData(pc2Transformation);
     C3Vector _pc1MinDistPt;
     C3Vector _pc2MinDistPt;
     bool retVal=geom_getPtcloudPtcloudDistanceIfSmaller((const CPcStruct*)pc1Struct,tr1,(const CPcStruct*)pc2Struct,tr2,dist[0],&_pc1MinDistPt,&_pc2MinDistPt,pc1Caching,pc2Caching);
     if (retVal)
     {
         if (pc1MinDistPt!=nullptr)
-            _pc1MinDistPt.getInternalData(pc1MinDistPt);
+            _pc1MinDistPt.getData(pc1MinDistPt);
         if (pc2MinDistPt!=nullptr)
-            _pc2MinDistPt.getInternalData(pc2MinDistPt);
+            _pc2MinDistPt.getData(pc2MinDistPt);
     }
     return(retVal);
 }
 SIM_DLLEXPORT bool geomPlugin_getPtcloudTriangleDistanceIfSmaller(const void* pcStruct,const simReal pcTransformation[7],const simReal p[3],const simReal v[3],const simReal w[3],simReal* dist,simReal* pcMinDistPt,simReal* triMinDistPt,unsigned long long int* pcCaching)
 {
     C7Vector tr;
-    tr.setInternalData(pcTransformation);
+    tr.setData(pcTransformation);
     C3Vector _p(p);
     C3Vector _v(v);
     C3Vector _w(w);
@@ -3753,16 +3753,16 @@ SIM_DLLEXPORT bool geomPlugin_getPtcloudTriangleDistanceIfSmaller(const void* pc
     if (retVal)
     {
         if (pcMinDistPt!=nullptr)
-            _pcMinDistPt.getInternalData(pcMinDistPt);
+            _pcMinDistPt.getData(pcMinDistPt);
         if (triMinDistPt!=nullptr)
-            _triMinDistPt.getInternalData(triMinDistPt);
+            _triMinDistPt.getData(triMinDistPt);
     }
     return(retVal);
 }
 SIM_DLLEXPORT bool geomPlugin_getPtcloudSegmentDistanceIfSmaller(const void* pcStruct,const simReal pcTransformation[7],const simReal segmentEndPoint[3],const simReal segmentVector[3],simReal* dist,simReal* pcMinDistPt,simReal* segMinDistPt,unsigned long long int* pcCaching)
 {
     C7Vector tr;
-    tr.setInternalData(pcTransformation);
+    tr.setData(pcTransformation);
     C3Vector _segmentEndPoint(segmentEndPoint);
     C3Vector _segmentVector(segmentVector);
     C3Vector _pcMinDistPt;
@@ -3771,23 +3771,23 @@ SIM_DLLEXPORT bool geomPlugin_getPtcloudSegmentDistanceIfSmaller(const void* pcS
     if (retVal)
     {
         if (pcMinDistPt!=nullptr)
-            _pcMinDistPt.getInternalData(pcMinDistPt);
+            _pcMinDistPt.getData(pcMinDistPt);
         if (segMinDistPt!=nullptr)
-            _segMinDistPt.getInternalData(segMinDistPt);
+            _segMinDistPt.getData(segMinDistPt);
     }
     return(retVal);
 }
 SIM_DLLEXPORT bool geomPlugin_getPtcloudPointDistanceIfSmaller(const void* pcStruct,const simReal pcTransformation[7],const simReal point[3],simReal* dist,simReal* pcMinDistPt,unsigned long long int* pcCaching)
 {
     C7Vector tr;
-    tr.setInternalData(pcTransformation);
+    tr.setData(pcTransformation);
     C3Vector _point(point);
     C3Vector _pcMinDistPt;
     bool retVal=geom_getPtcloudPointDistanceIfSmaller((const CPcStruct*)pcStruct,tr,_point,dist[0],&_pcMinDistPt,pcCaching);
     if (retVal)
     {
         if (pcMinDistPt!=nullptr)
-            _pcMinDistPt.getInternalData(pcMinDistPt);
+            _pcMinDistPt.getData(pcMinDistPt);
     }
     return(retVal);
 }
@@ -3795,9 +3795,9 @@ SIM_DLLEXPORT bool geomPlugin_getPtcloudPointDistanceIfSmaller(const void* pcStr
 SIM_DLLEXPORT simReal geomPlugin_getApproxBoxBoxDistance(const simReal box1Transformation[7],const simReal box1HalfSize[3],const simReal box2Transformation[7],const simReal box2HalfSize[3])
 {
     C7Vector tr1;
-    tr1.setInternalData(box1Transformation);
+    tr1.setData(box1Transformation);
     C7Vector tr2;
-    tr2.setInternalData(box2Transformation);
+    tr2.setData(box2Transformation);
     C3Vector _b1hs(box1HalfSize);
     C3Vector _b2hs(box2HalfSize);
     simReal retVal=geom_getApproxBoxBoxDistance(tr1,_b1hs,tr2,_b2hs);
@@ -3807,9 +3807,9 @@ SIM_DLLEXPORT simReal geomPlugin_getApproxBoxBoxDistance(const simReal box1Trans
 SIM_DLLEXPORT bool geomPlugin_getBoxBoxDistanceIfSmaller(const simReal box1Transformation[7],const simReal box1HalfSize[3],const simReal box2Transformation[7],const simReal box2HalfSize[3],bool boxesAreSolid,simReal* dist,simReal distSegPt1[3],simReal distSegPt2[3])
 {
     C7Vector tr1;
-    tr1.setInternalData(box1Transformation);
+    tr1.setData(box1Transformation);
     C7Vector tr2;
-    tr2.setInternalData(box2Transformation);
+    tr2.setData(box2Transformation);
     C3Vector _b1hs(box1HalfSize);
     C3Vector _b2hs(box2HalfSize);
     C3Vector _distSegPt1;
@@ -3818,16 +3818,16 @@ SIM_DLLEXPORT bool geomPlugin_getBoxBoxDistanceIfSmaller(const simReal box1Trans
     if (retVal)
     {
         if (distSegPt1!=nullptr)
-            _distSegPt1.getInternalData(distSegPt1);
+            _distSegPt1.getData(distSegPt1);
         if (distSegPt2!=nullptr)
-            _distSegPt2.getInternalData(distSegPt2);
+            _distSegPt2.getData(distSegPt2);
     }
     return(retVal);
 }
 SIM_DLLEXPORT bool geomPlugin_getBoxTriangleDistanceIfSmaller(const simReal boxTransformation[7],const simReal boxHalfSize[3],bool boxIsSolid,const simReal p[3],const simReal v[3],const simReal w[3],simReal* dist,simReal distSegPt1[3],simReal distSegPt2[3])
 {
     C7Vector tr;
-    tr.setInternalData(boxTransformation);
+    tr.setData(boxTransformation);
     C3Vector _bhs(boxHalfSize);
     C3Vector _p(p);
     C3Vector _v(v);
@@ -3838,16 +3838,16 @@ SIM_DLLEXPORT bool geomPlugin_getBoxTriangleDistanceIfSmaller(const simReal boxT
     if (retVal)
     {
         if (distSegPt1!=nullptr)
-            _distSegPt1.getInternalData(distSegPt1);
+            _distSegPt1.getData(distSegPt1);
         if (distSegPt2!=nullptr)
-            _distSegPt2.getInternalData(distSegPt2);
+            _distSegPt2.getData(distSegPt2);
     }
     return(retVal);
 }
 SIM_DLLEXPORT bool geomPlugin_getBoxSegmentDistanceIfSmaller(const simReal boxTransformation[7],const simReal boxHalfSize[3],bool boxIsSolid,const simReal segmentEndPoint[3],const simReal segmentVector[3],simReal* dist,simReal distSegPt1[3],simReal distSegPt2[3])
 {
     C7Vector tr;
-    tr.setInternalData(boxTransformation);
+    tr.setData(boxTransformation);
     C3Vector _bhs(boxHalfSize);
     C3Vector _segmentEndPoint(segmentEndPoint);
     C3Vector _segmentVector(segmentVector);
@@ -3857,16 +3857,16 @@ SIM_DLLEXPORT bool geomPlugin_getBoxSegmentDistanceIfSmaller(const simReal boxTr
     if (retVal)
     {
         if (distSegPt1!=nullptr)
-            _distSegPt1.getInternalData(distSegPt1);
+            _distSegPt1.getData(distSegPt1);
         if (distSegPt2!=nullptr)
-            _distSegPt2.getInternalData(distSegPt2);
+            _distSegPt2.getData(distSegPt2);
     }
     return(retVal);
 }
 SIM_DLLEXPORT bool geomPlugin_getBoxPointDistanceIfSmaller(const simReal boxTransformation[7],const simReal boxHalfSize[3],bool boxIsSolid,const simReal point[3],simReal* dist,simReal distSegPt1[3])
 {
     C7Vector tr;
-    tr.setInternalData(boxTransformation);
+    tr.setData(boxTransformation);
     C3Vector _bhs(boxHalfSize);
     C3Vector _point(point);
     C3Vector _distSegPt1;
@@ -3874,7 +3874,7 @@ SIM_DLLEXPORT bool geomPlugin_getBoxPointDistanceIfSmaller(const simReal boxTran
     if (retVal)
     {
         if (distSegPt1!=nullptr)
-            _distSegPt1.getInternalData(distSegPt1);
+            _distSegPt1.getData(distSegPt1);
     }
     return(retVal);
 }
@@ -3893,9 +3893,9 @@ SIM_DLLEXPORT bool geomPlugin_getTriangleTriangleDistanceIfSmaller(const simReal
     if (retVal)
     {
         if (minDistSegPt1!=nullptr)
-            _minDistSegPt1.getInternalData(minDistSegPt1);
+            _minDistSegPt1.getData(minDistSegPt1);
         if (minDistSegPt2!=nullptr)
-            _minDistSegPt2.getInternalData(minDistSegPt2);
+            _minDistSegPt2.getData(minDistSegPt2);
     }
     return(retVal);
 }
@@ -3912,9 +3912,9 @@ SIM_DLLEXPORT bool geomPlugin_getTriangleSegmentDistanceIfSmaller(const simReal 
     if (retVal)
     {
         if (minDistSegPt1!=nullptr)
-            _minDistSegPt1.getInternalData(minDistSegPt1);
+            _minDistSegPt1.getData(minDistSegPt1);
         if (minDistSegPt2!=nullptr)
-            _minDistSegPt2.getInternalData(minDistSegPt2);
+            _minDistSegPt2.getData(minDistSegPt2);
     }
     return(retVal);
 }
@@ -3929,7 +3929,7 @@ SIM_DLLEXPORT bool geomPlugin_getTrianglePointDistanceIfSmaller(const simReal p[
     if (retVal)
     {
         if (minDistSegPt!=nullptr)
-            _minDistSegPt.getInternalData(minDistSegPt);
+            _minDistSegPt.getData(minDistSegPt);
     }
     return(retVal);
 }
@@ -3946,9 +3946,9 @@ SIM_DLLEXPORT bool geomPlugin_getSegmentSegmentDistanceIfSmaller(const simReal s
     if (retVal)
     {
         if (minDistSegPt1!=nullptr)
-            _minDistSegPt1.getInternalData(minDistSegPt1);
+            _minDistSegPt1.getData(minDistSegPt1);
         if (minDistSegPt2!=nullptr)
-            _minDistSegPt2.getInternalData(minDistSegPt2);
+            _minDistSegPt2.getData(minDistSegPt2);
     }
     return(retVal);
 }
@@ -3962,7 +3962,7 @@ SIM_DLLEXPORT bool geomPlugin_getSegmentPointDistanceIfSmaller(const simReal seg
     if (retVal)
     {
         if (minDistSegPt!=nullptr)
-            _minDistSegPt.getInternalData(minDistSegPt);
+            _minDistSegPt.getData(minDistSegPt);
     }
     return(retVal);
 }
@@ -3970,45 +3970,45 @@ SIM_DLLEXPORT bool geomPlugin_getSegmentPointDistanceIfSmaller(const simReal seg
 SIM_DLLEXPORT bool geomPlugin_volumeSensorDetectMeshIfSmaller(const simReal* planesIn,int planesInSize,const simReal* planesOut,int planesOutSize,const void* obbStruct,const simReal meshTransformationRelative[7],simReal* dist,bool fast,bool frontDetection,bool backDetection,simReal maxAngle,simReal detectPt[3],simReal triN[3])
 {   // sensor is at the origin. meshTransformationRelative is relative to the sensor
     C7Vector tr;
-    tr.setInternalData(meshTransformationRelative);
+    tr.setData(meshTransformationRelative);
     C3Vector _detectPt;
     C3Vector _triN;
     bool retVal=geom_volumeSensorDetectMeshIfSmaller(planesIn,planesInSize,planesOut,planesOutSize,(const CObbStruct*)obbStruct,tr,dist[0],fast,frontDetection,backDetection,maxAngle,&_detectPt,&_triN);
     if (retVal)
     {
         if (detectPt!=nullptr)
-            _detectPt.getInternalData(detectPt);
+            _detectPt.getData(detectPt);
         if (triN!=nullptr)
-            _triN.getInternalData(triN);
+            _triN.getData(triN);
     }
     return(retVal);
 }
 SIM_DLLEXPORT bool geomPlugin_volumeSensorDetectOctreeIfSmaller(const simReal* planesIn,int planesInSize,const simReal* planesOut,int planesOutSize,const void* ocStruct,const simReal octreeTransformationRelative[7],simReal* dist,bool fast,bool frontDetection,bool backDetection,simReal maxAngle,simReal detectPt[3],simReal triN[3])
 {   // sensor is at the origin. octreeTransformationRelative is relative to the sensor
     C7Vector tr;
-    tr.setInternalData(octreeTransformationRelative);
+    tr.setData(octreeTransformationRelative);
     C3Vector _detectPt;
     C3Vector _triN;
     bool retVal=geom_volumeSensorDetectOctreeIfSmaller(planesIn,planesInSize,planesOut,planesOutSize,(const COcStruct*)ocStruct,tr,dist[0],fast,frontDetection,backDetection,maxAngle,&_detectPt,&_triN);
     if (retVal)
     {
         if (detectPt!=nullptr)
-            _detectPt.getInternalData(detectPt);
+            _detectPt.getData(detectPt);
         if (triN!=nullptr)
-            _triN.getInternalData(triN);
+            _triN.getData(triN);
     }
     return(retVal);
 }
 SIM_DLLEXPORT bool geomPlugin_volumeSensorDetectPtcloudIfSmaller(const simReal* planesIn,int planesInSize,const simReal* planesOut,int planesOutSize,const void* pcStruct,const simReal ptcloudTransformationRelative[7],simReal* dist,bool fast,simReal detectPt[3])
 {   // sensor is at the origin. ptcloudTransformationRelative is relative to the sensor
     C7Vector tr;
-    tr.setInternalData(ptcloudTransformationRelative);
+    tr.setData(ptcloudTransformationRelative);
     C3Vector _detectPt;
     bool retVal=geom_volumeSensorDetectPtcloudIfSmaller(planesIn,planesInSize,planesOut,planesOutSize,(const CPcStruct*)pcStruct,tr,dist[0],fast,&_detectPt);
     if (retVal)
     {
         if (detectPt!=nullptr)
-            _detectPt.getInternalData(detectPt);
+            _detectPt.getData(detectPt);
     }
     return(retVal);
 }
@@ -4023,9 +4023,9 @@ SIM_DLLEXPORT bool geomPlugin_volumeSensorDetectTriangleIfSmaller(const simReal*
     if (retVal)
     {
         if (detectPt!=nullptr)
-            _detectPt.getInternalData(detectPt);
+            _detectPt.getData(detectPt);
         if (triN!=nullptr)
-            _triN.getInternalData(triN);
+            _triN.getData(triN);
     }
     return(retVal);
 }
@@ -4038,7 +4038,7 @@ SIM_DLLEXPORT bool geomPlugin_volumeSensorDetectSegmentIfSmaller(const simReal* 
     if (retVal)
     {
         if (detectPt!=nullptr)
-            _detectPt.getInternalData(detectPt);
+            _detectPt.getData(detectPt);
     }
     return(retVal);
 }
@@ -4046,32 +4046,32 @@ SIM_DLLEXPORT bool geomPlugin_volumeSensorDetectSegmentIfSmaller(const simReal* 
 SIM_DLLEXPORT bool geomPlugin_raySensorDetectMeshIfSmaller(const simReal rayStart[3],const simReal rayVect[3],const void* obbStruct,const simReal meshTransformationRelative[7],simReal* dist,simReal forbiddenDist,bool fast,bool frontDetection,bool backDetection,simReal maxAngle,simReal detectPt[3],simReal triN[3],bool* forbiddenDistTouched)
 {   // sensor is at the origin. meshTransformationRelative is relative to the sensor
     C7Vector tr;
-    tr.setInternalData(meshTransformationRelative);
+    tr.setData(meshTransformationRelative);
     C3Vector _detectPt;
     C3Vector _triN;
     bool retVal=geom_raySensorDetectMeshIfSmaller(C3Vector(rayStart),C3Vector(rayVect),(const CObbStruct*)obbStruct,tr,dist[0],forbiddenDist,fast,frontDetection,backDetection,maxAngle,&_detectPt,&_triN,forbiddenDistTouched);
     if (retVal)
     {
         if (detectPt!=nullptr)
-            _detectPt.getInternalData(detectPt);
+            _detectPt.getData(detectPt);
         if (triN!=nullptr)
-            _triN.getInternalData(triN);
+            _triN.getData(triN);
     }
     return(retVal);
 }
 SIM_DLLEXPORT bool geomPlugin_raySensorDetectOctreeIfSmaller(const simReal rayStart[3],const simReal rayVect[3],const void* ocStruct,const simReal octreeTransformationRelative[7],simReal* dist,simReal forbiddenDist,bool fast,bool frontDetection,bool backDetection,simReal maxAngle,simReal detectPt[3],simReal triN[3],bool* forbiddenDistTouched)
 {   // sensor is at the origin. octreeTransformationRelative is relative to the sensor
     C7Vector tr;
-    tr.setInternalData(octreeTransformationRelative);
+    tr.setData(octreeTransformationRelative);
     C3Vector _detectPt;
     C3Vector _triN;
     bool retVal=geom_raySensorDetectOctreeIfSmaller(C3Vector(rayStart),C3Vector(rayVect),(const COcStruct*)ocStruct,tr,dist[0],forbiddenDist,fast,frontDetection,backDetection,maxAngle,&_detectPt,&_triN,forbiddenDistTouched);
     if (retVal)
     {
         if (detectPt!=nullptr)
-            _detectPt.getInternalData(detectPt);
+            _detectPt.getData(detectPt);
         if (triN!=nullptr)
-            _triN.getInternalData(triN);
+            _triN.getData(triN);
     }
     return(retVal);
 }
