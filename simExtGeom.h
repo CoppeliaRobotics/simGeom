@@ -33,6 +33,8 @@ SIM_DLLEXPORT void* geomPlugin_createOctreeFromOctree(const void* otherOctreeStr
 SIM_DLLEXPORT void* geomPlugin_copyOctree(const void* ocStruct);
 SIM_DLLEXPORT void* geomPlugin_getOctreeFromSerializationData(const unsigned char* serializationData);
 SIM_DLLEXPORT unsigned char* geomPlugin_getOctreeSerializationData(const void* ocStruct,int* serializationDataSize);
+SIM_DLLEXPORT void* geomPlugin_getOctreeFromSerializationData_float(const unsigned char* serializationData);
+SIM_DLLEXPORT unsigned char* geomPlugin_getOctreeSerializationData_float(const void* ocStruct,int* serializationDataSize);
 SIM_DLLEXPORT void geomPlugin_scaleOctree(void* ocStruct,simReal f);
 SIM_DLLEXPORT void geomPlugin_destroyOctree(void* ocStruct);
 SIM_DLLEXPORT simReal* geomPlugin_getOctreeVoxelData(const void* ocStruct,int* voxelCount);
@@ -53,6 +55,8 @@ SIM_DLLEXPORT void* geomPlugin_createPtcloudFromColorPoints(const simReal* point
 SIM_DLLEXPORT void* geomPlugin_copyPtcloud(const void* pcStruct);
 SIM_DLLEXPORT void* geomPlugin_getPtcloudFromSerializationData(const unsigned char* serializationData);
 SIM_DLLEXPORT unsigned char* geomPlugin_getPtcloudSerializationData(const void* pcStruct,int* serializationDataSize);
+SIM_DLLEXPORT void* geomPlugin_getPtcloudFromSerializationData_float(const unsigned char* serializationData);
+SIM_DLLEXPORT unsigned char* geomPlugin_getPtcloudSerializationData_float(const void* pcStruct,int* serializationDataSize);
 SIM_DLLEXPORT void geomPlugin_scalePtcloud(void* pcStruct,simReal f);
 SIM_DLLEXPORT void geomPlugin_destroyPtcloud(void* pcStruct);
 SIM_DLLEXPORT simReal* geomPlugin_getPtcloudPoints(const void* pcStruct,int* pointCount,simReal prop);

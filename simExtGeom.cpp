@@ -3113,6 +3113,21 @@ SIM_DLLEXPORT unsigned char* geomPlugin_getOctreeSerializationData(const void* o
     serializationDataSize[0]=(int)serData.size();
     return(retVal);
 }
+SIM_DLLEXPORT void* geomPlugin_getOctreeFromSerializationData_float(const unsigned char* serializationData)
+{
+    COcStruct* retVal=geom_getOctreeFromSerializationData_float(serializationData);
+    return(retVal);
+}
+SIM_DLLEXPORT unsigned char* geomPlugin_getOctreeSerializationData_float(const void* ocStruct,int* serializationDataSize)
+{
+    std::vector<unsigned char> serData;
+    geom_getOctreeSerializationData_float((const COcStruct*)ocStruct,serData);
+    unsigned char* retVal=new unsigned char[serData.size()];
+    for (size_t i=0;i<serData.size();i++)
+        retVal[i]=serData[i];
+    serializationDataSize[0]=(int)serData.size();
+    return(retVal);
+}
 SIM_DLLEXPORT void geomPlugin_scaleOctree(void* ocStruct,simReal f)
 {
     geom_scaleOctree((COcStruct*)ocStruct,f);
@@ -3241,6 +3256,21 @@ SIM_DLLEXPORT unsigned char* geomPlugin_getPtcloudSerializationData(const void* 
 {
     std::vector<unsigned char> serData;
     geom_getPtcloudSerializationData((const CPcStruct*)pcStruct,serData);
+    unsigned char* retVal=new unsigned char[serData.size()];
+    for (size_t i=0;i<serData.size();i++)
+        retVal[i]=serData[i];
+    serializationDataSize[0]=(int)serData.size();
+    return(retVal);
+}
+SIM_DLLEXPORT void* geomPlugin_getPtcloudFromSerializationData_float(const unsigned char* serializationData)
+{
+    void* retVal=geom_getPtcloudFromSerializationData_float(serializationData);
+    return(retVal);
+}
+SIM_DLLEXPORT unsigned char* geomPlugin_getPtcloudSerializationData_float(const void* pcStruct,int* serializationDataSize)
+{
+    std::vector<unsigned char> serData;
+    geom_getPtcloudSerializationData_float((const CPcStruct*)pcStruct,serData);
     unsigned char* retVal=new unsigned char[serData.size()];
     for (size_t i=0;i<serData.size();i++)
         retVal[i]=serData[i];
