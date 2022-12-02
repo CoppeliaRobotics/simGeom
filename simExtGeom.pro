@@ -6,7 +6,7 @@ CONFIG -= core
 CONFIG -= gui
 
 # not yet supported for double-precision on CoppeliaSim side
-# DEFINES += SIM_MATH_DOUBLE # for double-precision
+DEFINES += SIM_MATH_DOUBLE # for double-precision
 
 *-msvc* {
     QMAKE_CFLAGS += -O2

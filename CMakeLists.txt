@@ -40,8 +40,7 @@ coppeliasim_add_plugin(
     ${COPPELIASIM_COMMON_DIR}/scriptFunctionData.cpp
     ${COPPELIASIM_COMMON_DIR}/scriptFunctionDataItem.cpp
 )
-# not yet supported for double-precision on CoppeliaSim side
-#target_compile_definitions(simExtGeom PRIVATE SIM_MATH_DOUBLE)
+target_compile_definitions(simExtGeom PRIVATE SIM_MATH_DOUBLE)
 target_include_directories(simExtGeom PRIVATE ../coppeliaGeometricRoutines)
 target_include_directories(simExtGeom PRIVATE ${COPPELIASIM_ROOT_DIR}/programming/simMath)
 coppeliasim_add_helpfile(simGeom.htm)
