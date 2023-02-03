@@ -49,19 +49,17 @@ unix:!macx {
 }
 
 INCLUDEPATH += "../include"
-INCLUDEPATH += "../common"
-INCLUDEPATH += "../simMath"
 INCLUDEPATH += "../coppeliaGeometricRoutines"
 
 HEADERS += simExtGeom.h \
     ../include/simLib.h \
-    ../simMath/MyMath.h \
-    ../simMath/3Vector.h \
-    ../simMath/4Vector.h \
-    ../simMath/7Vector.h \
-    ../simMath/3X3Matrix.h \
-    ../simMath/4X4Matrix.h \
-    ../simMath/MMatrix.h \
+    ../include/simMath/MyMath.h \
+    ../include/simMath/3Vector.h \
+    ../include/simMath/4Vector.h \
+    ../include/simMath/7Vector.h \
+    ../include/simMath/3X3Matrix.h \
+    ../include/simMath/4X4Matrix.h \
+    ../include/simMath/MMatrix.h \
     ../include/scriptFunctionData.h \
     ../include/scriptFunctionDataItem.h \
     ../coppeliaGeometricRoutines/geom.h \
@@ -76,16 +74,16 @@ HEADERS += simExtGeom.h \
     ../coppeliaGeometricRoutines/kdNode.h \
 
 SOURCES += simExtGeom.cpp \
-    ../common/simLib.cpp \
-    ../simMath/MyMath.cpp \
-    ../simMath/3Vector.cpp \
-    ../simMath/4Vector.cpp \
-    ../simMath/7Vector.cpp \
-    ../simMath/3X3Matrix.cpp \
-    ../simMath/4X4Matrix.cpp \
-    ../simMath/MMatrix.cpp \
-    ../common/scriptFunctionData.cpp \
-    ../common/scriptFunctionDataItem.cpp \
+    ../include/simLib.cpp \
+    ../include/simMath/MyMath.cpp \
+    ../include/simMath/3Vector.cpp \
+    ../include/simMath/4Vector.cpp \
+    ../include/simMath/7Vector.cpp \
+    ../include/simMath/3X3Matrix.cpp \
+    ../include/simMath/4X4Matrix.cpp \
+    ../include/simMath/MMatrix.cpp \
+    ../include/scriptFunctionData.cpp \
+    ../include/scriptFunctionDataItem.cpp \
     ../coppeliaGeometricRoutines/geom.cpp \
     ../coppeliaGeometricRoutines/calcUtils.cpp \
     ../coppeliaGeometricRoutines/obbNode.cpp \

@@ -1,7 +1,7 @@
 #ifndef SIMEXTGEOMETRIC_H
 #define SIMEXTGEOMETRIC_H
 
-#include "geom.h"
+#include <geom.h>
 
 #ifdef _WIN32
     #define SIM_DLLEXPORT extern "C" __declspec(dllexport)
