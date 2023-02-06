@@ -1,8 +1,8 @@
 #include "simExtGeom.h"
-#include <simLib.h>
+#include <simLib/simLib.h>
 #include <iostream>
 #include <cstdio>
-#include <scriptFunctionData.h>
+#include <simLib/scriptFunctionData.h>
 #include <map>
 
 #ifdef _WIN32
