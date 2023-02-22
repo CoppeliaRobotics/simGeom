@@ -568,7 +568,7 @@ const int inArgs_GETMESHMESHDISTANCE[]={
     sim_script_arg_int32,0,
     sim_script_arg_double|sim_lua_arg_table,3,
     sim_script_arg_double|sim_lua_arg_table,4,
-    sim_script_arg_double,0, // threshold, default is FLOAT_MAX
+    sim_script_arg_double,0, // threshold, default is DBL_MAX
     sim_script_arg_int32|sim_lua_arg_table,2, // cachData, default is nil
 };
 
@@ -588,7 +588,7 @@ void LUA_GETMESHMESHDISTANCE_CALLBACK(SScriptCallBack* p)
             C4Vector mesh1Q(inData->at(2).doubleData[3],inData->at(2).doubleData[0],inData->at(2).doubleData[1],inData->at(2).doubleData[2]);
             C3Vector mesh2Pos(&(inData->at(4).doubleData[0]));
             C4Vector mesh2Q(inData->at(5).doubleData[3],inData->at(5).doubleData[0],inData->at(5).doubleData[1],inData->at(5).doubleData[2]);
-            double dist=FLOAT_MAX;
+            double dist=DBL_MAX;
             if ( (inData->size()>=7)&&(inData->at(6).doubleData.size()==1)&&(inData->at(6).doubleData[0]!=0.0) )
                 dist=inData->at(6).doubleData[0];
             int cache1=-1;
@@ -634,7 +634,7 @@ const int inArgs_GETMESHOCTREEDISTANCE[]={
     sim_script_arg_int32,0,
     sim_script_arg_double|sim_lua_arg_table,3,
     sim_script_arg_double|sim_lua_arg_table,4,
-    sim_script_arg_double,0, // threshold, default is FLOAT_MAX
+    sim_script_arg_double,0, // threshold, default is DBL_MAX
     sim_script_arg_double|sim_lua_arg_table,2, // cachData, default is nil
 };
 
@@ -654,7 +654,7 @@ void LUA_GETMESHOCTREEDISTANCE_CALLBACK(SScriptCallBack* p)
             C4Vector meshQ(inData->at(2).doubleData[3],inData->at(2).doubleData[0],inData->at(2).doubleData[1],inData->at(2).doubleData[2]);
             C3Vector octreePos(&(inData->at(4).doubleData[0]));
             C4Vector octreeQ(inData->at(5).doubleData[3],inData->at(5).doubleData[0],inData->at(5).doubleData[1],inData->at(5).doubleData[2]);
-            double dist=FLOAT_MAX;
+            double dist=DBL_MAX;
             if ( (inData->size()>=7)&&(inData->at(6).doubleData.size()==1)&&(inData->at(6).doubleData[0]!=0.0) )
                 dist=inData->at(6).doubleData[0];
             int cache1=-1;
@@ -700,7 +700,7 @@ const int inArgs_GETMESHPTCLOUDDISTANCE[]={
     sim_script_arg_int32,0,
     sim_script_arg_double|sim_lua_arg_table,3,
     sim_script_arg_double|sim_lua_arg_table,4,
-    sim_script_arg_double,0, // threshold, default is FLOAT_MAX
+    sim_script_arg_double,0, // threshold, default is DBL_MAX
     sim_script_arg_double|sim_lua_arg_table,2, // cachData, default is nil
 };
 
@@ -720,7 +720,7 @@ void LUA_GETMESHPTCLOUDDISTANCE_CALLBACK(SScriptCallBack* p)
             C4Vector meshQ(inData->at(2).doubleData[3],inData->at(2).doubleData[0],inData->at(2).doubleData[1],inData->at(2).doubleData[2]);
             C3Vector ptcloudPos(&(inData->at(4).doubleData[0]));
             C4Vector ptcloudQ(inData->at(5).doubleData[3],inData->at(5).doubleData[0],inData->at(5).doubleData[1],inData->at(5).doubleData[2]);
-            double dist=FLOAT_MAX;
+            double dist=DBL_MAX;
             if ( (inData->size()>=7)&&(inData->at(6).doubleData.size()==1)&&(inData->at(6).doubleData[0]!=0.0) )
                 dist=inData->at(6).doubleData[0];
             int cache1=-1;
@@ -766,7 +766,7 @@ const int inArgs_GETOCTREEOCTREEDISTANCE[]={
     sim_script_arg_int32,0,
     sim_script_arg_double|sim_lua_arg_table,3,
     sim_script_arg_double|sim_lua_arg_table,4,
-    sim_script_arg_double,0, // threshold, default is FLOAT_MAX
+    sim_script_arg_double,0, // threshold, default is DBL_MAX
     sim_script_arg_double|sim_lua_arg_table,2, // cachData, default is nil
 };
 
@@ -786,7 +786,7 @@ void LUA_GETOCTREEOCTREEDISTANCE_CALLBACK(SScriptCallBack* p)
             C4Vector octree1Q(inData->at(2).doubleData[3],inData->at(2).doubleData[0],inData->at(2).doubleData[1],inData->at(2).doubleData[2]);
             C3Vector octree2Pos(&(inData->at(4).doubleData[0]));
             C4Vector octree2Q(inData->at(5).doubleData[3],inData->at(5).doubleData[0],inData->at(5).doubleData[1],inData->at(5).doubleData[2]);
-            double dist=FLOAT_MAX;
+            double dist=DBL_MAX;
             if ( (inData->size()>=7)&&(inData->at(6).doubleData.size()==1)&&(inData->at(6).doubleData[0]!=0.0) )
                 dist=inData->at(6).doubleData[0];
             unsigned long long int cache1=0;
@@ -832,7 +832,7 @@ const int inArgs_GETOCTREEPTCLOUDDISTANCE[]={
     sim_script_arg_int32,0,
     sim_script_arg_double|sim_lua_arg_table,3,
     sim_script_arg_double|sim_lua_arg_table,4,
-    sim_script_arg_double,0, // threshold, default is FLOAT_MAX
+    sim_script_arg_double,0, // threshold, default is DBL_MAX
     sim_script_arg_double|sim_lua_arg_table,2, // cachData, default is nil
 };
 
@@ -852,7 +852,7 @@ void LUA_GETOCTREEPTCLOUDDISTANCE_CALLBACK(SScriptCallBack* p)
             C4Vector octreeQ(inData->at(2).doubleData[3],inData->at(2).doubleData[0],inData->at(2).doubleData[1],inData->at(2).doubleData[2]);
             C3Vector ptcloudPos(&(inData->at(4).doubleData[0]));
             C4Vector ptcloudQ(inData->at(5).doubleData[3],inData->at(5).doubleData[0],inData->at(5).doubleData[1],inData->at(5).doubleData[2]);
-            double dist=FLOAT_MAX;
+            double dist=DBL_MAX;
             if ( (inData->size()>=7)&&(inData->at(6).doubleData.size()==1)&&(inData->at(6).doubleData[0]!=0.0) )
                 dist=inData->at(6).doubleData[0];
             unsigned long long int cache1=0;
@@ -898,7 +898,7 @@ const int inArgs_GETOCTREETRIANGLEDISTANCE[]={
     sim_script_arg_double|sim_lua_arg_table,3,
     sim_script_arg_double|sim_lua_arg_table,3,
     sim_script_arg_double|sim_lua_arg_table,3,
-    sim_script_arg_double,0, // threshold, default is FLOAT_MAX
+    sim_script_arg_double,0, // threshold, default is DBL_MAX
     sim_script_arg_double,0, // cachData, default is nil
 };
 
@@ -917,7 +917,7 @@ void LUA_GETOCTREETRIANGLEDISTANCE_CALLBACK(SScriptCallBack* p)
             C3Vector triPt1(&(inData->at(3).doubleData[0]));
             C3Vector triPt2(&(inData->at(4).doubleData[0]));
             C3Vector triPt3(&(inData->at(5).doubleData[0]));
-            double dist=FLOAT_MAX;
+            double dist=DBL_MAX;
             if ( (inData->size()>=7)&&(inData->at(6).doubleData.size()==1)&&(inData->at(6).doubleData[0]!=0.0) )
                 dist=inData->at(6).doubleData[0];
             unsigned long long int cache=0;
@@ -955,7 +955,7 @@ const int inArgs_GETOCTREESEGMENTDISTANCE[]={
     sim_script_arg_double|sim_lua_arg_table,4,
     sim_script_arg_double|sim_lua_arg_table,3,
     sim_script_arg_double|sim_lua_arg_table,3,
-    sim_script_arg_double,0, // threshold, default is FLOAT_MAX
+    sim_script_arg_double,0, // threshold, default is DBL_MAX
     sim_script_arg_double,0, // cachData, default is nil
 };
 
@@ -973,7 +973,7 @@ void LUA_GETOCTREESEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
             C4Vector octreeQ(inData->at(2).doubleData[3],inData->at(2).doubleData[0],inData->at(2).doubleData[1],inData->at(2).doubleData[2]);
             C3Vector segPt1(&(inData->at(3).doubleData[0]));
             C3Vector segPt2(&(inData->at(4).doubleData[0]));
-            double dist=FLOAT_MAX;
+            double dist=DBL_MAX;
             if ( (inData->size()>=6)&&(inData->at(5).doubleData.size()==1)&&(inData->at(5).doubleData[0]!=0.0) )
                 dist=inData->at(5).doubleData[0];
             unsigned long long int cache=0;
@@ -1010,7 +1010,7 @@ const int inArgs_GETOCTREEPOINTDISTANCE[]={
     sim_script_arg_double|sim_lua_arg_table,3,
     sim_script_arg_double|sim_lua_arg_table,4,
     sim_script_arg_double|sim_lua_arg_table,3,
-    sim_script_arg_double,0, // threshold, default is FLOAT_MAX
+    sim_script_arg_double,0, // threshold, default is DBL_MAX
     sim_script_arg_double,0, // cachData, default is nil
 };
 
@@ -1027,7 +1027,7 @@ void LUA_GETOCTREEPOINTDISTANCE_CALLBACK(SScriptCallBack* p)
             C3Vector octreePos(&(inData->at(1).doubleData[0]));
             C4Vector octreeQ(inData->at(2).doubleData[3],inData->at(2).doubleData[0],inData->at(2).doubleData[1],inData->at(2).doubleData[2]);
             C3Vector point(&(inData->at(3).doubleData[0]));
-            double dist=FLOAT_MAX;
+            double dist=DBL_MAX;
             if ( (inData->size()>=5)&&(inData->at(4).doubleData.size()==1)&&(inData->at(4).doubleData[0]!=0.0) )
                 dist=inData->at(4).doubleData[0];
             unsigned long long int cache=0;
@@ -1064,7 +1064,7 @@ const int inArgs_GETMESHTRIANGLEDISTANCE[]={
     sim_script_arg_double|sim_lua_arg_table,3,
     sim_script_arg_double|sim_lua_arg_table,3,
     sim_script_arg_double|sim_lua_arg_table,3,
-    sim_script_arg_double,0, // threshold, default is FLOAT_MAX
+    sim_script_arg_double,0, // threshold, default is DBL_MAX
     sim_script_arg_int32,0, // cachData, default is -1
 };
 
@@ -1083,7 +1083,7 @@ void LUA_GETMESHTRIANGLEDISTANCE_CALLBACK(SScriptCallBack* p)
             C3Vector triPt1(&inData->at(3).doubleData[0]);
             C3Vector triPt2(&inData->at(4).doubleData[0]);
             C3Vector triPt3(&inData->at(5).doubleData[0]);
-            double dist=FLOAT_MAX;
+            double dist=DBL_MAX;
             if ( (inData->size()>=7)&&(inData->at(6).doubleData.size()==1)&&(inData->at(6).doubleData[0]!=0.0) )
                 dist=inData->at(6).doubleData[0];
             int cache=-1;
@@ -1121,7 +1121,7 @@ const int inArgs_GETMESHSEGMENTDISTANCE[]={
     sim_script_arg_double|sim_lua_arg_table,4,
     sim_script_arg_double|sim_lua_arg_table,3,
     sim_script_arg_double|sim_lua_arg_table,3,
-    sim_script_arg_double,0, // threshold, default is FLOAT_MAX
+    sim_script_arg_double,0, // threshold, default is DBL_MAX
     sim_script_arg_int32,0, // cachData, default is -1
 };
 
@@ -1139,7 +1139,7 @@ void LUA_GETMESHSEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
             C4Vector meshQ(inData->at(2).doubleData[3],inData->at(2).doubleData[0],inData->at(2).doubleData[1],inData->at(2).doubleData[2]);
             C3Vector segPt1(&inData->at(3).doubleData[0]);
             C3Vector segPt2(&inData->at(4).doubleData[0]);
-            double dist=FLOAT_MAX;
+            double dist=DBL_MAX;
             if ( (inData->size()>=6)&&(inData->at(5).doubleData.size()==1)&&(inData->at(5).doubleData[0]!=0.0) )
                 dist=inData->at(5).doubleData[0];
             int cache=-1;
@@ -1176,7 +1176,7 @@ const int inArgs_GETMESHPOINTDISTANCE[]={
     sim_script_arg_double|sim_lua_arg_table,3,
     sim_script_arg_double|sim_lua_arg_table,4,
     sim_script_arg_double|sim_lua_arg_table,3,
-    sim_script_arg_double,0, // threshold, default is FLOAT_MAX
+    sim_script_arg_double,0, // threshold, default is DBL_MAX
     sim_script_arg_int32,0, // cachData, default is -1
 };
 
@@ -1193,7 +1193,7 @@ void LUA_GETMESHPOINTDISTANCE_CALLBACK(SScriptCallBack* p)
             C3Vector meshPos(&(inData->at(1).doubleData[0]));
             C4Vector meshQ(inData->at(2).doubleData[3],inData->at(2).doubleData[0],inData->at(2).doubleData[1],inData->at(2).doubleData[2]);
             C3Vector pt1(&inData->at(3).doubleData[0]);
-            double dist=FLOAT_MAX;
+            double dist=DBL_MAX;
             if ( (inData->size()>=5)&&(inData->at(4).doubleData.size()==1)&&(inData->at(4).doubleData[0]!=0.0) )
                 dist=inData->at(4).doubleData[0];
             int cache=-1;
@@ -2640,7 +2640,7 @@ const int inArgs_GETPTCLOUDPTCLOUDDISTANCE[]={
     sim_script_arg_int32,0,
     sim_script_arg_double|sim_lua_arg_table,3,
     sim_script_arg_double|sim_lua_arg_table,4,
-    sim_script_arg_double,0, // threshold, default is FLOAT_MAX
+    sim_script_arg_double,0, // threshold, default is DBL_MAX
     sim_script_arg_double|sim_lua_arg_table,2, // cachData, default is nil
 };
 
@@ -2660,7 +2660,7 @@ void LUA_GETPTCLOUDPTCLOUDDISTANCE_CALLBACK(SScriptCallBack* p)
             C4Vector ptcloud1Q(inData->at(2).doubleData[3],inData->at(2).doubleData[0],inData->at(2).doubleData[1],inData->at(2).doubleData[2]);
             C3Vector ptcloud2Pos(&(inData->at(4).doubleData[0]));
             C4Vector ptcloud2Q(inData->at(5).doubleData[3],inData->at(5).doubleData[0],inData->at(5).doubleData[1],inData->at(5).doubleData[2]);
-            double dist=FLOAT_MAX;
+            double dist=DBL_MAX;
             if ( (inData->size()>=7)&&(inData->at(6).doubleData.size()==1)&&(inData->at(6).doubleData[0]!=0.0) )
                 dist=inData->at(6).doubleData[0];
             unsigned long long int cache1=0;
@@ -2706,7 +2706,7 @@ const int inArgs_GETPTCLOUDTRIANGLEDISTANCE[]={
     sim_script_arg_double|sim_lua_arg_table,3,
     sim_script_arg_double|sim_lua_arg_table,3,
     sim_script_arg_double|sim_lua_arg_table,3,
-    sim_script_arg_double,0, // threshold, default is FLOAT_MAX
+    sim_script_arg_double,0, // threshold, default is DBL_MAX
     sim_script_arg_double,0, // cachData, default is nil
 };
 
@@ -2725,7 +2725,7 @@ void LUA_GETPTCLOUDTRIANGLEDISTANCE_CALLBACK(SScriptCallBack* p)
             C3Vector triPt1(&(inData->at(3).doubleData[0]));
             C3Vector triPt2(&(inData->at(4).doubleData[0]));
             C3Vector triPt3(&(inData->at(5).doubleData[0]));
-            double dist=FLOAT_MAX;
+            double dist=DBL_MAX;
             if ( (inData->size()>=7)&&(inData->at(6).doubleData.size()==1)&&(inData->at(6).doubleData[0]!=0.0) )
                 dist=inData->at(6).doubleData[0];
             unsigned long long int cache=0;
@@ -2763,7 +2763,7 @@ const int inArgs_GETPTCLOUDSEGMENTDISTANCE[]={
     sim_script_arg_double|sim_lua_arg_table,4,
     sim_script_arg_double|sim_lua_arg_table,3,
     sim_script_arg_double|sim_lua_arg_table,3,
-    sim_script_arg_double,0, // threshold, default is FLOAT_MAX
+    sim_script_arg_double,0, // threshold, default is DBL_MAX
     sim_script_arg_double,0, // cachData, default is nil
 };
 
@@ -2781,7 +2781,7 @@ void LUA_GETPTCLOUDSEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
             C4Vector ptcloudQ(inData->at(2).doubleData[3],inData->at(2).doubleData[0],inData->at(2).doubleData[1],inData->at(2).doubleData[2]);
             C3Vector segPt1(&(inData->at(3).doubleData[0]));
             C3Vector segPt2(&(inData->at(4).doubleData[0]));
-            double dist=FLOAT_MAX;
+            double dist=DBL_MAX;
             if ( (inData->size()>=6)&&(inData->at(5).doubleData.size()==1)&&(inData->at(5).doubleData[0]!=0.0) )
                 dist=inData->at(5).doubleData[0];
             unsigned long long int cache=0;
@@ -2818,7 +2818,7 @@ const int inArgs_GETPTCLOUDPOINTDISTANCE[]={
     sim_script_arg_double|sim_lua_arg_table,3,
     sim_script_arg_double|sim_lua_arg_table,4,
     sim_script_arg_double|sim_lua_arg_table,3,
-    sim_script_arg_double,0, // threshold, default is FLOAT_MAX
+    sim_script_arg_double,0, // threshold, default is DBL_MAX
     sim_script_arg_double,0, // cachData, default is nil
 };
 
@@ -2835,7 +2835,7 @@ void LUA_GETPTCLOUDPOINTDISTANCE_CALLBACK(SScriptCallBack* p)
             C3Vector ptcloudPos(&(inData->at(1).doubleData[0]));
             C4Vector ptcloudQ(inData->at(2).doubleData[3],inData->at(2).doubleData[0],inData->at(2).doubleData[1],inData->at(2).doubleData[2]);
             C3Vector point(&(inData->at(3).doubleData[0]));
-            double dist=FLOAT_MAX;
+            double dist=DBL_MAX;
             if ( (inData->size()>=5)&&(inData->at(4).doubleData.size()==1)&&(inData->at(4).doubleData[0]!=0.0) )
                 dist=inData->at(4).doubleData[0];
             unsigned long long int cache=0;
