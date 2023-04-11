@@ -2,13 +2,7 @@
 #define SIMEXTGEOMETRIC_H
 
 #include <geom.h>
-
-#ifdef _WIN32
-    #define SIM_DLLEXPORT extern "C" __declspec(dllexport)
-#endif
-#if defined (__linux) || defined (__APPLE__)
-    #define SIM_DLLEXPORT extern "C"
-#endif
+#include <simLib/simExp.h>
 
 SIM_DLLEXPORT unsigned char simStart(void*,int);
 SIM_DLLEXPORT void simEnd();
