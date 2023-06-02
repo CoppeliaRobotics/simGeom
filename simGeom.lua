@@ -1,3 +1,3 @@
-local simGeom=loadPlugin('simGeom')
+local simGeom=loadPlugin'simGeom';
 
 return simGeom
