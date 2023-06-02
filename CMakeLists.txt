@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-project(simExtGeom)
+project(simGeom)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_MACOSX_RPATH 1)
@@ -17,10 +17,10 @@ list(APPEND CMAKE_MODULE_PATH ${COPPELIASIM_INCLUDE_DIR}/cmake)
 find_package(CoppeliaSim 4.5.0.0 REQUIRED)
 
 coppeliasim_add_plugin(
-    simExtGeom
+    simGeom
     LEGACY
     SOURCES
-    simExtGeom.cpp
+    simGeom.cpp
     ../coppeliaGeometricRoutines/geom.cpp
     ../coppeliaGeometricRoutines/calcUtils.cpp
     ../coppeliaGeometricRoutines/obbNode.cpp
@@ -40,8 +40,10 @@ coppeliasim_add_plugin(
     ${COPPELIASIM_INCLUDE_DIR}/simLib/scriptFunctionData.cpp
     ${COPPELIASIM_INCLUDE_DIR}/simLib/scriptFunctionDataItem.cpp
 )
-target_compile_definitions(simExtGeom PRIVATE SIM_MATH_DOUBLE)
-target_include_directories(simExtGeom PRIVATE ../coppeliaGeometricRoutines)
-target_include_directories(simExtGeom PRIVATE ${COPPELIASIM_INCLUDE_DIR}/simMath)
+target_compile_definitions(simGeom PRIVATE SIM_MATH_DOUBLE)
+target_include_directories(simGeom PRIVATE ../coppeliaGeometricRoutines)
+target_include_directories(simGeom PRIVATE ${COPPELIASIM_INCLUDE_DIR}/simMath)
+coppeliasim_add_lua(simGeom.lua)
+coppeliasim_add_lua(simGeom-ce.lua)
 coppeliasim_add_helpfile(simGeom.htm)
 coppeliasim_add_helpfile(simGeom.json SUBDIR index)

@@ -1,4 +1,4 @@
-#include "simExtGeom.h"
+#include "simGeom.h"
 #include <simLib/simLib.h>
 #include <iostream>
 #include <cstdio>
@@ -62,9 +62,6 @@ simGeom.volumeSensorDetectTriangle
 // --------------------------------------------------------------------------------------
 // simGeom.getMeshMeshCollision
 // --------------------------------------------------------------------------------------
-#define LUA_GETMESHMESHCOLLISION_COMMAND_PLUGIN "simGeom.getMeshMeshCollision@Geom"
-#define LUA_GETMESHMESHCOLLISION_COMMAND "simGeom.getMeshMeshCollision"
-
 const int inArgs_GETMESHMESHCOLLISION[]={
     8,
     sim_script_arg_int32,0,
@@ -80,7 +77,7 @@ const int inArgs_GETMESHMESHCOLLISION[]={
 void LUA_GETMESHMESHCOLLISION_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_GETMESHMESHCOLLISION,inArgs_GETMESHMESHCOLLISION[0]-2,LUA_GETMESHMESHCOLLISION_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_GETMESHMESHCOLLISION,inArgs_GETMESHMESHCOLLISION[0]-2,nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         int h1=inData->at(0).int32Data[0];
@@ -120,7 +117,7 @@ void LUA_GETMESHMESHCOLLISION_CALLBACK(SScriptCallBack* p)
             }
         }
         else
-            simSetLastError(LUA_GETMESHMESHCOLLISION_COMMAND,"Invalid handle.");
+            simSetLastError(nullptr,"Invalid handle.");
     }
     D.writeDataToStack(p->stackID);
 }
@@ -129,9 +126,6 @@ void LUA_GETMESHMESHCOLLISION_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getMeshOctreeCollision
 // --------------------------------------------------------------------------------------
-#define LUA_GETMESHOCTREECOLLISION_COMMAND_PLUGIN "simGeom.getMeshOctreeCollision@Geom"
-#define LUA_GETMESHOCTREECOLLISION_COMMAND "simGeom.getMeshOctreeCollision"
-
 const int inArgs_GETMESHOCTREECOLLISION[]={
     7,
     sim_script_arg_int32,0,
@@ -146,7 +140,7 @@ const int inArgs_GETMESHOCTREECOLLISION[]={
 void LUA_GETMESHOCTREECOLLISION_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_GETMESHOCTREECOLLISION,inArgs_GETMESHOCTREECOLLISION[0]-1,LUA_GETMESHOCTREECOLLISION_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_GETMESHOCTREECOLLISION,inArgs_GETMESHOCTREECOLLISION[0]-1,nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         int h1=inData->at(0).int32Data[0];
@@ -177,7 +171,7 @@ void LUA_GETMESHOCTREECOLLISION_CALLBACK(SScriptCallBack* p)
             }
         }
         else
-            simSetLastError(LUA_GETMESHOCTREECOLLISION_COMMAND,"Invalid handle.");
+            simSetLastError(nullptr,"Invalid handle.");
     }
     D.writeDataToStack(p->stackID);
 }
@@ -187,9 +181,6 @@ void LUA_GETMESHOCTREECOLLISION_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getMeshTriangleCollision
 // --------------------------------------------------------------------------------------
-#define LUA_GETMESHTRIANGLECOLLISION_COMMAND_PLUGIN "simGeom.getMeshTriangleCollision@Geom"
-#define LUA_GETMESHTRIANGLECOLLISION_COMMAND "simGeom.getMeshTriangleCollision"
-
 const int inArgs_GETMESHTRIANGLECOLLISION[]={
     8,
     sim_script_arg_int32,0,
@@ -205,7 +196,7 @@ const int inArgs_GETMESHTRIANGLECOLLISION[]={
 void LUA_GETMESHTRIANGLECOLLISION_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_GETMESHTRIANGLECOLLISION,inArgs_GETMESHTRIANGLECOLLISION[0]-2,LUA_GETMESHTRIANGLECOLLISION_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_GETMESHTRIANGLECOLLISION,inArgs_GETMESHTRIANGLECOLLISION[0]-2,nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         int h=inData->at(0).int32Data[0];
@@ -237,7 +228,7 @@ void LUA_GETMESHTRIANGLECOLLISION_CALLBACK(SScriptCallBack* p)
             }
         }
         else
-            simSetLastError(LUA_GETMESHTRIANGLECOLLISION_COMMAND,"Invalid handle.");
+            simSetLastError(nullptr,"Invalid handle.");
     }
     D.writeDataToStack(p->stackID);
 }
@@ -246,9 +237,6 @@ void LUA_GETMESHTRIANGLECOLLISION_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getMeshSegmentCollision
 // --------------------------------------------------------------------------------------
-#define LUA_GETMESHSEGMENTCOLLISION_COMMAND_PLUGIN "simGeom.getMeshSegmentCollision@Geom"
-#define LUA_GETMESHSEGMENTCOLLISION_COMMAND "simGeom.getMeshSegmentCollision"
-
 const int inArgs_GETMESHSEGMENTCOLLISION[]={
     7,
     sim_script_arg_int32,0,
@@ -263,7 +251,7 @@ const int inArgs_GETMESHSEGMENTCOLLISION[]={
 void LUA_GETMESHSEGMENTCOLLISION_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_GETMESHSEGMENTCOLLISION,inArgs_GETMESHSEGMENTCOLLISION[0]-2,LUA_GETMESHSEGMENTCOLLISION_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_GETMESHSEGMENTCOLLISION,inArgs_GETMESHSEGMENTCOLLISION[0]-2,nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         int h=inData->at(0).int32Data[0];
@@ -294,7 +282,7 @@ void LUA_GETMESHSEGMENTCOLLISION_CALLBACK(SScriptCallBack* p)
             }
         }
         else
-            simSetLastError(LUA_GETMESHSEGMENTCOLLISION_COMMAND,"Invalid handle.");
+            simSetLastError(nullptr,"Invalid handle.");
     }
     D.writeDataToStack(p->stackID);
 }
@@ -303,9 +291,6 @@ void LUA_GETMESHSEGMENTCOLLISION_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getOctreeOctreeCollision
 // --------------------------------------------------------------------------------------
-#define LUA_GETOCTREEOCTREECOLLISION_COMMAND_PLUGIN "simGeom.getOctreeOctreeCollision@Geom"
-#define LUA_GETOCTREEOCTREECOLLISION_COMMAND "simGeom.getOctreeOctreeCollision"
-
 const int inArgs_GETOCTREEOCTREECOLLISION[]={
     7,
     sim_script_arg_int32,0,
@@ -321,7 +306,7 @@ const int inArgs_GETOCTREEOCTREECOLLISION[]={
 void LUA_GETOCTREEOCTREECOLLISION_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_GETOCTREEOCTREECOLLISION,inArgs_GETOCTREEOCTREECOLLISION[0]-1,LUA_GETOCTREEOCTREECOLLISION_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_GETOCTREEOCTREECOLLISION,inArgs_GETOCTREEOCTREECOLLISION[0]-1,nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         int h1=inData->at(0).int32Data[0];
@@ -352,7 +337,7 @@ void LUA_GETOCTREEOCTREECOLLISION_CALLBACK(SScriptCallBack* p)
             }
         }
         else
-            simSetLastError(LUA_GETOCTREEOCTREECOLLISION_COMMAND,"Invalid handle.");
+            simSetLastError(nullptr,"Invalid handle.");
     }
     D.writeDataToStack(p->stackID);
 }
@@ -361,9 +346,6 @@ void LUA_GETOCTREEOCTREECOLLISION_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getOctreePtcloudCollision
 // --------------------------------------------------------------------------------------
-#define LUA_GETOCTREEPTCLOUDCOLLISION_COMMAND_PLUGIN "simGeom.getOctreePtcloudCollision@Geom"
-#define LUA_GETOCTREEPTCLOUDCOLLISION_COMMAND "simGeom.getOctreePtcloudCollision"
-
 const int inArgs_GETOCTREEPTCLOUDCOLLISION[]={
     7,
     sim_script_arg_int32,0,
@@ -379,7 +361,7 @@ const int inArgs_GETOCTREEPTCLOUDCOLLISION[]={
 void LUA_GETOCTREEPTCLOUDCOLLISION_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_GETOCTREEPTCLOUDCOLLISION,inArgs_GETOCTREEPTCLOUDCOLLISION[0]-1,LUA_GETOCTREEPTCLOUDCOLLISION_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_GETOCTREEPTCLOUDCOLLISION,inArgs_GETOCTREEPTCLOUDCOLLISION[0]-1,nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         int h1=inData->at(0).int32Data[0];
@@ -410,7 +392,7 @@ void LUA_GETOCTREEPTCLOUDCOLLISION_CALLBACK(SScriptCallBack* p)
             }
         }
         else
-            simSetLastError(LUA_GETOCTREEPTCLOUDCOLLISION_COMMAND,"Invalid handle.");
+            simSetLastError(nullptr,"Invalid handle.");
     }
     D.writeDataToStack(p->stackID);
 }
@@ -419,9 +401,6 @@ void LUA_GETOCTREEPTCLOUDCOLLISION_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getOctreeTriangleCollision
 // --------------------------------------------------------------------------------------
-#define LUA_GETOCTREETRIANGLECOLLISION_COMMAND_PLUGIN "simGeom.getOctreeTriangleCollision@Geom"
-#define LUA_GETOCTREETRIANGLECOLLISION_COMMAND "simGeom.getOctreeTriangleCollision"
-
 const int inArgs_GETOCTREETRIANGLECOLLISION[]={
     7,
     sim_script_arg_int32,0,
@@ -436,7 +415,7 @@ const int inArgs_GETOCTREETRIANGLECOLLISION[]={
 void LUA_GETOCTREETRIANGLECOLLISION_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_GETOCTREETRIANGLECOLLISION,inArgs_GETOCTREETRIANGLECOLLISION[0]-2,LUA_GETOCTREETRIANGLECOLLISION_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_GETOCTREETRIANGLECOLLISION,inArgs_GETOCTREETRIANGLECOLLISION[0]-2,nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         int h=inData->at(0).int32Data[0];
@@ -457,7 +436,7 @@ void LUA_GETOCTREETRIANGLECOLLISION_CALLBACK(SScriptCallBack* p)
                 D.pushOutData(CScriptFunctionDataItem(double(cache)));
         }
         else
-            simSetLastError(LUA_GETOCTREETRIANGLECOLLISION_COMMAND,"Invalid handle.");
+            simSetLastError(nullptr,"Invalid handle.");
     }
     D.writeDataToStack(p->stackID);
 }
@@ -466,9 +445,6 @@ void LUA_GETOCTREETRIANGLECOLLISION_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getOctreeSegmentCollision
 // --------------------------------------------------------------------------------------
-#define LUA_GETOCTREESEGMENTCOLLISION_COMMAND_PLUGIN "simGeom.getOctreeSegmentCollision@Geom"
-#define LUA_GETOCTREESEGMENTCOLLISION_COMMAND "simGeom.getOctreeSegmentCollision"
-
 const int inArgs_GETOCTREESEGMENTCOLLISION[]={
     6,
     sim_script_arg_int32,0,
@@ -482,7 +458,7 @@ const int inArgs_GETOCTREESEGMENTCOLLISION[]={
 void LUA_GETOCTREESEGMENTCOLLISION_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_GETOCTREESEGMENTCOLLISION,inArgs_GETOCTREESEGMENTCOLLISION[0]-2,LUA_GETOCTREESEGMENTCOLLISION_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_GETOCTREESEGMENTCOLLISION,inArgs_GETOCTREESEGMENTCOLLISION[0]-2,nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         int h=inData->at(0).int32Data[0];
@@ -502,7 +478,7 @@ void LUA_GETOCTREESEGMENTCOLLISION_CALLBACK(SScriptCallBack* p)
                 D.pushOutData(CScriptFunctionDataItem(double(cache)));
         }
         else
-            simSetLastError(LUA_GETOCTREESEGMENTCOLLISION_COMMAND,"Invalid handle.");
+            simSetLastError(nullptr,"Invalid handle.");
     }
     D.writeDataToStack(p->stackID);
 }
@@ -511,9 +487,6 @@ void LUA_GETOCTREESEGMENTCOLLISION_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getOctreePointCollision
 // --------------------------------------------------------------------------------------
-#define LUA_GETOCTREEPOINTCOLLISION_COMMAND_PLUGIN "simGeom.getOctreePointCollision@Geom"
-#define LUA_GETOCTREEPOINTCOLLISION_COMMAND "simGeom.getOctreePointCollision"
-
 const int inArgs_GETOCTREEPOINTCOLLISION[]={
     5,
     sim_script_arg_int32,0,
@@ -526,7 +499,7 @@ const int inArgs_GETOCTREEPOINTCOLLISION[]={
 void LUA_GETOCTREEPOINTCOLLISION_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_GETOCTREEPOINTCOLLISION,inArgs_GETOCTREEPOINTCOLLISION[0]-2,LUA_GETOCTREEPOINTCOLLISION_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_GETOCTREEPOINTCOLLISION,inArgs_GETOCTREEPOINTCOLLISION[0]-2,nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         int h=inData->at(0).int32Data[0];
@@ -545,7 +518,7 @@ void LUA_GETOCTREEPOINTCOLLISION_CALLBACK(SScriptCallBack* p)
                 D.pushOutData(CScriptFunctionDataItem(double(cache)));
         }
         else
-            simSetLastError(LUA_GETOCTREEPOINTCOLLISION_COMMAND,"Invalid handle.");
+            simSetLastError(nullptr,"Invalid handle.");
     }
     D.writeDataToStack(p->stackID);
 }
@@ -557,9 +530,6 @@ void LUA_GETOCTREEPOINTCOLLISION_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getMeshMeshDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETMESHMESHDISTANCE_COMMAND_PLUGIN "simGeom.getMeshMeshDistance@Geom"
-#define LUA_GETMESHMESHDISTANCE_COMMAND "simGeom.getMeshMeshDistance"
-
 const int inArgs_GETMESHMESHDISTANCE[]={
     8,
     sim_script_arg_int32,0,
@@ -575,7 +545,7 @@ const int inArgs_GETMESHMESHDISTANCE[]={
 void LUA_GETMESHMESHDISTANCE_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_GETMESHMESHDISTANCE,inArgs_GETMESHMESHDISTANCE[0]-2,LUA_GETMESHMESHDISTANCE_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_GETMESHMESHDISTANCE,inArgs_GETMESHMESHDISTANCE[0]-2,nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         int h1=inData->at(0).int32Data[0];
@@ -614,7 +584,7 @@ void LUA_GETMESHMESHDISTANCE_CALLBACK(SScriptCallBack* p)
             }
         }
         else
-            simSetLastError(LUA_GETMESHMESHDISTANCE_COMMAND,"Invalid handle.");
+            simSetLastError(nullptr,"Invalid handle.");
     }
     D.writeDataToStack(p->stackID);
 }
@@ -623,9 +593,6 @@ void LUA_GETMESHMESHDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getMeshOctreeDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETMESHOCTREEDISTANCE_COMMAND_PLUGIN "simGeom.getMeshOctreeDistance@Geom"
-#define LUA_GETMESHOCTREEDISTANCE_COMMAND "simGeom.getMeshOctreeDistance"
-
 const int inArgs_GETMESHOCTREEDISTANCE[]={
     8,
     sim_script_arg_int32,0,
@@ -641,7 +608,7 @@ const int inArgs_GETMESHOCTREEDISTANCE[]={
 void LUA_GETMESHOCTREEDISTANCE_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_GETMESHOCTREEDISTANCE,inArgs_GETMESHOCTREEDISTANCE[0]-2,LUA_GETMESHOCTREEDISTANCE_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_GETMESHOCTREEDISTANCE,inArgs_GETMESHOCTREEDISTANCE[0]-2,nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         int h1=inData->at(0).int32Data[0];
@@ -680,7 +647,7 @@ void LUA_GETMESHOCTREEDISTANCE_CALLBACK(SScriptCallBack* p)
             }
         }
         else
-            simSetLastError(LUA_GETMESHOCTREEDISTANCE_COMMAND,"Invalid handle.");
+            simSetLastError(nullptr,"Invalid handle.");
     }
     D.writeDataToStack(p->stackID);
 }
@@ -689,9 +656,6 @@ void LUA_GETMESHOCTREEDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getMeshPtcloudDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETMESHPTCLOUDDISTANCE_COMMAND_PLUGIN "simGeom.getMeshPtcloudDistance@Geom"
-#define LUA_GETMESHPTCLOUDDISTANCE_COMMAND "simGeom.getMeshPtcloudDistance"
-
 const int inArgs_GETMESHPTCLOUDDISTANCE[]={
     8,
     sim_script_arg_int32,0,
@@ -707,7 +671,7 @@ const int inArgs_GETMESHPTCLOUDDISTANCE[]={
 void LUA_GETMESHPTCLOUDDISTANCE_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_GETMESHPTCLOUDDISTANCE,inArgs_GETMESHPTCLOUDDISTANCE[0]-2,LUA_GETMESHPTCLOUDDISTANCE_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_GETMESHPTCLOUDDISTANCE,inArgs_GETMESHPTCLOUDDISTANCE[0]-2,nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         int h1=inData->at(0).int32Data[0];
@@ -746,7 +710,7 @@ void LUA_GETMESHPTCLOUDDISTANCE_CALLBACK(SScriptCallBack* p)
             }
         }
         else
-            simSetLastError(LUA_GETMESHPTCLOUDDISTANCE_COMMAND,"Invalid handle.");
+            simSetLastError(nullptr,"Invalid handle.");
     }
     D.writeDataToStack(p->stackID);
 }
@@ -755,9 +719,6 @@ void LUA_GETMESHPTCLOUDDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getOctreeOctreeDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETOCTREEOCTREEDISTANCE_COMMAND_PLUGIN "simGeom.getOctreeOctreeDistance@Geom"
-#define LUA_GETOCTREEOCTREEDISTANCE_COMMAND "simGeom.getOctreeOctreeDistance"
-
 const int inArgs_GETOCTREEOCTREEDISTANCE[]={
     8,
     sim_script_arg_int32,0,
@@ -773,7 +734,7 @@ const int inArgs_GETOCTREEOCTREEDISTANCE[]={
 void LUA_GETOCTREEOCTREEDISTANCE_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_GETOCTREEOCTREEDISTANCE,inArgs_GETOCTREEOCTREEDISTANCE[0]-2,LUA_GETOCTREEOCTREEDISTANCE_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_GETOCTREEOCTREEDISTANCE,inArgs_GETOCTREEOCTREEDISTANCE[0]-2,nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         int h1=inData->at(0).int32Data[0];
@@ -812,7 +773,7 @@ void LUA_GETOCTREEOCTREEDISTANCE_CALLBACK(SScriptCallBack* p)
             }
         }
         else
-            simSetLastError(LUA_GETOCTREEOCTREEDISTANCE_COMMAND,"Invalid handle.");
+            simSetLastError(nullptr,"Invalid handle.");
     }
     D.writeDataToStack(p->stackID);
 }
@@ -821,9 +782,6 @@ void LUA_GETOCTREEOCTREEDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getOctreePtcloudDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETOCTREEPTCLOUDDISTANCE_COMMAND_PLUGIN "simGeom.getOctreePtcloudDistance@Geom"
-#define LUA_GETOCTREEPTCLOUDDISTANCE_COMMAND "simGeom.getOctreePtcloudDistance"
-
 const int inArgs_GETOCTREEPTCLOUDDISTANCE[]={
     8,
     sim_script_arg_int32,0,
@@ -839,7 +797,7 @@ const int inArgs_GETOCTREEPTCLOUDDISTANCE[]={
 void LUA_GETOCTREEPTCLOUDDISTANCE_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_GETOCTREEPTCLOUDDISTANCE,inArgs_GETOCTREEPTCLOUDDISTANCE[0]-2,LUA_GETOCTREEPTCLOUDDISTANCE_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_GETOCTREEPTCLOUDDISTANCE,inArgs_GETOCTREEPTCLOUDDISTANCE[0]-2,nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         int h1=inData->at(0).int32Data[0];
@@ -878,7 +836,7 @@ void LUA_GETOCTREEPTCLOUDDISTANCE_CALLBACK(SScriptCallBack* p)
             }
         }
         else
-            simSetLastError(LUA_GETOCTREEPTCLOUDDISTANCE_COMMAND,"Invalid handle.");
+            simSetLastError(nullptr,"Invalid handle.");
     }
     D.writeDataToStack(p->stackID);
 }
@@ -887,9 +845,6 @@ void LUA_GETOCTREEPTCLOUDDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getOctreeTriangleDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETOCTREETRIANGLEDISTANCE_COMMAND_PLUGIN "simGeom.getOctreeTriangleDistance@Geom"
-#define LUA_GETOCTREETRIANGLEDISTANCE_COMMAND "simGeom.getOctreeTriangleDistance"
-
 const int inArgs_GETOCTREETRIANGLEDISTANCE[]={
     8,
     sim_script_arg_int32,0,
@@ -905,7 +860,7 @@ const int inArgs_GETOCTREETRIANGLEDISTANCE[]={
 void LUA_GETOCTREETRIANGLEDISTANCE_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_GETOCTREETRIANGLEDISTANCE,inArgs_GETOCTREETRIANGLEDISTANCE[0]-2,LUA_GETOCTREETRIANGLEDISTANCE_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_GETOCTREETRIANGLEDISTANCE,inArgs_GETOCTREETRIANGLEDISTANCE[0]-2,nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         int h=inData->at(0).int32Data[0];
@@ -936,7 +891,7 @@ void LUA_GETOCTREETRIANGLEDISTANCE_CALLBACK(SScriptCallBack* p)
             }
         }
         else
-            simSetLastError(LUA_GETOCTREETRIANGLEDISTANCE_COMMAND,"Invalid handle.");
+            simSetLastError(nullptr,"Invalid handle.");
     }
     D.writeDataToStack(p->stackID);
 }
@@ -945,9 +900,6 @@ void LUA_GETOCTREETRIANGLEDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getOctreeSegmentDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETOCTREESEGMENTDISTANCE_COMMAND_PLUGIN "simGeom.getOctreeSegmentDistance@Geom"
-#define LUA_GETOCTREESEGMENTDISTANCE_COMMAND "simGeom.getOctreeSegmentDistance"
-
 const int inArgs_GETOCTREESEGMENTDISTANCE[]={
     7,
     sim_script_arg_int32,0,
@@ -962,7 +914,7 @@ const int inArgs_GETOCTREESEGMENTDISTANCE[]={
 void LUA_GETOCTREESEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_GETOCTREESEGMENTDISTANCE,inArgs_GETOCTREESEGMENTDISTANCE[0]-2,LUA_GETOCTREESEGMENTDISTANCE_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_GETOCTREESEGMENTDISTANCE,inArgs_GETOCTREESEGMENTDISTANCE[0]-2,nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         int h=inData->at(0).int32Data[0];
@@ -992,7 +944,7 @@ void LUA_GETOCTREESEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
             }
         }
         else
-            simSetLastError(LUA_GETOCTREESEGMENTDISTANCE_COMMAND,"Invalid handle.");
+            simSetLastError(nullptr,"Invalid handle.");
     }
     D.writeDataToStack(p->stackID);
 }
@@ -1001,9 +953,6 @@ void LUA_GETOCTREESEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getOctreePointDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETOCTREEPOINTDISTANCE_COMMAND_PLUGIN "simGeom.getOctreePointDistance@Geom"
-#define LUA_GETOCTREEPOINTDISTANCE_COMMAND "simGeom.getOctreePointDistance"
-
 const int inArgs_GETOCTREEPOINTDISTANCE[]={
     6,
     sim_script_arg_int32,0,
@@ -1017,7 +966,7 @@ const int inArgs_GETOCTREEPOINTDISTANCE[]={
 void LUA_GETOCTREEPOINTDISTANCE_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_GETOCTREEPOINTDISTANCE,inArgs_GETOCTREEPOINTDISTANCE[0]-2,LUA_GETOCTREEPOINTDISTANCE_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_GETOCTREEPOINTDISTANCE,inArgs_GETOCTREEPOINTDISTANCE[0]-2,nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         int h=inData->at(0).int32Data[0];
@@ -1044,7 +993,7 @@ void LUA_GETOCTREEPOINTDISTANCE_CALLBACK(SScriptCallBack* p)
             }
         }
         else
-            simSetLastError(LUA_GETOCTREEPOINTDISTANCE_COMMAND,"Invalid handle.");
+            simSetLastError(nullptr,"Invalid handle.");
     }
     D.writeDataToStack(p->stackID);
 }
@@ -1053,9 +1002,6 @@ void LUA_GETOCTREEPOINTDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getMeshTriangleDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETMESHTRIANGLEDISTANCE_COMMAND_PLUGIN "simGeom.getMeshTriangleDistance@Geom"
-#define LUA_GETMESHTRIANGLEDISTANCE_COMMAND "simGeom.getMeshTriangleDistance"
-
 const int inArgs_GETMESHTRIANGLEDISTANCE[]={
     8,
     sim_script_arg_int32,0,
@@ -1071,7 +1017,7 @@ const int inArgs_GETMESHTRIANGLEDISTANCE[]={
 void LUA_GETMESHTRIANGLEDISTANCE_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_GETMESHTRIANGLEDISTANCE,inArgs_GETMESHTRIANGLEDISTANCE[0]-2,LUA_GETMESHTRIANGLEDISTANCE_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_GETMESHTRIANGLEDISTANCE,inArgs_GETMESHTRIANGLEDISTANCE[0]-2,nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         int h=inData->at(0).int32Data[0];
@@ -1102,7 +1048,7 @@ void LUA_GETMESHTRIANGLEDISTANCE_CALLBACK(SScriptCallBack* p)
             }
         }
         else
-            simSetLastError(LUA_GETMESHTRIANGLEDISTANCE_COMMAND,"Invalid handle.");
+            simSetLastError(nullptr,"Invalid handle.");
     }
     D.writeDataToStack(p->stackID);
 }
@@ -1111,9 +1057,6 @@ void LUA_GETMESHTRIANGLEDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getMeshSegmentDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETMESHSEGMENTDISTANCE_COMMAND_PLUGIN "simGeom.getMeshSegmentDistance@Geom"
-#define LUA_GETMESHSEGMENTDISTANCE_COMMAND "simGeom.getMeshSegmentDistance"
-
 const int inArgs_GETMESHSEGMENTDISTANCE[]={
     7,
     sim_script_arg_int32,0,
@@ -1128,7 +1071,7 @@ const int inArgs_GETMESHSEGMENTDISTANCE[]={
 void LUA_GETMESHSEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_GETMESHSEGMENTDISTANCE,inArgs_GETMESHSEGMENTDISTANCE[0]-2,LUA_GETMESHSEGMENTDISTANCE_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_GETMESHSEGMENTDISTANCE,inArgs_GETMESHSEGMENTDISTANCE[0]-2,nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         int h=inData->at(0).int32Data[0];
@@ -1158,7 +1101,7 @@ void LUA_GETMESHSEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
             }
         }
         else
-            simSetLastError(LUA_GETMESHSEGMENTDISTANCE_COMMAND,"Invalid handle.");
+            simSetLastError(nullptr,"Invalid handle.");
     }
     D.writeDataToStack(p->stackID);
 }
@@ -1167,9 +1110,6 @@ void LUA_GETMESHSEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getMeshPointDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETMESHPOINTDISTANCE_COMMAND_PLUGIN "simGeom.getMeshPointDistance@Geom"
-#define LUA_GETMESHPOINTDISTANCE_COMMAND "simGeom.getMeshPointDistance"
-
 const int inArgs_GETMESHPOINTDISTANCE[]={
     6,
     sim_script_arg_int32,0,
@@ -1183,7 +1123,7 @@ const int inArgs_GETMESHPOINTDISTANCE[]={
 void LUA_GETMESHPOINTDISTANCE_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_GETMESHPOINTDISTANCE,inArgs_GETMESHPOINTDISTANCE[0]-2,LUA_GETMESHPOINTDISTANCE_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_GETMESHPOINTDISTANCE,inArgs_GETMESHPOINTDISTANCE[0]-2,nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         int h=inData->at(0).int32Data[0];
@@ -1210,7 +1150,7 @@ void LUA_GETMESHPOINTDISTANCE_CALLBACK(SScriptCallBack* p)
             }
         }
         else
-            simSetLastError(LUA_GETMESHPOINTDISTANCE_COMMAND,"Invalid handle.");
+            simSetLastError(nullptr,"Invalid handle.");
     }
     D.writeDataToStack(p->stackID);
 }
@@ -1219,9 +1159,6 @@ void LUA_GETMESHPOINTDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getBoxBoxDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETBOXBOXDISTANCE_COMMAND_PLUGIN "simGeom.getBoxBoxDistance@Geom"
-#define LUA_GETBOXBOXDISTANCE_COMMAND "simGeom.getBoxBoxDistance"
-
 const int inArgs_GETBOXBOXDISTANCE[]={
     8,
     sim_script_arg_double|sim_lua_arg_table,3,
@@ -1237,7 +1174,7 @@ const int inArgs_GETBOXBOXDISTANCE[]={
 void LUA_GETBOXBOXDISTANCE_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_GETBOXBOXDISTANCE,inArgs_GETBOXBOXDISTANCE[0]-1,LUA_GETBOXBOXDISTANCE_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_GETBOXBOXDISTANCE,inArgs_GETBOXBOXDISTANCE[0]-1,nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         C3Vector box1Pos(&(inData->at(0).doubleData[0]));
@@ -1265,9 +1202,6 @@ void LUA_GETBOXBOXDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getBoxTriangleDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETBOXTRIANGLEDISTANCE_COMMAND_PLUGIN "simGeom.getBoxTriangleDistance@Geom"
-#define LUA_GETBOXTRIANGLEDISTANCE_COMMAND "simGeom.getBoxTriangleDistance"
-
 const int inArgs_GETBOXTRIANGLEDISTANCE[]={
     8,
     sim_script_arg_double|sim_lua_arg_table,3,
@@ -1283,7 +1217,7 @@ const int inArgs_GETBOXTRIANGLEDISTANCE[]={
 void LUA_GETBOXTRIANGLEDISTANCE_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_GETBOXTRIANGLEDISTANCE,inArgs_GETBOXTRIANGLEDISTANCE[0]-1,LUA_GETBOXTRIANGLEDISTANCE_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_GETBOXTRIANGLEDISTANCE,inArgs_GETBOXTRIANGLEDISTANCE[0]-1,nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         C3Vector boxPos(&(inData->at(0).doubleData[0]));
@@ -1311,9 +1245,6 @@ void LUA_GETBOXTRIANGLEDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getBoxSegmentDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETBOXSEGMENTDISTANCE_COMMAND_PLUGIN "simGeom.getBoxSegmentDistance@Geom"
-#define LUA_GETBOXSEGMENTDISTANCE_COMMAND "simGeom.getBoxSegmentDistance"
-
 const int inArgs_GETBOXSEGMENTDISTANCE[]={
     7,
     sim_script_arg_double|sim_lua_arg_table,3,
@@ -1328,7 +1259,7 @@ const int inArgs_GETBOXSEGMENTDISTANCE[]={
 void LUA_GETBOXSEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_GETBOXSEGMENTDISTANCE,inArgs_GETBOXSEGMENTDISTANCE[0]-1,LUA_GETBOXSEGMENTDISTANCE_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_GETBOXSEGMENTDISTANCE,inArgs_GETBOXSEGMENTDISTANCE[0]-1,nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         C3Vector boxPos(&(inData->at(0).doubleData[0]));
@@ -1355,9 +1286,6 @@ void LUA_GETBOXSEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getBoxPointDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETBOXPOINTDISTANCE_COMMAND_PLUGIN "simGeom.getBoxPointDistance@Geom"
-#define LUA_GETBOXPOINTDISTANCE_COMMAND "simGeom.getBoxPointDistance"
-
 const int inArgs_GETBOXPOINTDISTANCE[]={
     5,
     sim_script_arg_double|sim_lua_arg_table,3,
@@ -1370,7 +1298,7 @@ const int inArgs_GETBOXPOINTDISTANCE[]={
 void LUA_GETBOXPOINTDISTANCE_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_GETBOXPOINTDISTANCE,inArgs_GETBOXPOINTDISTANCE[0],LUA_GETBOXPOINTDISTANCE_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_GETBOXPOINTDISTANCE,inArgs_GETBOXPOINTDISTANCE[0],nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         C3Vector boxPos(&(inData->at(0).doubleData[0]));
@@ -1391,9 +1319,6 @@ void LUA_GETBOXPOINTDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getTriangleTriangleDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETTRIANGLETRIANGLEDISTANCE_COMMAND_PLUGIN "simGeom.getTriangleTriangleDistance@Geom"
-#define LUA_GETTRIANGLETRIANGLEDISTANCE_COMMAND "simGeom.getTriangleTriangleDistance"
-
 const int inArgs_GETTRIANGLETRIANGLEDISTANCE[]={
     6,
     sim_script_arg_double|sim_lua_arg_table,3,
@@ -1407,7 +1332,7 @@ const int inArgs_GETTRIANGLETRIANGLEDISTANCE[]={
 void LUA_GETTRIANGLETRIANGLEDISTANCE_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_GETTRIANGLETRIANGLEDISTANCE,inArgs_GETTRIANGLETRIANGLEDISTANCE[0],LUA_GETTRIANGLETRIANGLEDISTANCE_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_GETTRIANGLETRIANGLEDISTANCE,inArgs_GETTRIANGLETRIANGLEDISTANCE[0],nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         C3Vector tpa1(&(inData->at(0).doubleData[0]));
@@ -1431,9 +1356,6 @@ void LUA_GETTRIANGLETRIANGLEDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getTriangleSegmentDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETTRIANGLESEGMENTDISTANCE_COMMAND_PLUGIN "simGeom.getTriangleSegmentDistance@Geom"
-#define LUA_GETTRIANGLESEGMENTDISTANCE_COMMAND "simGeom.getTriangleSegmentDistance"
-
 const int inArgs_GETTRIANGLESEGMENTDISTANCE[]={
     5,
     sim_script_arg_double|sim_lua_arg_table,3,
@@ -1446,7 +1368,7 @@ const int inArgs_GETTRIANGLESEGMENTDISTANCE[]={
 void LUA_GETTRIANGLESEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_GETTRIANGLESEGMENTDISTANCE,inArgs_GETTRIANGLESEGMENTDISTANCE[0],LUA_GETTRIANGLESEGMENTDISTANCE_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_GETTRIANGLESEGMENTDISTANCE,inArgs_GETTRIANGLESEGMENTDISTANCE[0],nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         C3Vector tp1(&(inData->at(0).doubleData[0]));
@@ -1469,9 +1391,6 @@ void LUA_GETTRIANGLESEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getTrianglePointDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETTRIANGLEPOINTDISTANCE_COMMAND_PLUGIN "simGeom.getTrianglePointDistance@Geom"
-#define LUA_GETTRIANGLEPOINTDISTANCE_COMMAND "simGeom.getTrianglePointDistance"
-
 const int inArgs_GETTRIANGLEPOINTDISTANCE[]={
     4,
     sim_script_arg_double|sim_lua_arg_table,3,
@@ -1483,7 +1402,7 @@ const int inArgs_GETTRIANGLEPOINTDISTANCE[]={
 void LUA_GETTRIANGLEPOINTDISTANCE_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_GETTRIANGLEPOINTDISTANCE,inArgs_GETTRIANGLEPOINTDISTANCE[0],LUA_GETTRIANGLEPOINTDISTANCE_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_GETTRIANGLEPOINTDISTANCE,inArgs_GETTRIANGLEPOINTDISTANCE[0],nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         C3Vector tp1(&(inData->at(0).doubleData[0]));
@@ -1503,9 +1422,6 @@ void LUA_GETTRIANGLEPOINTDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getSegmentSegmentDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETSEGMENTSEGMENTDISTANCE_COMMAND_PLUGIN "simGeom.getSegmentSegmentDistance@Geom"
-#define LUA_GETSEGMENTSEGMENTDISTANCE_COMMAND "simGeom.getSegmentSegmentDistance"
-
 const int inArgs_GETSEGMENTSEGMENTDISTANCE[]={
     4,
     sim_script_arg_double|sim_lua_arg_table,3,
@@ -1517,7 +1433,7 @@ const int inArgs_GETSEGMENTSEGMENTDISTANCE[]={
 void LUA_GETSEGMENTSEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_GETSEGMENTSEGMENTDISTANCE,inArgs_GETSEGMENTSEGMENTDISTANCE[0],LUA_GETSEGMENTSEGMENTDISTANCE_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_GETSEGMENTSEGMENTDISTANCE,inArgs_GETSEGMENTSEGMENTDISTANCE[0],nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         C3Vector segaP1(&(inData->at(0).doubleData[0]));
@@ -1539,9 +1455,6 @@ void LUA_GETSEGMENTSEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getSegmentPointDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETSEGMENTPOINTDISTANCE_COMMAND_PLUGIN "simGeom.getSegmentPointDistance@Geom"
-#define LUA_GETSEGMENTPOINTDISTANCE_COMMAND "simGeom.getSegmentPointDistance"
-
 const int inArgs_GETSEGMENTPOINTDISTANCE[]={
     3,
     sim_script_arg_double|sim_lua_arg_table,3,
@@ -1552,7 +1465,7 @@ const int inArgs_GETSEGMENTPOINTDISTANCE[]={
 void LUA_GETSEGMENTPOINTDISTANCE_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_GETSEGMENTPOINTDISTANCE,inArgs_GETSEGMENTPOINTDISTANCE[0],LUA_GETSEGMENTPOINTDISTANCE_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_GETSEGMENTPOINTDISTANCE,inArgs_GETSEGMENTPOINTDISTANCE[0],nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         C3Vector segPt1(&(inData->at(0).doubleData[0]));
@@ -1571,9 +1484,6 @@ void LUA_GETSEGMENTPOINTDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.createMesh
 // --------------------------------------------------------------------------------------
-#define LUA_CREATEMESH_COMMAND_PLUGIN "simGeom.createMesh@Geom"
-#define LUA_CREATEMESH_COMMAND "simGeom.createMesh"
-
 const int inArgs_CREATEMESH[]={
     6,
     sim_script_arg_double|sim_lua_arg_table,0,
@@ -1587,7 +1497,7 @@ const int inArgs_CREATEMESH[]={
 void LUA_CREATEMESH_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_CREATEMESH,inArgs_CREATEMESH[0]-4,LUA_CREATEMESH_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_CREATEMESH,inArgs_CREATEMESH[0]-4,nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         double maxTriS=double(0.3);
@@ -1622,9 +1532,6 @@ void LUA_CREATEMESH_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.destroyMesh
 // --------------------------------------------------------------------------------------
-#define LUA_DESTROYMESH_COMMAND_PLUGIN "simGeom.destroyMesh@Geom"
-#define LUA_DESTROYMESH_COMMAND "simGeom.destroyMesh"
-
 const int inArgs_DESTROYMESH[]={
     1,
     sim_script_arg_int32,0,
@@ -1633,7 +1540,7 @@ const int inArgs_DESTROYMESH[]={
 void LUA_DESTROYMESH_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_DESTROYMESH,inArgs_DESTROYMESH[0],LUA_DESTROYMESH_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_DESTROYMESH,inArgs_DESTROYMESH[0],nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         int h=inData->at(0).int32Data[0];
@@ -1644,7 +1551,7 @@ void LUA_DESTROYMESH_CALLBACK(SScriptCallBack* p)
             _meshData.erase(it);
         }
         else
-            simSetLastError(LUA_DESTROYMESH_COMMAND,"Invalid handle.");
+            simSetLastError(nullptr,"Invalid handle.");
     }
     D.writeDataToStack(p->stackID);
 }
@@ -1653,9 +1560,6 @@ void LUA_DESTROYMESH_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.copyMesh
 // --------------------------------------------------------------------------------------
-#define LUA_COPYMESH_COMMAND_PLUGIN "simGeom.copyMesh@Geom"
-#define LUA_COPYMESH_COMMAND "simGeom.copyMesh"
-
 const int inArgs_COPYMESH[]={
     1,
     sim_script_arg_int32,0,
@@ -1664,7 +1568,7 @@ const int inArgs_COPYMESH[]={
 void LUA_COPYMESH_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_COPYMESH,inArgs_COPYMESH[0],LUA_COPYMESH_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_COPYMESH,inArgs_COPYMESH[0],nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         int h=inData->at(0).int32Data[0];
@@ -1677,7 +1581,7 @@ void LUA_COPYMESH_CALLBACK(SScriptCallBack* p)
             _nextMeshDataHandle++;
         }
         else
-            simSetLastError(LUA_COPYMESH_COMMAND,"Invalid handle.");
+            simSetLastError(nullptr,"Invalid handle.");
     }
     D.writeDataToStack(p->stackID);
 }
@@ -1686,9 +1590,6 @@ void LUA_COPYMESH_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.scaleMesh
 // --------------------------------------------------------------------------------------
-#define LUA_SCALEMESH_COMMAND_PLUGIN "simGeom.scaleMesh@Geom"
-#define LUA_SCALEMESH_COMMAND "simGeom.scaleMesh"
-
 const int inArgs_SCALEMESH[]={
     2,
     sim_script_arg_int32,0,
@@ -1698,7 +1599,7 @@ const int inArgs_SCALEMESH[]={
 void LUA_SCALEMESH_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_SCALEMESH,inArgs_SCALEMESH[0],LUA_SCALEMESH_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_SCALEMESH,inArgs_SCALEMESH[0],nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         int h=inData->at(0).int32Data[0];
@@ -1706,7 +1607,7 @@ void LUA_SCALEMESH_CALLBACK(SScriptCallBack* p)
         if (it!=_meshData.end())
             geom_scaleMesh(it->second,inData->at(1).doubleData[0]);
         else
-            simSetLastError(LUA_SCALEMESH_COMMAND,"Invalid handle.");
+            simSetLastError(nullptr,"Invalid handle.");
     }
     D.writeDataToStack(p->stackID);
 }
@@ -1715,9 +1616,6 @@ void LUA_SCALEMESH_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getMeshSerializationData
 // --------------------------------------------------------------------------------------
-#define LUA_GETMESHSERIALIZATIONDATA_COMMAND_PLUGIN "simGeom.getMeshSerializationData@Geom"
-#define LUA_GETMESHSERIALIZATIONDATA_COMMAND "simGeom.getMeshSerializationData"
-
 const int inArgs_GETMESHSERIALIZATIONDATA[]={
     1,
     sim_script_arg_int32,0,
@@ -1726,7 +1624,7 @@ const int inArgs_GETMESHSERIALIZATIONDATA[]={
 void LUA_GETMESHSERIALIZATIONDATA_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_GETMESHSERIALIZATIONDATA,inArgs_GETMESHSERIALIZATIONDATA[0],LUA_GETMESHSERIALIZATIONDATA_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_GETMESHSERIALIZATIONDATA,inArgs_GETMESHSERIALIZATIONDATA[0],nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         int h=inData->at(0).int32Data[0];
@@ -1738,7 +1636,7 @@ void LUA_GETMESHSERIALIZATIONDATA_CALLBACK(SScriptCallBack* p)
             D.pushOutData(CScriptFunctionDataItem((const char*)&data[0],data.size()));
         }
         else
-            simSetLastError(LUA_GETMESHSERIALIZATIONDATA_COMMAND,"Invalid handle.");
+            simSetLastError(nullptr,"Invalid handle.");
     }
     D.writeDataToStack(p->stackID);
 }
@@ -1747,9 +1645,6 @@ void LUA_GETMESHSERIALIZATIONDATA_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.createMeshFromSerializationData
 // --------------------------------------------------------------------------------------
-#define LUA_CREATEMESHFROMSERIALIZATIONDATA_COMMAND_PLUGIN "simGeom.createMeshFromSerializationData@Geom"
-#define LUA_CREATEMESHFROMSERIALIZATIONDATA_COMMAND "simGeom.createMeshFromSerializationData"
-
 const int inArgs_CREATEMESHFROMSERIALIZATIONDATA[]={
     1,
     sim_script_arg_string,0,
@@ -1758,7 +1653,7 @@ const int inArgs_CREATEMESHFROMSERIALIZATIONDATA[]={
 void LUA_CREATEMESHFROMSERIALIZATIONDATA_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_CREATEMESHFROMSERIALIZATIONDATA,inArgs_CREATEMESHFROMSERIALIZATIONDATA[0],LUA_CREATEMESHFROMSERIALIZATIONDATA_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_CREATEMESHFROMSERIALIZATIONDATA,inArgs_CREATEMESHFROMSERIALIZATIONDATA[0],nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         std::vector<unsigned char> data;
@@ -1776,9 +1671,6 @@ void LUA_CREATEMESHFROMSERIALIZATIONDATA_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.createOctreeFromPoints
 // --------------------------------------------------------------------------------------
-#define LUA_CREATEOCTREEFROMPOINTS_COMMAND_PLUGIN "simGeom.createOctreeFromPoints@Geom"
-#define LUA_CREATEOCTREEFROMPOINTS_COMMAND "simGeom.createOctreeFromPoints"
-
 const int inArgs_CREATEOCTREEFROMPOINTS[]={
     6,
     sim_script_arg_double|sim_lua_arg_table,0,
@@ -1792,7 +1684,7 @@ const int inArgs_CREATEOCTREEFROMPOINTS[]={
 void LUA_CREATEOCTREEFROMPOINTS_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_CREATEOCTREEFROMPOINTS,inArgs_CREATEOCTREEFROMPOINTS[0]-5,LUA_CREATEOCTREEFROMPOINTS_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_CREATEOCTREEFROMPOINTS,inArgs_CREATEOCTREEFROMPOINTS[0]-5,nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         C3Vector pos;
@@ -1835,9 +1727,6 @@ void LUA_CREATEOCTREEFROMPOINTS_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.createOctreeFromColorPoints
 // --------------------------------------------------------------------------------------
-#define LUA_CREATEOCTREEFROMCOLORPOINTS_COMMAND_PLUGIN "simGeom.createOctreeFromColorPoints@Geom"
-#define LUA_CREATEOCTREEFROMCOLORPOINTS_COMMAND "simGeom.createOctreeFromColorPoints"
-
 const int inArgs_CREATEOCTREEFROMCOLORPOINTS[]={
     6,
     sim_script_arg_double|sim_lua_arg_table,0,
@@ -1851,7 +1740,7 @@ const int inArgs_CREATEOCTREEFROMCOLORPOINTS[]={
 void LUA_CREATEOCTREEFROMCOLORPOINTS_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_CREATEOCTREEFROMCOLORPOINTS,inArgs_CREATEOCTREEFROMCOLORPOINTS[0]-5,LUA_CREATEOCTREEFROMCOLORPOINTS_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_CREATEOCTREEFROMCOLORPOINTS,inArgs_CREATEOCTREEFROMCOLORPOINTS[0]-5,nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         C3Vector pos;
@@ -1901,9 +1790,6 @@ void LUA_CREATEOCTREEFROMCOLORPOINTS_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.createOctreeFromMesh
 // --------------------------------------------------------------------------------------
-#define LUA_CREATEOCTREEFROMMESH_COMMAND_PLUGIN "simGeom.createOctreeFromMesh@Geom"
-#define LUA_CREATEOCTREEFROMMESH_COMMAND "simGeom.createOctreeFromMesh"
-
 const int inArgs_CREATEOCTREEFROMMESH[]={
     8,
     sim_script_arg_int32,0,
@@ -1919,7 +1805,7 @@ const int inArgs_CREATEOCTREEFROMMESH[]={
 void LUA_CREATEOCTREEFROMMESH_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_CREATEOCTREEFROMMESH,inArgs_CREATEOCTREEFROMMESH[0]-5,LUA_CREATEOCTREEFROMMESH_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_CREATEOCTREEFROMMESH,inArgs_CREATEOCTREEFROMMESH[0]-5,nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         int h=inData->at(0).int32Data[0];
@@ -1961,7 +1847,7 @@ void LUA_CREATEOCTREEFROMMESH_CALLBACK(SScriptCallBack* p)
             _nextOctreeDataHandle++;
         }
         else
-            simSetLastError(LUA_CREATEOCTREEFROMMESH_COMMAND,"Invalid handle.");
+            simSetLastError(nullptr,"Invalid handle.");
     }
     D.writeDataToStack(p->stackID);
 }
@@ -1970,9 +1856,6 @@ void LUA_CREATEOCTREEFROMMESH_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.createOctreeFromOctree
 // --------------------------------------------------------------------------------------
-#define LUA_CREATEOCTREEFROMOCTREE_COMMAND_PLUGIN "simGeom.createOctreeFromOctree@Geom"
-#define LUA_CREATEOCTREEFROMOCTREE_COMMAND "simGeom.createOctreeFromOctree"
-
 const int inArgs_CREATEOCTREEFROMOCTREE[]={
     8,
     sim_script_arg_int32,0,
@@ -1988,7 +1871,7 @@ const int inArgs_CREATEOCTREEFROMOCTREE[]={
 void LUA_CREATEOCTREEFROMOCTREE_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_CREATEOCTREEFROMOCTREE,inArgs_CREATEOCTREEFROMOCTREE[0]-5,LUA_CREATEOCTREEFROMOCTREE_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_CREATEOCTREEFROMOCTREE,inArgs_CREATEOCTREEFROMOCTREE[0]-5,nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         int h=inData->at(0).int32Data[0];
@@ -2030,7 +1913,7 @@ void LUA_CREATEOCTREEFROMOCTREE_CALLBACK(SScriptCallBack* p)
             _nextOctreeDataHandle++;
         }
         else
-            simSetLastError(LUA_CREATEOCTREEFROMOCTREE_COMMAND,"Invalid handle.");
+            simSetLastError(nullptr,"Invalid handle.");
     }
     D.writeDataToStack(p->stackID);
 }
@@ -2039,9 +1922,6 @@ void LUA_CREATEOCTREEFROMOCTREE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.destroyOctree
 // --------------------------------------------------------------------------------------
-#define LUA_DESTROYOCTREE_COMMAND_PLUGIN "simGeom.destroyOctree@Geom"
-#define LUA_DESTROYOCTREE_COMMAND "simGeom.destroyOctree"
-
 const int inArgs_DESTROYOCTREE[]={
     1,
     sim_script_arg_int32,0,
@@ -2050,7 +1930,7 @@ const int inArgs_DESTROYOCTREE[]={
 void LUA_DESTROYOCTREE_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_DESTROYOCTREE,inArgs_DESTROYOCTREE[0],LUA_DESTROYOCTREE_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_DESTROYOCTREE,inArgs_DESTROYOCTREE[0],nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         int h=inData->at(0).int32Data[0];
@@ -2061,7 +1941,7 @@ void LUA_DESTROYOCTREE_CALLBACK(SScriptCallBack* p)
             _octreeData.erase(it);
         }
         else
-            simSetLastError(LUA_DESTROYOCTREE_COMMAND,"Invalid handle.");
+            simSetLastError(nullptr,"Invalid handle.");
     }
     D.writeDataToStack(p->stackID);
 }
@@ -2070,9 +1950,6 @@ void LUA_DESTROYOCTREE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.copyOctree
 // --------------------------------------------------------------------------------------
-#define LUA_COPYOCTREE_COMMAND_PLUGIN "simGeom.copyOctree@Geom"
-#define LUA_COPYOCTREE_COMMAND "simGeom.copyOctree"
-
 const int inArgs_COPYOCTREE[]={
     1,
     sim_script_arg_int32,0,
@@ -2081,7 +1958,7 @@ const int inArgs_COPYOCTREE[]={
 void LUA_COPYOCTREE_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_COPYOCTREE,inArgs_COPYOCTREE[0],LUA_COPYOCTREE_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_COPYOCTREE,inArgs_COPYOCTREE[0],nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         int h=inData->at(0).int32Data[0];
@@ -2094,7 +1971,7 @@ void LUA_COPYOCTREE_CALLBACK(SScriptCallBack* p)
             _nextOctreeDataHandle++;
         }
         else
-            simSetLastError(LUA_COPYOCTREE_COMMAND,"Invalid handle.");
+            simSetLastError(nullptr,"Invalid handle.");
     }
     D.writeDataToStack(p->stackID);
 }
@@ -2103,9 +1980,6 @@ void LUA_COPYOCTREE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.scaleOctree
 // --------------------------------------------------------------------------------------
-#define LUA_SCALEOCTREE_COMMAND_PLUGIN "simGeom.scaleOctree@Geom"
-#define LUA_SCALEOCTREE_COMMAND "simGeom.scaleOctree"
-
 const int inArgs_SCALEOCTREE[]={
     2,
     sim_script_arg_int32,0,
@@ -2115,7 +1989,7 @@ const int inArgs_SCALEOCTREE[]={
 void LUA_SCALEOCTREE_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_SCALEOCTREE,inArgs_SCALEOCTREE[0],LUA_SCALEOCTREE_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_SCALEOCTREE,inArgs_SCALEOCTREE[0],nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         int h=inData->at(0).int32Data[0];
@@ -2123,7 +1997,7 @@ void LUA_SCALEOCTREE_CALLBACK(SScriptCallBack* p)
         if (it!=_octreeData.end())
             geom_scaleOctree(it->second,inData->at(1).doubleData[0]);
         else
-            simSetLastError(LUA_SCALEOCTREE_COMMAND,"Invalid handle.");
+            simSetLastError(nullptr,"Invalid handle.");
     }
     D.writeDataToStack(p->stackID);
 }
@@ -2132,9 +2006,6 @@ void LUA_SCALEOCTREE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getOctreeSerializationData
 // --------------------------------------------------------------------------------------
-#define LUA_GETOCTREESERIALIZATIONDATA_COMMAND_PLUGIN "simGeom.getOctreeSerializationData@Geom"
-#define LUA_GETOCTREESERIALIZATIONDATA_COMMAND "simGeom.getOctreeSerializationData"
-
 const int inArgs_GETOCTREESERIALIZATIONDATA[]={
     1,
     sim_script_arg_int32,0,
@@ -2143,7 +2014,7 @@ const int inArgs_GETOCTREESERIALIZATIONDATA[]={
 void LUA_GETOCTREESERIALIZATIONDATA_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_GETOCTREESERIALIZATIONDATA,inArgs_GETOCTREESERIALIZATIONDATA[0],LUA_GETOCTREESERIALIZATIONDATA_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_GETOCTREESERIALIZATIONDATA,inArgs_GETOCTREESERIALIZATIONDATA[0],nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         int h=inData->at(0).int32Data[0];
@@ -2155,7 +2026,7 @@ void LUA_GETOCTREESERIALIZATIONDATA_CALLBACK(SScriptCallBack* p)
             D.pushOutData(CScriptFunctionDataItem((const char*)&data[0],data.size()));
         }
         else
-            simSetLastError(LUA_GETOCTREESERIALIZATIONDATA_COMMAND,"Invalid handle.");
+            simSetLastError(nullptr,"Invalid handle.");
     }
     D.writeDataToStack(p->stackID);
 }
@@ -2164,9 +2035,6 @@ void LUA_GETOCTREESERIALIZATIONDATA_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.createOctreeFromSerializationData
 // --------------------------------------------------------------------------------------
-#define LUA_CREATEOCTREEFROMSERIALIZATIONDATA_COMMAND_PLUGIN "simGeom.createOctreeFromSerializationData@Geom"
-#define LUA_CREATEOCTREEFROMSERIALIZATIONDATA_COMMAND "simGeom.createOctreeFromSerializationData"
-
 const int inArgs_CREATEOCTREEFROMSERIALIZATIONDATA[]={
     1,
     sim_script_arg_string,0,
@@ -2175,7 +2043,7 @@ const int inArgs_CREATEOCTREEFROMSERIALIZATIONDATA[]={
 void LUA_CREATEOCTREEFROMSERIALIZATIONDATA_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_CREATEOCTREEFROMSERIALIZATIONDATA,inArgs_CREATEOCTREEFROMSERIALIZATIONDATA[0],LUA_CREATEOCTREEFROMSERIALIZATIONDATA_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_CREATEOCTREEFROMSERIALIZATIONDATA,inArgs_CREATEOCTREEFROMSERIALIZATIONDATA[0],nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         std::vector<unsigned char> data;
@@ -2193,9 +2061,6 @@ void LUA_CREATEOCTREEFROMSERIALIZATIONDATA_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getOctreeVoxels
 // --------------------------------------------------------------------------------------
-#define LUA_GETOCTREEVOXELS_COMMAND_PLUGIN "simGeom.getOctreeVoxels@Geom"
-#define LUA_GETOCTREEVOXELS_COMMAND "simGeom.getOctreeVoxels"
-
 const int inArgs_GETOCTREEVOXELS[]={
     1,
     sim_script_arg_int32,0,
@@ -2204,7 +2069,7 @@ const int inArgs_GETOCTREEVOXELS[]={
 void LUA_GETOCTREEVOXELS_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_GETOCTREEVOXELS,inArgs_GETOCTREEVOXELS[0],LUA_GETOCTREEVOXELS_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_GETOCTREEVOXELS,inArgs_GETOCTREEVOXELS[0],nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         int h=inData->at(0).int32Data[0];
@@ -2234,7 +2099,7 @@ void LUA_GETOCTREEVOXELS_CALLBACK(SScriptCallBack* p)
             D.pushOutData(CScriptFunctionDataItem(_usrData));
         }
         else
-            simSetLastError(LUA_GETOCTREEVOXELS_COMMAND,"Invalid handle.");
+            simSetLastError(nullptr,"Invalid handle.");
     }
     D.writeDataToStack(p->stackID);
 }
@@ -2243,9 +2108,6 @@ void LUA_GETOCTREEVOXELS_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getTransformedPoints
 // --------------------------------------------------------------------------------------
-#define LUA_GETTRANSFORMEDPOINTS_COMMAND_PLUGIN "simGeom.getTransformedPoints@Geom"
-#define LUA_GETTRANSFORMEDPOINTS_COMMAND "simGeom.getTransformedPoints"
-
 const int inArgs_GETTRANSFORMEDPOINTS[]={
     3,
     sim_script_arg_double|sim_lua_arg_table,0, // points
@@ -2256,7 +2118,7 @@ const int inArgs_GETTRANSFORMEDPOINTS[]={
 void LUA_GETTRANSFORMEDPOINTS_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_GETTRANSFORMEDPOINTS,inArgs_GETTRANSFORMEDPOINTS[0],LUA_GETTRANSFORMEDPOINTS_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_GETTRANSFORMEDPOINTS,inArgs_GETTRANSFORMEDPOINTS[0],nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         std::vector<double> outData;
@@ -2301,9 +2163,6 @@ void LUA_GETTRANSFORMEDPOINTS_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.createPtcloudFromPoints
 // --------------------------------------------------------------------------------------
-#define LUA_CREATEPTCLOUDFROMPOINTS_COMMAND_PLUGIN "simGeom.createPtcloudFromPoints@Geom"
-#define LUA_CREATEPTCLOUDFROMPOINTS_COMMAND "simGeom.createPtcloudFromPoints"
-
 const int inArgs_CREATEPTCLOUDFROMPOINTS[]={
     7,
     sim_script_arg_double|sim_lua_arg_table,0,
@@ -2318,7 +2177,7 @@ const int inArgs_CREATEPTCLOUDFROMPOINTS[]={
 void LUA_CREATEPTCLOUDFROMPOINTS_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_CREATEPTCLOUDFROMPOINTS,inArgs_CREATEPTCLOUDFROMPOINTS[0]-6,LUA_CREATEPTCLOUDFROMPOINTS_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_CREATEPTCLOUDFROMPOINTS,inArgs_CREATEPTCLOUDFROMPOINTS[0]-6,nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         C3Vector pos;
@@ -2363,9 +2222,6 @@ void LUA_CREATEPTCLOUDFROMPOINTS_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.createPtcloudFromColorPoints
 // --------------------------------------------------------------------------------------
-#define LUA_CREATEPTCLOUDFROMCOLORPOINTS_COMMAND_PLUGIN "simGeom.createPtcloudFromColorPoints@Geom"
-#define LUA_CREATEPTCLOUDFROMCOLORPOINTS_COMMAND "simGeom.createPtcloudFromColorPoints"
-
 const int inArgs_CREATEPTCLOUDFROMCOLORPOINTS[]={
     7,
     sim_script_arg_double|sim_lua_arg_table,0,
@@ -2380,7 +2236,7 @@ const int inArgs_CREATEPTCLOUDFROMCOLORPOINTS[]={
 void LUA_CREATEPTCLOUDFROMCOLORPOINTS_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_CREATEPTCLOUDFROMCOLORPOINTS,inArgs_CREATEPTCLOUDFROMCOLORPOINTS[0]-5,LUA_CREATEPTCLOUDFROMCOLORPOINTS_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_CREATEPTCLOUDFROMCOLORPOINTS,inArgs_CREATEPTCLOUDFROMCOLORPOINTS[0]-5,nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         C3Vector pos;
@@ -2427,9 +2283,6 @@ void LUA_CREATEPTCLOUDFROMCOLORPOINTS_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.destroyPtcloud
 // --------------------------------------------------------------------------------------
-#define LUA_DESTROYPTCLOUD_COMMAND_PLUGIN "simGeom.destroyPtcloud@Geom"
-#define LUA_DESTROYPTCLOUD_COMMAND "simGeom.destroyPtcloud"
-
 const int inArgs_DESTROYPTCLOUD[]={
     1,
     sim_script_arg_int32,0,
@@ -2438,7 +2291,7 @@ const int inArgs_DESTROYPTCLOUD[]={
 void LUA_DESTROYPTCLOUD_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_DESTROYPTCLOUD,inArgs_DESTROYPTCLOUD[0],LUA_DESTROYPTCLOUD_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_DESTROYPTCLOUD,inArgs_DESTROYPTCLOUD[0],nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         int h=inData->at(0).int32Data[0];
@@ -2449,7 +2302,7 @@ void LUA_DESTROYPTCLOUD_CALLBACK(SScriptCallBack* p)
             _ptcloudData.erase(it);
         }
         else
-            simSetLastError(LUA_DESTROYPTCLOUD_COMMAND,"Invalid handle.");
+            simSetLastError(nullptr,"Invalid handle.");
     }
     D.writeDataToStack(p->stackID);
 }
@@ -2458,9 +2311,6 @@ void LUA_DESTROYPTCLOUD_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.copyPtcloud
 // --------------------------------------------------------------------------------------
-#define LUA_COPYPTCLOUD_COMMAND_PLUGIN "simGeom.copyPtcloud@Geom"
-#define LUA_COPYPTCLOUD_COMMAND "simGeom.copyPtcloud"
-
 const int inArgs_COPYPTCLOUD[]={
     1,
     sim_script_arg_int32,0,
@@ -2469,7 +2319,7 @@ const int inArgs_COPYPTCLOUD[]={
 void LUA_COPYPTCLOUD_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_COPYPTCLOUD,inArgs_COPYPTCLOUD[0],LUA_COPYPTCLOUD_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_COPYPTCLOUD,inArgs_COPYPTCLOUD[0],nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         int h=inData->at(0).int32Data[0];
@@ -2482,7 +2332,7 @@ void LUA_COPYPTCLOUD_CALLBACK(SScriptCallBack* p)
             _nextPtcloudDataHandle++;
         }
         else
-            simSetLastError(LUA_COPYPTCLOUD_COMMAND,"Invalid handle.");
+            simSetLastError(nullptr,"Invalid handle.");
     }
     D.writeDataToStack(p->stackID);
 }
@@ -2491,9 +2341,6 @@ void LUA_COPYPTCLOUD_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.scalePtcloud
 // --------------------------------------------------------------------------------------
-#define LUA_SCALEPTCLOUD_COMMAND_PLUGIN "simGeom.scalePtcloud@Geom"
-#define LUA_SCALEPTCLOUD_COMMAND "simGeom.scalePtcloud"
-
 const int inArgs_SCALEPTCLOUD[]={
     2,
     sim_script_arg_int32,0,
@@ -2503,7 +2350,7 @@ const int inArgs_SCALEPTCLOUD[]={
 void LUA_SCALEPTCLOUD_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_SCALEPTCLOUD,inArgs_SCALEPTCLOUD[0],LUA_SCALEPTCLOUD_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_SCALEPTCLOUD,inArgs_SCALEPTCLOUD[0],nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         int h=inData->at(0).int32Data[0];
@@ -2511,7 +2358,7 @@ void LUA_SCALEPTCLOUD_CALLBACK(SScriptCallBack* p)
         if (it!=_ptcloudData.end())
             geom_scalePtcloud(it->second,inData->at(1).doubleData[0]);
         else
-            simSetLastError(LUA_SCALEPTCLOUD_COMMAND,"Invalid handle.");
+            simSetLastError(nullptr,"Invalid handle.");
     }
     D.writeDataToStack(p->stackID);
 }
@@ -2520,9 +2367,6 @@ void LUA_SCALEPTCLOUD_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getPtcloudSerializationData
 // --------------------------------------------------------------------------------------
-#define LUA_GETPTCLOUDSERIALIZATIONDATA_COMMAND_PLUGIN "simGeom.getPtcloudSerializationData@Geom"
-#define LUA_GETPTCLOUDSERIALIZATIONDATA_COMMAND "simGeom.getPtcloudSerializationData"
-
 const int inArgs_GETPTCLOUDSERIALIZATIONDATA[]={
     1,
     sim_script_arg_int32,0,
@@ -2531,7 +2375,7 @@ const int inArgs_GETPTCLOUDSERIALIZATIONDATA[]={
 void LUA_GETPTCLOUDSERIALIZATIONDATA_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_GETPTCLOUDSERIALIZATIONDATA,inArgs_GETPTCLOUDSERIALIZATIONDATA[0],LUA_GETPTCLOUDSERIALIZATIONDATA_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_GETPTCLOUDSERIALIZATIONDATA,inArgs_GETPTCLOUDSERIALIZATIONDATA[0],nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         int h=inData->at(0).int32Data[0];
@@ -2543,7 +2387,7 @@ void LUA_GETPTCLOUDSERIALIZATIONDATA_CALLBACK(SScriptCallBack* p)
             D.pushOutData(CScriptFunctionDataItem((const char*)&data[0],data.size()));
         }
         else
-            simSetLastError(LUA_GETPTCLOUDSERIALIZATIONDATA_COMMAND,"Invalid handle.");
+            simSetLastError(nullptr,"Invalid handle.");
     }
     D.writeDataToStack(p->stackID);
 }
@@ -2552,9 +2396,6 @@ void LUA_GETPTCLOUDSERIALIZATIONDATA_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.createPtcloudFromSerializationData
 // --------------------------------------------------------------------------------------
-#define LUA_CREATEPTCLOUDFROMSERIALIZATIONDATA_COMMAND_PLUGIN "simGeom.createPtcloudFromSerializationData@Geom"
-#define LUA_CREATEPTCLOUDFROMSERIALIZATIONDATA_COMMAND "simGeom.createPtcloudFromSerializationData"
-
 const int inArgs_CREATEPTCLOUDFROMSERIALIZATIONDATA[]={
     1,
     sim_script_arg_string,0,
@@ -2563,7 +2404,7 @@ const int inArgs_CREATEPTCLOUDFROMSERIALIZATIONDATA[]={
 void LUA_CREATEPTCLOUDFROMSERIALIZATIONDATA_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_CREATEPTCLOUDFROMSERIALIZATIONDATA,inArgs_CREATEPTCLOUDFROMSERIALIZATIONDATA[0],LUA_CREATEPTCLOUDFROMSERIALIZATIONDATA_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_CREATEPTCLOUDFROMSERIALIZATIONDATA,inArgs_CREATEPTCLOUDFROMSERIALIZATIONDATA[0],nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         std::vector<unsigned char> data;
@@ -2581,9 +2422,6 @@ void LUA_CREATEPTCLOUDFROMSERIALIZATIONDATA_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getPtcloudPoints
 // --------------------------------------------------------------------------------------
-#define LUA_GETPTCLOUDPOINTS_COMMAND_PLUGIN "simGeom.getPtcloudPoints@Geom"
-#define LUA_GETPTCLOUDPOINTS_COMMAND "simGeom.getPtcloudPoints"
-
 const int inArgs_GETPTCLOUDPOINTS[]={
     2,
     sim_script_arg_int32,0,
@@ -2593,7 +2431,7 @@ const int inArgs_GETPTCLOUDPOINTS[]={
 void LUA_GETPTCLOUDPOINTS_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_GETPTCLOUDPOINTS,inArgs_GETPTCLOUDPOINTS[0]-1,LUA_GETPTCLOUDPOINTS_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_GETPTCLOUDPOINTS,inArgs_GETPTCLOUDPOINTS[0]-1,nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         int h=inData->at(0).int32Data[0];
@@ -2620,7 +2458,7 @@ void LUA_GETPTCLOUDPOINTS_CALLBACK(SScriptCallBack* p)
             D.pushOutData(CScriptFunctionDataItem(rgb));
         }
         else
-            simSetLastError(LUA_GETPTCLOUDPOINTS_COMMAND,"Invalid handle.");
+            simSetLastError(nullptr,"Invalid handle.");
     }
     D.writeDataToStack(p->stackID);
 }
@@ -2629,9 +2467,6 @@ void LUA_GETPTCLOUDPOINTS_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getPtcloudPtcloudDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETPTCLOUDPTCLOUDDISTANCE_COMMAND_PLUGIN "simGeom.getPtcloudPtcloudDistance@Geom"
-#define LUA_GETPTCLOUDPTCLOUDDISTANCE_COMMAND "simGeom.getPtcloudPtcloudDistance"
-
 const int inArgs_GETPTCLOUDPTCLOUDDISTANCE[]={
     8,
     sim_script_arg_int32,0,
@@ -2647,7 +2482,7 @@ const int inArgs_GETPTCLOUDPTCLOUDDISTANCE[]={
 void LUA_GETPTCLOUDPTCLOUDDISTANCE_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_GETPTCLOUDPTCLOUDDISTANCE,inArgs_GETPTCLOUDPTCLOUDDISTANCE[0]-2,LUA_GETPTCLOUDPTCLOUDDISTANCE_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_GETPTCLOUDPTCLOUDDISTANCE,inArgs_GETPTCLOUDPTCLOUDDISTANCE[0]-2,nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         int h1=inData->at(0).int32Data[0];
@@ -2686,7 +2521,7 @@ void LUA_GETPTCLOUDPTCLOUDDISTANCE_CALLBACK(SScriptCallBack* p)
             }
         }
         else
-            simSetLastError(LUA_GETPTCLOUDPTCLOUDDISTANCE_COMMAND,"Invalid handle.");
+            simSetLastError(nullptr,"Invalid handle.");
     }
     D.writeDataToStack(p->stackID);
 }
@@ -2695,9 +2530,6 @@ void LUA_GETPTCLOUDPTCLOUDDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getPtcloudTriangleDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETPTCLOUDTRIANGLEDISTANCE_COMMAND_PLUGIN "simGeom.getPtcloudTriangleDistance@Geom"
-#define LUA_GETPTCLOUDTRIANGLEDISTANCE_COMMAND "simGeom.getPtcloudTriangleDistance"
-
 const int inArgs_GETPTCLOUDTRIANGLEDISTANCE[]={
     8,
     sim_script_arg_int32,0,
@@ -2713,7 +2545,7 @@ const int inArgs_GETPTCLOUDTRIANGLEDISTANCE[]={
 void LUA_GETPTCLOUDTRIANGLEDISTANCE_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_GETPTCLOUDTRIANGLEDISTANCE,inArgs_GETPTCLOUDTRIANGLEDISTANCE[0]-2,LUA_GETPTCLOUDTRIANGLEDISTANCE_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_GETPTCLOUDTRIANGLEDISTANCE,inArgs_GETPTCLOUDTRIANGLEDISTANCE[0]-2,nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         int h=inData->at(0).int32Data[0];
@@ -2744,7 +2576,7 @@ void LUA_GETPTCLOUDTRIANGLEDISTANCE_CALLBACK(SScriptCallBack* p)
             }
         }
         else
-            simSetLastError(LUA_GETPTCLOUDTRIANGLEDISTANCE_COMMAND,"Invalid handle.");
+            simSetLastError(nullptr,"Invalid handle.");
     }
     D.writeDataToStack(p->stackID);
 }
@@ -2753,9 +2585,6 @@ void LUA_GETPTCLOUDTRIANGLEDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getPtcloudSegmentDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETPTCLOUDSEGMENTDISTANCE_COMMAND_PLUGIN "simGeom.getPtcloudSegmentDistance@Geom"
-#define LUA_GETPTCLOUDSEGMENTDISTANCE_COMMAND "simGeom.getPtcloudSegmentDistance"
-
 const int inArgs_GETPTCLOUDSEGMENTDISTANCE[]={
     7,
     sim_script_arg_int32,0,
@@ -2770,7 +2599,7 @@ const int inArgs_GETPTCLOUDSEGMENTDISTANCE[]={
 void LUA_GETPTCLOUDSEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_GETPTCLOUDSEGMENTDISTANCE,inArgs_GETPTCLOUDSEGMENTDISTANCE[0]-2,LUA_GETPTCLOUDSEGMENTDISTANCE_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_GETPTCLOUDSEGMENTDISTANCE,inArgs_GETPTCLOUDSEGMENTDISTANCE[0]-2,nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         int h=inData->at(0).int32Data[0];
@@ -2800,7 +2629,7 @@ void LUA_GETPTCLOUDSEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
             }
         }
         else
-            simSetLastError(LUA_GETPTCLOUDSEGMENTDISTANCE_COMMAND,"Invalid handle.");
+            simSetLastError(nullptr,"Invalid handle.");
     }
     D.writeDataToStack(p->stackID);
 }
@@ -2809,9 +2638,6 @@ void LUA_GETPTCLOUDSEGMENTDISTANCE_CALLBACK(SScriptCallBack* p)
 // --------------------------------------------------------------------------------------
 // simGeom.getPtcloudPointDistance
 // --------------------------------------------------------------------------------------
-#define LUA_GETPTCLOUDPOINTDISTANCE_COMMAND_PLUGIN "simGeom.getPtcloudPointDistance@Geom"
-#define LUA_GETPTCLOUDPOINTDISTANCE_COMMAND "simGeom.getPtcloudPointDistance"
-
 const int inArgs_GETPTCLOUDPOINTDISTANCE[]={
     6,
     sim_script_arg_int32,0,
@@ -2825,7 +2651,7 @@ const int inArgs_GETPTCLOUDPOINTDISTANCE[]={
 void LUA_GETPTCLOUDPOINTDISTANCE_CALLBACK(SScriptCallBack* p)
 {
     CScriptFunctionData D;
-    if (D.readDataFromStack(p->stackID,inArgs_GETPTCLOUDPOINTDISTANCE,inArgs_GETPTCLOUDPOINTDISTANCE[0]-2,LUA_GETPTCLOUDPOINTDISTANCE_COMMAND))
+    if (D.readDataFromStack(p->stackID,inArgs_GETPTCLOUDPOINTDISTANCE,inArgs_GETPTCLOUDPOINTDISTANCE[0]-2,nullptr))
     {
         std::vector<CScriptFunctionDataItem>* inData=D.getInDataPtr();
         int h=inData->at(0).int32Data[0];
@@ -2852,13 +2678,13 @@ void LUA_GETPTCLOUDPOINTDISTANCE_CALLBACK(SScriptCallBack* p)
             }
         }
         else
-            simSetLastError(LUA_GETPTCLOUDPOINTDISTANCE_COMMAND,"Invalid handle.");
+            simSetLastError(nullptr,"Invalid handle.");
     }
     D.writeDataToStack(p->stackID);
 }
 // --------------------------------------------------------------------------------------
 
-SIM_DLLEXPORT unsigned char simStart(void*,int)
+SIM_DLLEXPORT int simInit(const char* pluginName)
 {
     char curDirAndFile[1024];
 #ifdef _WIN32
@@ -2886,96 +2712,95 @@ SIM_DLLEXPORT unsigned char simStart(void*,int)
     simLib=loadSimLibrary(temp.c_str());
     if (simLib==NULL)
     {
-        printf("simExtGeometric: error: could not find or correctly load the CoppeliaSim library. Cannot start the plugin.\n"); // cannot use simAddLog here.
+        simAddLog(pluginName,sim_verbosity_errors,"could not find or correctly load the CoppeliaSim library. Cannot start the plugin.");
         return(0);
     }
     if (getSimProcAddresses(simLib)==0)
     {
-        printf("simExtGeometric: error: could not find all required functions in the CoppeliaSim library. Cannot start the plugin.\n"); // cannot use simAddLog here.
+        simAddLog(pluginName,sim_verbosity_errors,"could not find all required functions in the CoppeliaSim library. Cannot start the plugin.");
         unloadSimLibrary(simLib);
         return(0);
     }
 
     // Register the new Lua commands:
-    simRegisterScriptCallbackFunction(LUA_GETMESHMESHCOLLISION_COMMAND_PLUGIN,strConCat("bool collision,int[2] cache,float[] intersections=",LUA_GETMESHMESHCOLLISION_COMMAND,"(int mesh1Handle,float[3] mesh1Pos,float[4] mesh1Quaternion,int mesh2Handle,float[3] mesh2Pos,float[4] mesh2Quaternion,int[2] cache=nil,bool returnIntersections=false)"),LUA_GETMESHMESHCOLLISION_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETMESHOCTREECOLLISION_COMMAND_PLUGIN,strConCat("bool collision,int[2] cache=",LUA_GETMESHOCTREECOLLISION_COMMAND,"(int meshHandle,float[3] meshPos,float[4] meshQuaternion,int octreeHandle,float[3] octreePos,float[4] octreeQuaternion,int[2] cache=nil)"),LUA_GETMESHOCTREECOLLISION_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETMESHTRIANGLECOLLISION_COMMAND_PLUGIN,strConCat("bool collision,int cache,float[] intersections=",LUA_GETMESHTRIANGLECOLLISION_COMMAND,"(int meshHandle,float[3] meshPos,float[4] meshQuaternion,float[3] triPt1,float[3] triPt2,float[3] triPt3,int cache=-1,bool returnIntersections=false)"),LUA_GETMESHTRIANGLECOLLISION_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETMESHSEGMENTCOLLISION_COMMAND_PLUGIN,strConCat("bool collision,int cache,float[] intersections=",LUA_GETMESHSEGMENTCOLLISION_COMMAND,"(int meshHandle,float[3] meshPos,float[4] meshQuaternion,float[3] segmentPt1,float[3] segmentPt2,int cache=-1,bool returnIntersections=false)"),LUA_GETMESHSEGMENTCOLLISION_CALLBACK);
+    simRegisterScriptCallbackFunction("getMeshMeshCollision",nullptr,LUA_GETMESHMESHCOLLISION_CALLBACK);
+    simRegisterScriptCallbackFunction("getMeshOctreeCollision",nullptr,LUA_GETMESHOCTREECOLLISION_CALLBACK);
+    simRegisterScriptCallbackFunction("getMeshTriangleCollision",nullptr,LUA_GETMESHTRIANGLECOLLISION_CALLBACK);
+    simRegisterScriptCallbackFunction("getMeshSegmentCollision",nullptr,LUA_GETMESHSEGMENTCOLLISION_CALLBACK);
 
-    simRegisterScriptCallbackFunction(LUA_GETOCTREEOCTREECOLLISION_COMMAND_PLUGIN,strConCat("bool collision,int[2] cache=",LUA_GETOCTREEOCTREECOLLISION_COMMAND,"(int octree1Handle,float[3] octree1Pos,float[4] octree1Quaternion,int octree2Handle,float[3] octree2Pos,float[4] octree2Quaternion,int[2] cache=nil)"),LUA_GETOCTREEOCTREECOLLISION_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETOCTREEPTCLOUDCOLLISION_COMMAND_PLUGIN,strConCat("bool collision,int[2] cache=",LUA_GETOCTREEPTCLOUDCOLLISION_COMMAND,"(int octreeHandle,float[3] octreePos,float[4] octreeQuaternion,int ptcloudHandle,float[3] ptcloudPos,float[4] ptcloudQuaternion,int[2] cache=nil)"),LUA_GETOCTREEPTCLOUDCOLLISION_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETOCTREETRIANGLECOLLISION_COMMAND_PLUGIN,strConCat("bool collision,int cache=",LUA_GETOCTREETRIANGLECOLLISION_COMMAND,"(int octreeHandle,float[3] octreePos,float[4] octreeQuaternion,float[3] triPt1,float[3] triPt2,float[3] triPt3,int cache=-1)"),LUA_GETOCTREETRIANGLECOLLISION_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETOCTREESEGMENTCOLLISION_COMMAND_PLUGIN,strConCat("bool collision,int cache=",LUA_GETOCTREESEGMENTCOLLISION_COMMAND,"(int octreeHandle,float[3] octreePos,float[4] octreeQuaternion,float[3] segPt1,float[3] segPt2,int cache=-1)"),LUA_GETOCTREESEGMENTCOLLISION_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETOCTREEPOINTCOLLISION_COMMAND_PLUGIN,strConCat("bool collision,int cache=",LUA_GETOCTREEPOINTCOLLISION_COMMAND,"(int octreeHandle,float[3] octreePos,float[4] octreeQuaternion,float[3] point,int cache=-1)"),LUA_GETOCTREEPOINTCOLLISION_CALLBACK);
+    simRegisterScriptCallbackFunction("getOctreeOctreeCollision",nullptr,LUA_GETOCTREEOCTREECOLLISION_CALLBACK);
+    simRegisterScriptCallbackFunction("getOctreePtcloudCollision",nullptr,LUA_GETOCTREEPTCLOUDCOLLISION_CALLBACK);
+    simRegisterScriptCallbackFunction("getOctreeTriangleCollision",nullptr,LUA_GETOCTREETRIANGLECOLLISION_CALLBACK);
+    simRegisterScriptCallbackFunction("getOctreeSegmentCollision",nullptr,LUA_GETOCTREESEGMENTCOLLISION_CALLBACK);
+    simRegisterScriptCallbackFunction("getOctreePointCollision",nullptr,LUA_GETOCTREEPOINTCOLLISION_CALLBACK);
 
-    simRegisterScriptCallbackFunction(LUA_GETMESHMESHDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt1,float[3] distSegPt2,int[2] cache=",LUA_GETMESHMESHDISTANCE_COMMAND,"(int mesh1Handle,float[3] mesh1Pos,float[4] mesh1Quaternion,int mesh2Handle,float[3] mesh2Pos,float[4] mesh2Quaternion,float distanceThreshold=0,int[2] cache=nil)"),LUA_GETMESHMESHDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETMESHOCTREEDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt1,float[3] distSegPt2,int[2] cache=",LUA_GETMESHOCTREEDISTANCE_COMMAND,"(int meshHandle,float[3] meshPos,float[4] meshQuaternion,int octreeHandle,float[3] octreePos,float[4] octreeQuaternion,float distanceThreshold=0,int[2] cache=nil)"),LUA_GETMESHOCTREEDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETMESHPTCLOUDDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt1,float[3] distSegPt2,int[2] cache=",LUA_GETMESHPTCLOUDDISTANCE_COMMAND,"(int meshHandle,float[3] meshPos,float[4] meshQuaternion,int ptcloudHandle,float[3] ptcloudPos,float[4] ptcloudQuaternion,float distanceThreshold=0,int[2] cache=nil)"),LUA_GETMESHPTCLOUDDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETMESHTRIANGLEDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt1,float[3] distSegPt2,int cache=",LUA_GETMESHTRIANGLEDISTANCE_COMMAND,"(int meshHandle,float[3] meshPos,float[4] meshQuaternion,float[3] triPt1,float[3] triPt2,float[3] triPt3,float distanceThreshold=0,int cache=-1)"),LUA_GETMESHTRIANGLEDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETMESHSEGMENTDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt1,float[3] distSegPt2,int cache=",LUA_GETMESHSEGMENTDISTANCE_COMMAND,"(int meshHandle,float[3] meshPos,float[4] meshQuaternion,float[3] segmentPt1,float[3] segmentPt2,float distanceThreshold=0,int cache=-1)"),LUA_GETMESHSEGMENTDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETMESHPOINTDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt,int cache=",LUA_GETMESHPOINTDISTANCE_COMMAND,"(int meshHandle,float[3] meshPos,float[4] meshQuaternion,float[3] point,float distanceThreshold=0,int cache=-1)"),LUA_GETMESHPOINTDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction("getMeshMeshDistance",nullptr,LUA_GETMESHMESHDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction("getMeshOctreeDistance",nullptr,LUA_GETMESHOCTREEDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction("getMeshPtcloudDistance",nullptr,LUA_GETMESHPTCLOUDDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction("getMeshTriangleDistance",nullptr,LUA_GETMESHTRIANGLEDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction("getMeshSegmentDistance",nullptr,LUA_GETMESHSEGMENTDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction("getMeshPointDistance",nullptr,LUA_GETMESHPOINTDISTANCE_CALLBACK);
 
-    simRegisterScriptCallbackFunction(LUA_GETOCTREEOCTREEDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt1,float[3] distSegPt2,int[2] cache=",LUA_GETOCTREEOCTREEDISTANCE_COMMAND,"(int octree1Handle,float[3] octree1Pos,float[4] octree1Quaternion,int octree2Handle,float[3] octree2Pos,float[4] octree2Quaternion,float distanceThreshold=0,int[2] cache=nil)"),LUA_GETOCTREEOCTREEDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETOCTREEPTCLOUDDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt1,float[3] distSegPt2,int[2] cache=",LUA_GETOCTREEPTCLOUDDISTANCE_COMMAND,"(int octreeHandle,float[3] octreePos,float[4] octreeQuaternion,int ptcloudHandle,float[3] ptcloudPos,float[4] ptcloudQuaternion,float distanceThreshold=0,int[2] cache=nil)"),LUA_GETOCTREEPTCLOUDDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETOCTREETRIANGLEDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt1,float[3] distSegPt2,int cache=",LUA_GETOCTREETRIANGLEDISTANCE_COMMAND,"(int octreeHandle,float[3] octreePos,float[4] octreeQuaternion,float[3] triPt1,float[3] triPt2,float[3] triPt3,float distanceThreshold=0,int cache=-1)"),LUA_GETOCTREETRIANGLEDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETOCTREESEGMENTDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt1,float[3] distSegPt2,int cache=",LUA_GETOCTREESEGMENTDISTANCE_COMMAND,"(int octreeHandle,float[3] octreePos,float[4] octreeQuaternion,float[3] segPt1,float[3] segPt2,float distanceThreshold=0,int cache=-1)"),LUA_GETOCTREESEGMENTDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETOCTREEPOINTDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt,int cache=",LUA_GETOCTREEPOINTDISTANCE_COMMAND,"(int octreeHandle,float[3] octreePos,float[4] octreeQuaternion,float[3] point,float distanceThreshold=0,int cache=-1)"),LUA_GETOCTREEPOINTDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction("getOctreeOctreeDistance",nullptr,LUA_GETOCTREEOCTREEDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction("getOctreePtcloudDistance",nullptr,LUA_GETOCTREEPTCLOUDDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction("getOctreeTriangleDistance",nullptr,LUA_GETOCTREETRIANGLEDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction("getOctreeSegmentDistance",nullptr,LUA_GETOCTREESEGMENTDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction("getOctreePointDistance",nullptr,LUA_GETOCTREEPOINTDISTANCE_CALLBACK);
 
-    simRegisterScriptCallbackFunction(LUA_GETPTCLOUDPTCLOUDDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt1,float[3] distSegPt2,int[2] cache=",LUA_GETPTCLOUDPTCLOUDDISTANCE_COMMAND,"(int ptcloud1Handle,float[3] ptcloud1Pos,float[4] ptcloud1Quaternion,int ptcloud2Handle,float[3] ptcloud2Pos,float[4] ptcloud2Quaternion,float distanceThreshold=0,int[2] cache=nil)"),LUA_GETPTCLOUDPTCLOUDDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETPTCLOUDTRIANGLEDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt1,float[3] distSegPt2,int cache=",LUA_GETPTCLOUDTRIANGLEDISTANCE_COMMAND,"(int ptcloudHandle,float[3] ptcloudPos,float[4] ptcloudQuaternion,float[3] triPt1,float[3] triPt2,float[3] triPt3,float distanceThreshold=0,int cache=-1)"),LUA_GETPTCLOUDTRIANGLEDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETPTCLOUDSEGMENTDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt1,float[3] distSegPt2,int cache=",LUA_GETPTCLOUDSEGMENTDISTANCE_COMMAND,"(int ptcloudHandle,float[3] ptcloudPos,float[4] ptcloudQuaternion,float[3] segPt1,float[3] segPt2,float distanceThreshold=0,int cache=-1)"),LUA_GETPTCLOUDSEGMENTDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETPTCLOUDPOINTDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt,int cache=",LUA_GETPTCLOUDPOINTDISTANCE_COMMAND,"(int ptcloudHandle,float[3] ptcloudPos,float[4] ptcloudQuaternion,float[3] point,float distanceThreshold=0,int cache=-1)"),LUA_GETPTCLOUDPOINTDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction("getPtcloudPtcloudDistance",nullptr,LUA_GETPTCLOUDPTCLOUDDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction("getPtcloudTriangleDistance",nullptr,LUA_GETPTCLOUDTRIANGLEDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction("getPtcloudSegmentDistance",nullptr,LUA_GETPTCLOUDSEGMENTDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction("getPtcloudPointDistance",nullptr,LUA_GETPTCLOUDPOINTDISTANCE_CALLBACK);
 
-    simRegisterScriptCallbackFunction(LUA_GETBOXBOXDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt1,float[3] distSegPt2=",LUA_GETBOXBOXDISTANCE_COMMAND,"(float[3] box1Pos,float[4] box1Quaternion,float[3] box1HalfSize,float[3] box2Pos,float[4] box2Quaternion,float[3] box2HalfSize,bool boxesAreSolid)"),LUA_GETBOXBOXDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETBOXTRIANGLEDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt1,float[3] distSegPt2=",LUA_GETBOXTRIANGLEDISTANCE_COMMAND,"(float[3] boxPos,float[4] boxQuaternion,float[3] boxHalfSize,bool boxIsSolid,float[3] triPt1,float[3] triPt2,float[3] triPt3,bool altRoutine=false)"),LUA_GETBOXTRIANGLEDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETBOXSEGMENTDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt1,float[3] distSegPt2=",LUA_GETBOXSEGMENTDISTANCE_COMMAND,"(float[3] boxPos,float[4] boxQuaternion,float[3] boxHalfSize,bool boxIsSolid,float[3] segmentPt1,float[3] segmentPt2,bool altRoutine=false)"),LUA_GETBOXSEGMENTDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETBOXPOINTDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt=",LUA_GETBOXPOINTDISTANCE_COMMAND,"(float[3] boxPos,float[4] boxQuaternion,float[3] boxHalfSize,bool boxIsSolid,float[3] point)"),LUA_GETBOXPOINTDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction("getBoxBoxDistance",nullptr,LUA_GETBOXBOXDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction("getBoxTriangleDistance",nullptr,LUA_GETBOXTRIANGLEDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction("getBoxSegmentDistance",nullptr,LUA_GETBOXSEGMENTDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction("getBoxPointDistance",nullptr,LUA_GETBOXPOINTDISTANCE_CALLBACK);
 
-    simRegisterScriptCallbackFunction(LUA_GETTRIANGLETRIANGLEDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt1,float[3] distSegPt2=",LUA_GETTRIANGLETRIANGLEDISTANCE_COMMAND,"(float[3] tri1Pt1,float[3] tri1Pt2,float[3] tri1Pt3,float[3] tri2Pt1,float[3] tri2Pt2,float[3] tri2Pt3)"),LUA_GETTRIANGLETRIANGLEDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETTRIANGLESEGMENTDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt1,float[3] distSegPt2=",LUA_GETTRIANGLESEGMENTDISTANCE_COMMAND,"(float[3] triPt1,float[3] triPt2,float[3] triPt3,float[3] segmentPt1,float[3] segmentPt2)"),LUA_GETTRIANGLESEGMENTDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETTRIANGLEPOINTDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt=",LUA_GETTRIANGLEPOINTDISTANCE_COMMAND,"(float[3] triPt1,float[3] triPt2,float[3] triPt3,float[3] point)"),LUA_GETTRIANGLEPOINTDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction("getTriangleTriangleDistance",nullptr,LUA_GETTRIANGLETRIANGLEDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction("getTriangleSegmentDistance",nullptr,LUA_GETTRIANGLESEGMENTDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction("getTrianglePointDistance",nullptr,LUA_GETTRIANGLEPOINTDISTANCE_CALLBACK);
 
-    simRegisterScriptCallbackFunction(LUA_GETSEGMENTSEGMENTDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt1,float[3] distSegPt2=",LUA_GETSEGMENTSEGMENTDISTANCE_COMMAND,"(float[3] segment1Pt1,float[3] segment1Pt2,float[3] segment2Pt1,float[3] segment2Pt2)"),LUA_GETSEGMENTSEGMENTDISTANCE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETSEGMENTPOINTDISTANCE_COMMAND_PLUGIN,strConCat("float dist,float[3] distSegPt=",LUA_GETSEGMENTPOINTDISTANCE_COMMAND,"(float[3] segmentPt1,float[3] segmentPt2,float[3] point)"),LUA_GETSEGMENTPOINTDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction("getSegmentSegmentDistance",nullptr,LUA_GETSEGMENTSEGMENTDISTANCE_CALLBACK);
+    simRegisterScriptCallbackFunction("getSegmentPointDistance",nullptr,LUA_GETSEGMENTPOINTDISTANCE_CALLBACK);
 
-    simRegisterScriptCallbackFunction(LUA_CREATEMESH_COMMAND_PLUGIN,strConCat("int meshHandle=",LUA_CREATEMESH_COMMAND,"(float[] vertices,int[] indices,float[3] meshOriginPos=nil,float[4] meshOriginQuaternion=nil,float maxTriangleEdgeLength=0.3,int maxTriangleCountInLeafObb=8)"),LUA_CREATEMESH_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_COPYMESH_COMMAND_PLUGIN,strConCat("int meshHandle=",LUA_COPYMESH_COMMAND,"(int meshHandle)"),LUA_COPYMESH_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_SCALEMESH_COMMAND_PLUGIN,strConCat("",LUA_SCALEMESH_COMMAND,"(int meshHandle,float scaleFactor)"),LUA_SCALEMESH_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETMESHSERIALIZATIONDATA_COMMAND_PLUGIN,strConCat("string data=",LUA_GETMESHSERIALIZATIONDATA_COMMAND,"(int meshHandle)"),LUA_GETMESHSERIALIZATIONDATA_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_CREATEMESHFROMSERIALIZATIONDATA_COMMAND_PLUGIN,strConCat("int meshHandle=",LUA_CREATEMESHFROMSERIALIZATIONDATA_COMMAND,"(string data)"),LUA_CREATEMESHFROMSERIALIZATIONDATA_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_DESTROYMESH_COMMAND_PLUGIN,strConCat("",LUA_DESTROYMESH_COMMAND,"(int meshHandle)"),LUA_DESTROYMESH_CALLBACK);
+    simRegisterScriptCallbackFunction("createMesh",nullptr,LUA_CREATEMESH_CALLBACK);
+    simRegisterScriptCallbackFunction("copyMesh",nullptr,LUA_COPYMESH_CALLBACK);
+    simRegisterScriptCallbackFunction("scaleMesh",nullptr,LUA_SCALEMESH_CALLBACK);
+    simRegisterScriptCallbackFunction("getMeshSerializationData",nullptr,LUA_GETMESHSERIALIZATIONDATA_CALLBACK);
+    simRegisterScriptCallbackFunction("createMeshFromSerializationData",nullptr,LUA_CREATEMESHFROMSERIALIZATIONDATA_CALLBACK);
+    simRegisterScriptCallbackFunction("destroyMesh",nullptr,LUA_DESTROYMESH_CALLBACK);
 
-    simRegisterScriptCallbackFunction(LUA_CREATEOCTREEFROMPOINTS_COMMAND_PLUGIN,strConCat("int octreeHandle=",LUA_CREATEOCTREEFROMPOINTS_COMMAND,"(float[] points,float[3] octreeOriginPos=nil,float[4] octreeOriginQuaternion=nil,float maxCellSize=0.05,int[3] pointColor={0,0,0},int userData=0)"),LUA_CREATEOCTREEFROMPOINTS_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_CREATEOCTREEFROMCOLORPOINTS_COMMAND_PLUGIN,strConCat("int octreeHandle=",LUA_CREATEOCTREEFROMCOLORPOINTS_COMMAND,"(float[] points,float[3] octreeOriginPos=nil,float[4] octreeOriginQuaternion=nil,float maxCellSize=0.05,float[] colors=nil,int[] userData=nil)"),LUA_CREATEOCTREEFROMCOLORPOINTS_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_CREATEOCTREEFROMMESH_COMMAND_PLUGIN,strConCat("int octreeHandle=",LUA_CREATEOCTREEFROMMESH_COMMAND,"(int meshHandle,float[3] meshPos,float[4] meshQuaternion,float[3] octreeOriginPos=nil,float[4] octreeOriginQuaternion=nil,float maxCellSize=0.05,int[3] pointColor={0,0,0},int userData=0)"),LUA_CREATEOCTREEFROMMESH_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_CREATEOCTREEFROMOCTREE_COMMAND_PLUGIN,strConCat("int octreeHandle=",LUA_CREATEOCTREEFROMOCTREE_COMMAND,"(int octreeHandle,float[3] octreePos,float[4] octreeQuaternion,float[3] newOctreeOriginPos=nil,float[4] newOctreeOriginQuaternion=nil,float maxCellSize=0.05,int[3] pointColor={0,0,0},int userData=0)"),LUA_CREATEOCTREEFROMOCTREE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_COPYOCTREE_COMMAND_PLUGIN,strConCat("int octreeHandle=",LUA_COPYOCTREE_COMMAND,"(int octreeHandle)"),LUA_COPYOCTREE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_SCALEOCTREE_COMMAND_PLUGIN,strConCat("",LUA_SCALEOCTREE_COMMAND,"(int octreeHandle,float scaleFactor)"),LUA_SCALEOCTREE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETOCTREESERIALIZATIONDATA_COMMAND_PLUGIN,strConCat("string data=",LUA_GETOCTREESERIALIZATIONDATA_COMMAND,"(int octreeHandle)"),LUA_GETOCTREESERIALIZATIONDATA_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_CREATEOCTREEFROMSERIALIZATIONDATA_COMMAND_PLUGIN,strConCat("int octreeHandle=",LUA_CREATEOCTREEFROMSERIALIZATIONDATA_COMMAND,"(string data)"),LUA_CREATEOCTREEFROMSERIALIZATIONDATA_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_DESTROYOCTREE_COMMAND_PLUGIN,strConCat("",LUA_DESTROYOCTREE_COMMAND,"(int octreeHandle)"),LUA_DESTROYOCTREE_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETOCTREEVOXELS_COMMAND_PLUGIN,strConCat("float[] positions,float[] colors,int[] userData=",LUA_GETOCTREEVOXELS_COMMAND,"(int octreeHandle)"),LUA_GETOCTREEVOXELS_CALLBACK);
+    simRegisterScriptCallbackFunction("createOctreeFromPoints",nullptr,LUA_CREATEOCTREEFROMPOINTS_CALLBACK);
+    simRegisterScriptCallbackFunction("createOctreeFromColorPoints",nullptr,LUA_CREATEOCTREEFROMCOLORPOINTS_CALLBACK);
+    simRegisterScriptCallbackFunction("createOctreeFromMesh",nullptr,LUA_CREATEOCTREEFROMMESH_CALLBACK);
+    simRegisterScriptCallbackFunction("createOctreeFromOctree",nullptr,LUA_CREATEOCTREEFROMOCTREE_CALLBACK);
+    simRegisterScriptCallbackFunction("copyOctree",nullptr,LUA_COPYOCTREE_CALLBACK);
+    simRegisterScriptCallbackFunction("scaleOctree",nullptr,LUA_SCALEOCTREE_CALLBACK);
+    simRegisterScriptCallbackFunction("getOctreeSerializationData",nullptr,LUA_GETOCTREESERIALIZATIONDATA_CALLBACK);
+    simRegisterScriptCallbackFunction("createOctreeFromSerializationData",nullptr,LUA_CREATEOCTREEFROMSERIALIZATIONDATA_CALLBACK);
+    simRegisterScriptCallbackFunction("destroyOctree",nullptr,LUA_DESTROYOCTREE_CALLBACK);
+    simRegisterScriptCallbackFunction("getOctreeVoxels",nullptr,LUA_GETOCTREEVOXELS_CALLBACK);
 
-    simRegisterScriptCallbackFunction(LUA_CREATEPTCLOUDFROMPOINTS_COMMAND_PLUGIN,strConCat("int ptcloudHandle=",LUA_CREATEPTCLOUDFROMPOINTS_COMMAND,"(float[] points,float[3] octreeOriginPos=nil,float[4] octreeOriginQuaternion=nil,float maxCellSize=0.05,int maxPtsInCell=20,int[3] pointColor={0,0,0},float proximityTolerance=0.005)"),LUA_CREATEPTCLOUDFROMPOINTS_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_CREATEPTCLOUDFROMCOLORPOINTS_COMMAND_PLUGIN,strConCat("int ptcloudHandle=",LUA_CREATEPTCLOUDFROMCOLORPOINTS_COMMAND,"(float[] points,float[3] octreeOriginPos=nil,float[4] octreeOriginQuaternion=nil,float maxCellSize=0.05,int maxPtsInCell=20,float[] colors=nil,float proximityTolerance=0.005)"),LUA_CREATEPTCLOUDFROMCOLORPOINTS_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_COPYPTCLOUD_COMMAND_PLUGIN,strConCat("int ptcloudHandle=",LUA_COPYPTCLOUD_COMMAND,"(int ptcloudHandle)"),LUA_COPYPTCLOUD_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_SCALEPTCLOUD_COMMAND_PLUGIN,strConCat("",LUA_SCALEPTCLOUD_COMMAND,"(int ptcloudHandle,float scaleFactor)"),LUA_SCALEPTCLOUD_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETPTCLOUDSERIALIZATIONDATA_COMMAND_PLUGIN,strConCat("string data=",LUA_GETPTCLOUDSERIALIZATIONDATA_COMMAND,"(int octreeHandle)"),LUA_GETPTCLOUDSERIALIZATIONDATA_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_CREATEPTCLOUDFROMSERIALIZATIONDATA_COMMAND_PLUGIN,strConCat("int ptcloudHandle=",LUA_CREATEPTCLOUDFROMSERIALIZATIONDATA_COMMAND,"(string data)"),LUA_CREATEPTCLOUDFROMSERIALIZATIONDATA_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_DESTROYPTCLOUD_COMMAND_PLUGIN,strConCat("",LUA_DESTROYPTCLOUD_COMMAND,"(int ptcloudHandle)"),LUA_DESTROYPTCLOUD_CALLBACK);
-    simRegisterScriptCallbackFunction(LUA_GETPTCLOUDPOINTS_COMMAND_PLUGIN,strConCat("float[] points,float[] colors=",LUA_GETPTCLOUDPOINTS_COMMAND,"(int ptcloudHandle,float subsetProportion=1.0)"),LUA_GETPTCLOUDPOINTS_CALLBACK);
+    simRegisterScriptCallbackFunction("createPtcloudFromPoints",nullptr,LUA_CREATEPTCLOUDFROMPOINTS_CALLBACK);
+    simRegisterScriptCallbackFunction("createPtcloudFromColorPoints",nullptr,LUA_CREATEPTCLOUDFROMCOLORPOINTS_CALLBACK);
+    simRegisterScriptCallbackFunction("copyPtcloud",nullptr,LUA_COPYPTCLOUD_CALLBACK);
+    simRegisterScriptCallbackFunction("scalePtcloud",nullptr,LUA_SCALEPTCLOUD_CALLBACK);
+    simRegisterScriptCallbackFunction("getPtcloudSerializationData",nullptr,LUA_GETPTCLOUDSERIALIZATIONDATA_CALLBACK);
+    simRegisterScriptCallbackFunction("createPtcloudFromSerializationData",nullptr,LUA_CREATEPTCLOUDFROMSERIALIZATIONDATA_CALLBACK);
+    simRegisterScriptCallbackFunction("destroyPtcloud",nullptr,LUA_DESTROYPTCLOUD_CALLBACK);
+    simRegisterScriptCallbackFunction("getPtcloudPoints",nullptr,LUA_GETPTCLOUDPOINTS_CALLBACK);
 
-    simRegisterScriptCallbackFunction(LUA_GETTRANSFORMEDPOINTS_COMMAND_PLUGIN,"float[] transformedPoints=simGeom.getTransformedPoints(float[] points,float[3] position,float[4] quaternion)\nfloat[] transformedPoints=simGeom.getTransformedPoints(float[] points,float[3] position,float[3] eulerAngles)\nfloat[] transformedPoints=simGeom.getTransformedPoints(float[] points,float[12] transformationMatrix)",LUA_GETTRANSFORMEDPOINTS_CALLBACK);
+    simRegisterScriptCallbackFunction("getTransformedPoints",nullptr,LUA_GETTRANSFORMEDPOINTS_CALLBACK);
 
-
-    return(4);
+    return(5);
 }
 
-SIM_DLLEXPORT void simEnd()
+SIM_DLLEXPORT void simCleanup()
 {
 }
 
-SIM_DLLEXPORT void* simMessage(int message,int*,void*,int*)
+SIM_DLLEXPORT void simMsg(int message,int*,void*)
 {
     if (message==sim_message_eventcallback_lastinstancepass)
     {
@@ -2989,7 +2814,6 @@ SIM_DLLEXPORT void* simMessage(int message,int*,void*,int*)
             delete it->second;
         _ptcloudData.clear();
     }
-    return(nullptr);
 }
 
 SIM_DLLEXPORT void geomPlugin_releaseBuffer(void* buff)

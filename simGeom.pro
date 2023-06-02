@@ -1,4 +1,4 @@
-TARGET = simExtGeom
+TARGET = simGeom
 TEMPLATE = lib
 DEFINES -= UNICODE
 CONFIG += shared plugin
@@ -52,7 +52,7 @@ unix:!macx {
 INCLUDEPATH += "../include"
 INCLUDEPATH += "../coppeliaGeometricRoutines"
 
-HEADERS += simExtGeom.h \
+HEADERS += simGeom.h \
     ../include/simLib/simLib.h \
     ../include/simLib/scriptFunctionData.h \
     ../include/simLib/scriptFunctionDataItem.h \
@@ -74,7 +74,7 @@ HEADERS += simExtGeom.h \
     ../coppeliaGeometricRoutines/pcStruct.h \
     ../coppeliaGeometricRoutines/kdNode.h \
 
-SOURCES += simExtGeom.cpp \
+SOURCES += simGeom.cpp \
     ../include/simLib/simLib.cpp \
     ../include/simLib/scriptFunctionData.cpp \
     ../include/simLib/scriptFunctionDataItem.cpp \

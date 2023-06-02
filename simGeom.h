@@ -1,12 +1,11 @@
-#ifndef SIMEXTGEOMETRIC_H
-#define SIMEXTGEOMETRIC_H
+#pragma once
 
 #include <geom.h>
 #include <simLib/simExp.h>
 
-SIM_DLLEXPORT unsigned char simStart(void*,int);
-SIM_DLLEXPORT void simEnd();
-SIM_DLLEXPORT void* simMessage(int,int*,void*,int*);
+SIM_DLLEXPORT int simInit(const char*);
+SIM_DLLEXPORT void simCleanup();
+SIM_DLLEXPORT void simMsg(int,int*,void*);
 
 SIM_DLLEXPORT void geomPlugin_releaseBuffer(void* buff);
 
@@ -129,5 +128,3 @@ SIM_DLLEXPORT bool geomPlugin_raySensorDetectOctreeIfSmaller(const double raySta
 
 // Volume-pt test
 SIM_DLLEXPORT bool geomPlugin_isPointInVolume(const double* planesIn,int planesInSize,const double point[3]);
-
-#endif
