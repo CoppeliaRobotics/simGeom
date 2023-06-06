@@ -17,9 +17,6 @@
     #include <unistd.h>
 #endif
 
-#define CONCAT(x,y,z) x y z
-#define strConCat(x,y,z)    CONCAT(x,y,z)
-
 static LIBRARY simLib;
 
 static std::map<int,CObbStruct*> _meshData;
