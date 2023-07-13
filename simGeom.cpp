@@ -5,18 +5,6 @@
 #include <simLib/scriptFunctionData.h>
 #include <map>
 
-#ifdef _WIN32
-#ifdef QT_COMPIL
-    #include <direct.h>
-#else
-    #include <shlwapi.h>
-    #pragma comment(lib, "Shlwapi.lib")
-#endif
-#endif
-#if defined (__linux) || defined (__APPLE__)
-    #include <unistd.h>
-#endif
-
 static LIBRARY simLib;
 
 static std::map<int,CObbStruct*> _meshData;
