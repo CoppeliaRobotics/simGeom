@@ -20,7 +20,7 @@ coppeliasim_add_plugin(
     simGeom
     LEGACY
     SOURCES
-    simGeom.cpp
+    sourceCode/simGeom.cpp
     ../coppeliaGeometricRoutines/geom.cpp
     ../coppeliaGeometricRoutines/calcUtils.cpp
     ../coppeliaGeometricRoutines/obbNode.cpp
@@ -43,7 +43,7 @@ coppeliasim_add_plugin(
 target_compile_definitions(simGeom PRIVATE SIM_MATH_DOUBLE)
 target_include_directories(simGeom PRIVATE ../coppeliaGeometricRoutines)
 target_include_directories(simGeom PRIVATE ${COPPELIASIM_INCLUDE_DIR}/simMath)
-coppeliasim_add_lua(simGeom.lua)
-coppeliasim_add_lua(simGeom-ce.lua)
-coppeliasim_add_helpfile(simGeom.htm)
-coppeliasim_add_helpfile(simGeom.json SUBDIR index)
+coppeliasim_add_lua(lua/simGeom.lua)
+coppeliasim_add_lua(lua/simGeom-ce.lua)
+coppeliasim_add_helpfile(helpFiles/simGeom.htm)
+coppeliasim_add_helpfile(helpFiles/index/simGeom.json SUBDIR index)
