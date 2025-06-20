@@ -1,5 +1,5 @@
 #include "simGeom.h"
-#include <simLib/simLib.h>
+#include <simLib/simLib-2.h>
 #include <iostream>
 #include <cstdio>
 #include <simLib/scriptFunctionData.h>
