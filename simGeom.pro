@@ -53,9 +53,9 @@ INCLUDEPATH += "../include"
 INCLUDEPATH += "../coppeliaGeometricRoutines"
 
 HEADERS += sourceCode/simGeom.h \
-    ../include/simLib/simLib.h \
-    ../include/simLib/scriptFunctionData.h \
-    ../include/simLib/scriptFunctionDataItem.h \
+    ../include/simLib-2/simLib.h \
+    ../include/simLib-2/scriptFunctionData.h \
+    ../include/simLib-2/scriptFunctionDataItem.h \
     ../include/simMath/mathFuncs.h \
     ../include/simMath/3Vector.h \
     ../include/simMath/4Vector.h \
@@ -75,9 +75,9 @@ HEADERS += sourceCode/simGeom.h \
     ../coppeliaGeometricRoutines/kdNode.h \
 
 SOURCES += sourceCode/simGeom.cpp \
-    ../include/simLib/simLib.cpp \
-    ../include/simLib/scriptFunctionData.cpp \
-    ../include/simLib/scriptFunctionDataItem.cpp \
+    ../include/simLib-2/simLib.cpp \
+    ../include/simLib-2/scriptFunctionData.cpp \
+    ../include/simLib-2/scriptFunctionDataItem.cpp \
     ../include/simMath/mathFuncs.cpp \
     ../include/simMath/3Vector.cpp \
     ../include/simMath/4Vector.cpp \

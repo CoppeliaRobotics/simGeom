@@ -1,8 +1,8 @@
 #include "simGeom.h"
-#include <simLib/simLib-2.h>
+#include <simLib-2/simLib.h>
 #include <iostream>
 #include <cstdio>
-#include <simLib/scriptFunctionData.h>
+#include <simLib-2/scriptFunctionData.h>
 #include <map>
 
 static LIBRARY simLib;

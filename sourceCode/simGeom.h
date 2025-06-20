@@ -1,7 +1,7 @@
 #pragma once
 
 #include <geom.h>
-#include <simLib/simExp.h>
+#include <simLib-2/simExp.h>
 
 SIM_DLLEXPORT int simInit(SSimInit*);
 SIM_DLLEXPORT void simCleanup();
