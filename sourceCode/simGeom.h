@@ -52,6 +52,7 @@ SIM_DLLEXPORT void* geomPlugin_getPtcloudFromSerializationData_float(const unsig
 SIM_DLLEXPORT unsigned char* geomPlugin_getPtcloudSerializationData_float(const void* pcStruct,int* serializationDataSize);
 SIM_DLLEXPORT void geomPlugin_scalePtcloud(void* pcStruct,double f);
 SIM_DLLEXPORT void geomPlugin_destroyPtcloud(void* pcStruct);
+SIM_DLLEXPORT bool geomPlugin_getDisplayPtcloudData(const void* pcStruct, bool forceFresh,float** pts, unsigned char** cols, unsigned int** ids, int* newCnt, unsigned int** remIds, int* remCnt);
 SIM_DLLEXPORT double* geomPlugin_getPtcloudPoints(const void* pcStruct,int* pointCount,double prop);
 SIM_DLLEXPORT double* geomPlugin_getPtcloudOctreeCorners(const void* pcStruct,int* pointCount);
 SIM_DLLEXPORT int geomPlugin_getPtcloudNonEmptyCellCount(const void* pcStruct);
