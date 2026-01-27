@@ -30,6 +30,8 @@ SIM_DLLEXPORT void* geomPlugin_getOctreeFromSerializationData_float(const unsign
 SIM_DLLEXPORT unsigned char* geomPlugin_getOctreeSerializationData_float(const void* ocStruct,int* serializationDataSize);
 SIM_DLLEXPORT void geomPlugin_scaleOctree(void* ocStruct,double f);
 SIM_DLLEXPORT void geomPlugin_destroyOctree(void* ocStruct);
+SIM_DLLEXPORT void geomPlugin_refreshDisplayOctreeData(void* ocStruct);
+SIM_DLLEXPORT bool geomPlugin_getDisplayOctreeData(void* ocStruct,float** pts, unsigned char** cols, unsigned int** ids, int* newCnt, unsigned int** remIds, int* remCnt);
 SIM_DLLEXPORT double* geomPlugin_getOctreeVoxelData(const void* ocStruct,int* voxelCount);
 SIM_DLLEXPORT unsigned int* geomPlugin_getOctreeUserData(const void* ocStruct,int* voxelCount);
 SIM_DLLEXPORT double* geomPlugin_getOctreeCornersFromOctree(const void* ocStruct,int* pointCount);
@@ -52,7 +54,8 @@ SIM_DLLEXPORT void* geomPlugin_getPtcloudFromSerializationData_float(const unsig
 SIM_DLLEXPORT unsigned char* geomPlugin_getPtcloudSerializationData_float(const void* pcStruct,int* serializationDataSize);
 SIM_DLLEXPORT void geomPlugin_scalePtcloud(void* pcStruct,double f);
 SIM_DLLEXPORT void geomPlugin_destroyPtcloud(void* pcStruct);
-SIM_DLLEXPORT bool geomPlugin_getDisplayPtcloudData(const void* pcStruct, bool forceFresh,float** pts, unsigned char** cols, unsigned int** ids, int* newCnt, unsigned int** remIds, int* remCnt);
+SIM_DLLEXPORT void geomPlugin_refreshDisplayPtcloudData(void* pcStruct);
+SIM_DLLEXPORT bool geomPlugin_getDisplayPtcloudData(void* pcStruct,float** pts, unsigned char** cols, unsigned int** ids, int* newCnt, unsigned int** remIds, int* remCnt);
 SIM_DLLEXPORT double* geomPlugin_getPtcloudPoints(const void* pcStruct,int* pointCount,double prop);
 SIM_DLLEXPORT double* geomPlugin_getPtcloudOctreeCorners(const void* pcStruct,int* pointCount);
 SIM_DLLEXPORT int geomPlugin_getPtcloudNonEmptyCellCount(const void* pcStruct);

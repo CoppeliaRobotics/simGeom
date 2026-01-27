@@ -3064,13 +3064,49 @@ SIM_DLLEXPORT void geomPlugin_destroyPtcloud(void* pcStruct)
     geom_destroyPtcloud((CPcStruct*)pcStruct);
 }
 
-SIM_DLLEXPORT bool geomPlugin_getDisplayPtcloudData(const void* pcStruct, bool forceFresh,float** pts, unsigned char** cols, unsigned int** ids, int* newCnt, unsigned int** remIds, int* remCnt)
+SIM_DLLEXPORT void geomPlugin_refreshDisplayOctreeData(void* ocStruct)
 {
-    CPcStruct* pc =(CPcStruct*)pcStruct;
+    geom_refreshDisplayOctreeData((COcStruct*)ocStruct);
+}
+
+SIM_DLLEXPORT bool geomPlugin_getDisplayOctreeData(void* ocStruct,float** pts, unsigned char** cols, unsigned int** ids, int* newCnt, unsigned int** remIds, int* remCnt)
+{
+    COcStruct* oct = (COcStruct*)ocStruct;
     std::vector<float> p;
     std::vector<unsigned char> c;
     std::vector<unsigned int> d;
-    bool retVal = geom_getDisplayPtcloudData(pc, forceFresh, p, c, d);
+    bool retVal = geom_getDisplayOctreeData(oct, p, c, d);
+    pts[0] = new float[p.size()];
+    for (size_t  i =0; i  <p.size(); i++)
+        pts[0][i] = p[i];
+    cols[0] = new unsigned char[c.size()];
+    for (size_t  i =0; i  <c.size(); i++)
+        cols[0][i] = c[i];
+    ids[0] = new unsigned int[d.size()];
+    for (size_t  i =0; i  <d.size(); i++)
+        ids[0][i] = d[i];
+    newCnt[0] = int(d.size());
+
+    remIds[0] = new unsigned int[oct->removedIds.size()];
+    for (size_t  i =0; i  <oct->removedIds.size(); i++)
+        remIds[0][i] = oct->removedIds[i];
+    remCnt[0] = int(oct->removedIds.size());
+
+    return retVal;
+}
+
+SIM_DLLEXPORT void geomPlugin_refreshDisplayPtcloudData(void* pcStruct)
+{
+    geom_refreshDisplayPtcloudData((CPcStruct*)pcStruct);
+}
+
+SIM_DLLEXPORT bool geomPlugin_getDisplayPtcloudData(void* pcStruct, float** pts, unsigned char** cols, unsigned int** ids, int* newCnt, unsigned int** remIds, int* remCnt)
+{
+    CPcStruct* pc = (CPcStruct*)pcStruct;
+    std::vector<float> p;
+    std::vector<unsigned char> c;
+    std::vector<unsigned int> d;
+    bool retVal = geom_getDisplayPtcloudData(pc, p, c, d);
     pts[0] = new float[p.size()];
     for (size_t  i =0; i  <p.size(); i++)
         pts[0][i] = p[i];
