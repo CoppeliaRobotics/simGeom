@@ -3091,6 +3091,7 @@ SIM_DLLEXPORT bool geomPlugin_getDisplayOctreeData(void* ocStruct,float** pts, u
     for (size_t  i =0; i  <oct->removedIds.size(); i++)
         remIds[0][i] = oct->removedIds[i];
     remCnt[0] = int(oct->removedIds.size());
+    oct->removedIds.clear();
 
     return retVal;
 }
@@ -3122,6 +3123,7 @@ SIM_DLLEXPORT bool geomPlugin_getDisplayPtcloudData(void* pcStruct, float** pts,
     for (size_t  i =0; i  <pc->removedIds.size(); i++)
         remIds[0][i] = pc->removedIds[i];
     remCnt[0] = int(pc->removedIds.size());
+    pc->removedIds.clear();
 
     return retVal;
 }
