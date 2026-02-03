@@ -19,15 +19,15 @@ SIM_DLLEXPORT void geomPlugin_destroyMesh(void* meshObbStruct);
 SIM_DLLEXPORT double geomPlugin_getMeshRootObbVolume(const void* meshObbStruct);
 
 // OC tree creation/destruction/manipulation/info
-SIM_DLLEXPORT void* geomPlugin_createOctreeFromPoints(const double* points,int pointCnt,const double octreeOrigin[7],double cellS,const unsigned char rgbData[3],unsigned int usrData);
-SIM_DLLEXPORT void* geomPlugin_createOctreeFromColorPoints(const double* points,int pointCnt,const double octreeOrigin[7],double cellS,const unsigned char* rgbData,const unsigned int* usrData);
-SIM_DLLEXPORT void* geomPlugin_createOctreeFromMesh(const void* meshObbStruct,const double meshTransformation[7],const double octreeOrigin[7],double cellS,const unsigned char rgbData[3],unsigned int usrData);
-SIM_DLLEXPORT void* geomPlugin_createOctreeFromOctree(const void* otherOctreeStruct,const double otherOctreeTransformation[7],const double newOctreeOrigin[7],double newOctreeCellS,const unsigned char rgbData[3],unsigned int usrData);
+SIM_DLLEXPORT void* geomPlugin_createOctreeFromPoints(const double* points,int pointCnt,const double octreeOrigin[7],double cellS,const unsigned char rgbaData[4],unsigned int usrData);
+SIM_DLLEXPORT void* geomPlugin_createOctreeFromColorPoints(const double* points,int pointCnt,const double octreeOrigin[7],double cellS,const unsigned char* rgbaData,const unsigned int* usrData);
+SIM_DLLEXPORT void* geomPlugin_createOctreeFromMesh(const void* meshObbStruct,const double meshTransformation[7],const double octreeOrigin[7],double cellS,const unsigned char rgbaData[4],unsigned int usrData);
+SIM_DLLEXPORT void* geomPlugin_createOctreeFromOctree(const void* otherOctreeStruct,const double otherOctreeTransformation[7],const double newOctreeOrigin[7],double newOctreeCellS,const unsigned char rgbaData[4],unsigned int usrData);
 SIM_DLLEXPORT void* geomPlugin_copyOctree(const void* ocStruct);
 SIM_DLLEXPORT void* geomPlugin_getOctreeFromSerializationData(const unsigned char* serializationData);
 SIM_DLLEXPORT unsigned char* geomPlugin_getOctreeSerializationData(const void* ocStruct,int* serializationDataSize);
+SIM_DLLEXPORT unsigned char* geomPlugin_getOctreeSerializationData_ver2(const void* ocStruct,int* serializationDataSize);
 SIM_DLLEXPORT void* geomPlugin_getOctreeFromSerializationData_float(const unsigned char* serializationData);
-SIM_DLLEXPORT unsigned char* geomPlugin_getOctreeSerializationData_float(const void* ocStruct,int* serializationDataSize);
 SIM_DLLEXPORT void geomPlugin_scaleOctree(void* ocStruct,double f);
 SIM_DLLEXPORT void geomPlugin_destroyOctree(void* ocStruct);
 SIM_DLLEXPORT void geomPlugin_refreshDisplayOctreeData(void* ocStruct);
@@ -36,22 +36,23 @@ SIM_DLLEXPORT double* geomPlugin_getOctreeVoxelData(const void* ocStruct,int* vo
 SIM_DLLEXPORT unsigned int* geomPlugin_getOctreeUserData(const void* ocStruct,int* voxelCount);
 SIM_DLLEXPORT double* geomPlugin_getOctreeCornersFromOctree(const void* ocStruct,int* pointCount);
 
-SIM_DLLEXPORT void geomPlugin_insertPointsIntoOctree(void* ocStruct,const double octreeTransformation[7],const double* points,int pointCnt,const unsigned char rgbData[3],unsigned int usrData);
-SIM_DLLEXPORT void geomPlugin_insertColorPointsIntoOctree(void* ocStruct,const double octreeTransformation[7],const double* points,int pointCnt,const unsigned char* rgbData,const unsigned int* usrData);
-SIM_DLLEXPORT void geomPlugin_insertMeshIntoOctree(void* ocStruct,const double octreeTransformation[7],const void* obbStruct,const double meshTransformation[7],const unsigned char rgbData[3],unsigned int usrData);
-SIM_DLLEXPORT void geomPlugin_insertOctreeIntoOctree(void* oc1Struct,const double octree1Transformation[7],const void* oc2Struct,const double octree2Transformation[7],const unsigned char rgbData[3],unsigned int usrData);
+SIM_DLLEXPORT void geomPlugin_insertPointsIntoOctree(void* ocStruct,const double octreeTransformation[7],const double* points,int pointCnt,const unsigned char rgbaData[4],unsigned int usrData);
+SIM_DLLEXPORT void geomPlugin_insertColorPointsIntoOctree(void* ocStruct,const double octreeTransformation[7],const double* points,int pointCnt,const unsigned char* rgbaData,const unsigned int* usrData);
+SIM_DLLEXPORT void geomPlugin_insertMeshIntoOctree(void* ocStruct,const double octreeTransformation[7],const void* obbStruct,const double meshTransformation[7],const unsigned char rgbaData[4],unsigned int usrData);
+SIM_DLLEXPORT void geomPlugin_insertOctreeIntoOctree(void* oc1Struct,const double octree1Transformation[7],const void* oc2Struct,const double octree2Transformation[7],const unsigned char rgbaData[4],unsigned int usrData);
 SIM_DLLEXPORT bool geomPlugin_removePointsFromOctree(void* ocStruct,const double octreeTransformation[7],const double* points,int pointCnt);
 SIM_DLLEXPORT bool geomPlugin_removeMeshFromOctree(void* ocStruct,const double octreeTransformation[7],const void* obbStruct,const double meshTransformation[7]);
 SIM_DLLEXPORT bool geomPlugin_removeOctreeFromOctree(void* oc1Struct,const double octree1Transformation[7],const void* oc2Struct,const double octree2Transformation[7]);
 
 // Point cloud creation/destruction/manipulation/info
-SIM_DLLEXPORT void* geomPlugin_createPtcloudFromPoints(const double* points,int pointCnt,const double ptcloudOrigin[7],double cellS,int maxPointCnt,const unsigned char rgbData[3],double proximityTol);
-SIM_DLLEXPORT void* geomPlugin_createPtcloudFromColorPoints(const double* points,int pointCnt,const double ptcloudOrigin[7],double cellS,int maxPointCnt,const unsigned char* rgbData,double proximityTol);
+SIM_DLLEXPORT void* geomPlugin_createPtcloudFromPoints(const double* points,int pointCnt,const double ptcloudOrigin[7],double cellS,int maxPointCnt,const unsigned char rgbaData[4],double proximityTol);
+SIM_DLLEXPORT void* geomPlugin_createPtcloudFromColorPoints(const double* points,int pointCnt,const double ptcloudOrigin[7],double cellS,int maxPointCnt,const unsigned char* rgbaData,double proximityTol);
 SIM_DLLEXPORT void* geomPlugin_copyPtcloud(const void* pcStruct);
 SIM_DLLEXPORT void* geomPlugin_getPtcloudFromSerializationData(const unsigned char* serializationData);
 SIM_DLLEXPORT unsigned char* geomPlugin_getPtcloudSerializationData(const void* pcStruct,int* serializationDataSize);
+SIM_DLLEXPORT void* geomPlugin_getPtcloudFromSerializationData_ver2(const unsigned char* serializationData);
+SIM_DLLEXPORT unsigned char* geomPlugin_getPtcloudSerializationData_ver2(const void* pcStruct,int* serializationDataSize);
 SIM_DLLEXPORT void* geomPlugin_getPtcloudFromSerializationData_float(const unsigned char* serializationData);
-SIM_DLLEXPORT unsigned char* geomPlugin_getPtcloudSerializationData_float(const void* pcStruct,int* serializationDataSize);
 SIM_DLLEXPORT void geomPlugin_scalePtcloud(void* pcStruct,double f);
 SIM_DLLEXPORT void geomPlugin_destroyPtcloud(void* pcStruct);
 SIM_DLLEXPORT void geomPlugin_refreshDisplayPtcloudData(void* pcStruct);
@@ -60,8 +61,8 @@ SIM_DLLEXPORT double* geomPlugin_getPtcloudPoints(const void* pcStruct,int* poin
 SIM_DLLEXPORT double* geomPlugin_getPtcloudOctreeCorners(const void* pcStruct,int* pointCount);
 SIM_DLLEXPORT int geomPlugin_getPtcloudNonEmptyCellCount(const void* pcStruct);
 
-SIM_DLLEXPORT void geomPlugin_insertPointsIntoPtcloud(void* pcStruct,const double ptcloudTransformation[7],const double* points,int pointCnt,const unsigned char rgbData[3],double proximityTol);
-SIM_DLLEXPORT void geomPlugin_insertColorPointsIntoPtcloud(void* pcStruct,const double ptcloudTransformation[7],const double* points,int pointCnt,const unsigned char* rgbData,double proximityTol);
+SIM_DLLEXPORT void geomPlugin_insertPointsIntoPtcloud(void* pcStruct,const double ptcloudTransformation[7],const double* points,int pointCnt,const unsigned char rgbaData[4],double proximityTol);
+SIM_DLLEXPORT void geomPlugin_insertColorPointsIntoPtcloud(void* pcStruct,const double ptcloudTransformation[7],const double* points,int pointCnt,const unsigned char* rgbaData,double proximityTol);
 SIM_DLLEXPORT bool geomPlugin_removePointsFromPtcloud(void* pcStruct,const double ptcloudTransformation[7],const double* points,int pointCnt,double proximityTol,int* countRemoved);
 SIM_DLLEXPORT bool geomPlugin_removeOctreeFromPtcloud(void* pcStruct,const double ptcloudTransformation[7],const void* ocStruct,const double octreeTransformation[7],int* countRemoved);
 SIM_DLLEXPORT bool geomPlugin_intersectPointsWithPtcloud(void* pcStruct,const double ptcloudTransformation[7],const double* points,int pointCnt,double proximityTol);

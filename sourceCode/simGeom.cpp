@@ -2831,25 +2831,25 @@ SIM_DLLEXPORT double geomPlugin_getMeshRootObbVolume(const void* meshObbStruct)
     return(geom_getMeshRootObbVolume((const CObbStruct*)meshObbStruct));
 }
 
-SIM_DLLEXPORT void* geomPlugin_createOctreeFromPoints(const double* points,int pointCnt,const double octreeOrigin[7],double cellS,const unsigned char rgbData[3],unsigned int usrData)
+SIM_DLLEXPORT void* geomPlugin_createOctreeFromPoints(const double* points,int pointCnt,const double octreeOrigin[7],double cellS,const unsigned char rgbaData[4],unsigned int usrData)
 {
     C7Vector tr;
     tr.setIdentity();
     if (octreeOrigin!=nullptr)
         tr.setData(octreeOrigin);
-    COcStruct* retVal=geom_createOctreeFromPoints(points,pointCnt,&tr,cellS,rgbData,usrData);
+    COcStruct* retVal=geom_createOctreeFromPoints(points,pointCnt,&tr,cellS,rgbaData,usrData);
     return(retVal);
 }
-SIM_DLLEXPORT void* geomPlugin_createOctreeFromColorPoints(const double* points,int pointCnt,const double octreeOrigin[7],double cellS,const unsigned char* rgbData,const unsigned int* usrData)
+SIM_DLLEXPORT void* geomPlugin_createOctreeFromColorPoints(const double* points,int pointCnt,const double octreeOrigin[7],double cellS,const unsigned char* rgbaData,const unsigned int* usrData)
 {
     C7Vector tr;
     tr.setIdentity();
     if (octreeOrigin!=nullptr)
         tr.setData(octreeOrigin);
-    COcStruct* retVal=geom_createOctreeFromColorPoints(points,pointCnt,&tr,cellS,rgbData,usrData);
+    COcStruct* retVal=geom_createOctreeFromColorPoints(points,pointCnt,&tr,cellS,rgbaData,usrData);
     return(retVal);
 }
-SIM_DLLEXPORT void* geomPlugin_createOctreeFromMesh(const void* meshObbStruct,const double meshTransformation[7],const double octreeOrigin[7],double cellS,const unsigned char rgbData[3],unsigned int usrData)
+SIM_DLLEXPORT void* geomPlugin_createOctreeFromMesh(const void* meshObbStruct,const double meshTransformation[7],const double octreeOrigin[7],double cellS,const unsigned char rgbaData[4],unsigned int usrData)
 {
     C7Vector _meshTransformation;
     _meshTransformation.setData(meshTransformation);
@@ -2857,10 +2857,10 @@ SIM_DLLEXPORT void* geomPlugin_createOctreeFromMesh(const void* meshObbStruct,co
     tr.setIdentity();
     if (octreeOrigin!=nullptr)
         tr.setData(octreeOrigin);
-    COcStruct* retVal=geom_createOctreeFromMesh((const CObbStruct*)meshObbStruct,_meshTransformation,&tr,cellS,rgbData,usrData);
+    COcStruct* retVal=geom_createOctreeFromMesh((const CObbStruct*)meshObbStruct,_meshTransformation,&tr,cellS,rgbaData,usrData);
     return(retVal);
 }
-SIM_DLLEXPORT void* geomPlugin_createOctreeFromOctree(const void* otherOctreeStruct,const double otherOctreeTransformation[7],const double newOctreeOrigin[7],double newOctreeCellS,const unsigned char rgbData[3],unsigned int usrData)
+SIM_DLLEXPORT void* geomPlugin_createOctreeFromOctree(const void* otherOctreeStruct,const double otherOctreeTransformation[7],const double newOctreeOrigin[7],double newOctreeCellS,const unsigned char rgbaData[4],unsigned int usrData)
 {
     C7Vector _otherOctreeTransformation;
     _otherOctreeTransformation.setData(otherOctreeTransformation);
@@ -2868,7 +2868,7 @@ SIM_DLLEXPORT void* geomPlugin_createOctreeFromOctree(const void* otherOctreeStr
     tr.setIdentity();
     if (newOctreeOrigin!=nullptr)
         tr.setData(newOctreeOrigin);
-    COcStruct* retVal=geom_createOctreeFromOctree((const COcStruct*)otherOctreeStruct,_otherOctreeTransformation,&tr,newOctreeCellS,rgbData,usrData);
+    COcStruct* retVal=geom_createOctreeFromOctree((const COcStruct*)otherOctreeStruct,_otherOctreeTransformation,&tr,newOctreeCellS,rgbaData,usrData);
     return(retVal);
 }
 SIM_DLLEXPORT void* geomPlugin_copyOctree(const void* ocStruct)
@@ -2891,15 +2891,10 @@ SIM_DLLEXPORT unsigned char* geomPlugin_getOctreeSerializationData(const void* o
     serializationDataSize[0]=(int)serData.size();
     return(retVal);
 }
-SIM_DLLEXPORT void* geomPlugin_getOctreeFromSerializationData_float(const unsigned char* serializationData)
-{
-    COcStruct* retVal=geom_getOctreeFromSerializationData_float(serializationData);
-    return(retVal);
-}
-SIM_DLLEXPORT unsigned char* geomPlugin_getOctreeSerializationData_float(const void* ocStruct,int* serializationDataSize)
+SIM_DLLEXPORT unsigned char* geomPlugin_getOctreeSerializationData_ver2(const void* ocStruct,int* serializationDataSize)
 {
     std::vector<unsigned char> serData;
-    geom_getOctreeSerializationData_float((const COcStruct*)ocStruct,serData);
+    geom_getOctreeSerializationData_ver2((const COcStruct*)ocStruct,serData);
     unsigned char* retVal=new unsigned char[serData.size()];
     for (size_t i=0;i<serData.size();i++)
         retVal[i]=serData[i];
@@ -2915,13 +2910,18 @@ SIM_DLLEXPORT void geomPlugin_destroyOctree(void* ocStruct)
     geom_destroyOctree((COcStruct*)ocStruct);
 }
 SIM_DLLEXPORT double* geomPlugin_getOctreeVoxelData(const void* ocStruct,int* voxelCount)
-{ // voxel position + rgb
+{ // voxel position + rgba
     std::vector<double> data;
     geom_getOctreeVoxelData((const COcStruct*)ocStruct,data,nullptr);
     double* retVal=new double[data.size()];
     for (size_t i=0;i<data.size();i++)
         retVal[i]=data[i];
-    voxelCount[0]=((int)data.size())/6;
+    voxelCount[0]=((int)data.size())/7;
+    return(retVal);
+}
+SIM_DLLEXPORT void* geomPlugin_getOctreeFromSerializationData_float(const unsigned char* serializationData)
+{
+    COcStruct* retVal=geom_getOctreeFromSerializationData_float(serializationData);
     return(retVal);
 }
 SIM_DLLEXPORT unsigned int* geomPlugin_getOctreeUserData(const void* ocStruct,int* voxelCount)
@@ -2946,33 +2946,33 @@ SIM_DLLEXPORT double* geomPlugin_getOctreeCornersFromOctree(const void* ocStruct
     return(retVal);
 }
 
-SIM_DLLEXPORT void geomPlugin_insertPointsIntoOctree(void* ocStruct,const double octreeTransformation[7],const double* points,int pointCnt,const unsigned char rgbData[3],unsigned int usrData)
+SIM_DLLEXPORT void geomPlugin_insertPointsIntoOctree(void* ocStruct,const double octreeTransformation[7],const double* points,int pointCnt,const unsigned char rgbaData[4],unsigned int usrData)
 {
     C7Vector tr;
     tr.setData(octreeTransformation);
-    geom_insertPointsIntoOctree((COcStruct*)ocStruct,tr,points,pointCnt,rgbData,usrData);
+    geom_insertPointsIntoOctree((COcStruct*)ocStruct,tr,points,pointCnt,rgbaData,usrData);
 }
-SIM_DLLEXPORT void geomPlugin_insertColorPointsIntoOctree(void* ocStruct,const double octreeTransformation[7],const double* points,int pointCnt,const unsigned char* rgbData,const unsigned int* usrData)
+SIM_DLLEXPORT void geomPlugin_insertColorPointsIntoOctree(void* ocStruct,const double octreeTransformation[7],const double* points,int pointCnt,const unsigned char* rgbaData,const unsigned int* usrData)
 {
     C7Vector tr;
     tr.setData(octreeTransformation);
-    geom_insertColorPointsIntoOctree((COcStruct*)ocStruct,tr,points,pointCnt,rgbData,usrData);
+    geom_insertColorPointsIntoOctree((COcStruct*)ocStruct,tr,points,pointCnt,rgbaData,usrData);
 }
-SIM_DLLEXPORT void geomPlugin_insertMeshIntoOctree(void* ocStruct,const double octreeTransformation[7],const void* obbStruct,const double meshTransformation[7],const unsigned char rgbData[3],unsigned int usrData)
+SIM_DLLEXPORT void geomPlugin_insertMeshIntoOctree(void* ocStruct,const double octreeTransformation[7],const void* obbStruct,const double meshTransformation[7],const unsigned char rgbaData[4],unsigned int usrData)
 {
     C7Vector tr;
     tr.setData(octreeTransformation);
     C7Vector meshTr;
     meshTr.setData(meshTransformation);
-    geom_insertMeshIntoOctree((COcStruct*)ocStruct,tr,(const CObbStruct*)obbStruct,meshTr,rgbData,usrData);
+    geom_insertMeshIntoOctree((COcStruct*)ocStruct,tr,(const CObbStruct*)obbStruct,meshTr,rgbaData,usrData);
 }
-SIM_DLLEXPORT void geomPlugin_insertOctreeIntoOctree(void* oc1Struct,const double octree1Transformation[7],const void* oc2Struct,const double octree2Transformation[7],const unsigned char rgbData[3],unsigned int usrData)
+SIM_DLLEXPORT void geomPlugin_insertOctreeIntoOctree(void* oc1Struct,const double octree1Transformation[7],const void* oc2Struct,const double octree2Transformation[7],const unsigned char rgbaData[4],unsigned int usrData)
 {
     C7Vector tr1;
     tr1.setData(octree1Transformation);
     C7Vector tr2;
     tr2.setData(octree2Transformation);
-    geom_insertOctreeIntoOctree((COcStruct*)oc1Struct,tr1,(const COcStruct*)oc2Struct,tr2,rgbData,usrData);
+    geom_insertOctreeIntoOctree((COcStruct*)oc1Struct,tr1,(const COcStruct*)oc2Struct,tr2,rgbaData,usrData);
 }
 SIM_DLLEXPORT bool geomPlugin_removePointsFromOctree(void* ocStruct,const double octreeTransformation[7],const double* points,int pointCnt)
 {
@@ -3002,22 +3002,22 @@ SIM_DLLEXPORT bool geomPlugin_removeOctreeFromOctree(void* oc1Struct,const doubl
 
 
 
-SIM_DLLEXPORT void* geomPlugin_createPtcloudFromPoints(const double* points,int pointCnt,const double ptcloudOrigin[7],double cellS,int maxPointCnt,const unsigned char rgbData[3],double proximityTol)
+SIM_DLLEXPORT void* geomPlugin_createPtcloudFromPoints(const double* points,int pointCnt,const double ptcloudOrigin[7],double cellS,int maxPointCnt,const unsigned char rgbaData[4],double proximityTol)
 {
     C7Vector tr;
     tr.setIdentity();
     if (ptcloudOrigin!=nullptr)
         tr.setData(ptcloudOrigin);
-    void* retVal=geom_createPtcloudFromPoints(points,pointCnt,&tr,cellS,maxPointCnt,rgbData,proximityTol);
+    void* retVal=geom_createPtcloudFromPoints(points,pointCnt,&tr,cellS,maxPointCnt,rgbaData,proximityTol);
     return(retVal);
 }
-SIM_DLLEXPORT void* geomPlugin_createPtcloudFromColorPoints(const double* points,int pointCnt,const double ptcloudOrigin[7],double cellS,int maxPointCnt,const unsigned char* rgbData,double proximityTol)
+SIM_DLLEXPORT void* geomPlugin_createPtcloudFromColorPoints(const double* points,int pointCnt,const double ptcloudOrigin[7],double cellS,int maxPointCnt,const unsigned char* rgbaData,double proximityTol)
 {
     C7Vector tr;
     tr.setIdentity();
     if (ptcloudOrigin!=nullptr)
         tr.setData(ptcloudOrigin);
-    void* retVal=geom_createPtcloudFromColorPoints(points,pointCnt,&tr,cellS,maxPointCnt,rgbData,proximityTol);
+    void* retVal=geom_createPtcloudFromColorPoints(points,pointCnt,&tr,cellS,maxPointCnt,rgbaData,proximityTol);
     return(retVal);
 }
 SIM_DLLEXPORT void* geomPlugin_copyPtcloud(const void* pcStruct)
@@ -3040,19 +3040,24 @@ SIM_DLLEXPORT unsigned char* geomPlugin_getPtcloudSerializationData(const void* 
     serializationDataSize[0]=(int)serData.size();
     return(retVal);
 }
-SIM_DLLEXPORT void* geomPlugin_getPtcloudFromSerializationData_float(const unsigned char* serializationData)
+SIM_DLLEXPORT void* geomPlugin_getPtcloudFromSerializationData_ver2(const unsigned char* serializationData)
 {
-    void* retVal=geom_getPtcloudFromSerializationData_float(serializationData);
+    void* retVal=geom_getPtcloudFromSerializationData_ver2(serializationData);
     return(retVal);
 }
-SIM_DLLEXPORT unsigned char* geomPlugin_getPtcloudSerializationData_float(const void* pcStruct,int* serializationDataSize)
+SIM_DLLEXPORT unsigned char* geomPlugin_getPtcloudSerializationData_ver2(const void* pcStruct,int* serializationDataSize)
 {
     std::vector<unsigned char> serData;
-    geom_getPtcloudSerializationData_float((const CPcStruct*)pcStruct,serData);
+    geom_getPtcloudSerializationData_ver2((const CPcStruct*)pcStruct,serData);
     unsigned char* retVal=new unsigned char[serData.size()];
     for (size_t i=0;i<serData.size();i++)
         retVal[i]=serData[i];
     serializationDataSize[0]=(int)serData.size();
+    return(retVal);
+}
+SIM_DLLEXPORT void* geomPlugin_getPtcloudFromSerializationData_float(const unsigned char* serializationData)
+{
+    void* retVal=geom_getPtcloudFromSerializationData_float(serializationData);
     return(retVal);
 }
 SIM_DLLEXPORT void geomPlugin_scalePtcloud(void* pcStruct,double f)
@@ -3135,7 +3140,7 @@ SIM_DLLEXPORT double* geomPlugin_getPtcloudPoints(const void* pcStruct,int* poin
     double* retVal=new double[data.size()];
     for (size_t i=0;i<data.size();i++)
         retVal[i]=data[i];
-    pointCount[0]=((int)data.size())/6;
+    pointCount[0]=((int)data.size())/7;
     return(retVal);
 }
 SIM_DLLEXPORT double* geomPlugin_getPtcloudOctreeCorners(const void* pcStruct,int* pointCount)
@@ -3154,17 +3159,17 @@ SIM_DLLEXPORT int geomPlugin_getPtcloudNonEmptyCellCount(const void* pcStruct)
     return(retVal);
 }
 
-SIM_DLLEXPORT void geomPlugin_insertPointsIntoPtcloud(void* pcStruct,const double ptcloudTransformation[7],const double* points,int pointCnt,const unsigned char rgbData[3],double proximityTol)
+SIM_DLLEXPORT void geomPlugin_insertPointsIntoPtcloud(void* pcStruct,const double ptcloudTransformation[7],const double* points,int pointCnt,const unsigned char rgbaData[4],double proximityTol)
 {
     C7Vector tr;
     tr.setData(ptcloudTransformation);
-    geom_insertPointsIntoPtcloud((CPcStruct*)pcStruct,tr,points,pointCnt,rgbData,proximityTol);
+    geom_insertPointsIntoPtcloud((CPcStruct*)pcStruct,tr,points,pointCnt,rgbaData,proximityTol);
 }
-SIM_DLLEXPORT void geomPlugin_insertColorPointsIntoPtcloud(void* pcStruct,const double ptcloudTransformation[7],const double* points,int pointCnt,const unsigned char* rgbData,double proximityTol)
+SIM_DLLEXPORT void geomPlugin_insertColorPointsIntoPtcloud(void* pcStruct,const double ptcloudTransformation[7],const double* points,int pointCnt,const unsigned char* rgbaData,double proximityTol)
 {
     C7Vector tr;
     tr.setData(ptcloudTransformation);
-    geom_insertColorPointsIntoPtcloud((CPcStruct*)pcStruct,tr,points,pointCnt,rgbData,proximityTol);
+    geom_insertColorPointsIntoPtcloud((CPcStruct*)pcStruct,tr,points,pointCnt,rgbaData,proximityTol);
 }
 SIM_DLLEXPORT bool geomPlugin_removePointsFromPtcloud(void* pcStruct,const double ptcloudTransformation[7],const double* points,int pointCnt,double proximityTol,int* countRemoved)
 {
